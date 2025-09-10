@@ -47,8 +47,20 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        MovePlayer();
-        RotatePlayer();
+        if (CameraToggle.use2D)
+            MovePlayer2D();
+        else
+        {
+            MovePlayer();
+            RotatePlayer();
+        }
+    }
+
+    private void MovePlayer2D()
+    {
+        float inputX = Input.GetAxisRaw("Horizontal");
+        Vector3 move = new Vector3(inputX, 0f, 0f); // x축 이동만
+        rb.MovePosition(rb.position + move * moveSpeed * Time.fixedDeltaTime);
     }
 
     private void GetInput()

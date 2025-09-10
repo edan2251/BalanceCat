@@ -15,6 +15,8 @@ public class SpirteDirectionalController : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (CameraToggle.use2D) return;
+
         float horizontalInput = playerMovement.horizontalInput;
         float verticalInput = playerMovement.verticalInput;
 
