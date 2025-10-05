@@ -38,10 +38,9 @@ public class ChapterPlanetCreator : MonoBehaviour
         for (int i = 0; i < numberOfPlanets; i++)
         {
             // 3. 현재 행성의 궤도 각도 (Y축 기준)
-            float currentAngle = i * angleStep;
+            float currentAngle = -(i * angleStep);
 
             // 4. Quaternion을 사용하여 회전값 생성
-            // 0, currentAngle, 0 각도로 회전
             Quaternion rotation = Quaternion.Euler(0, currentAngle, 0);
 
             // 5. 회전된 방향(앞쪽)으로 반지름만큼 이동
