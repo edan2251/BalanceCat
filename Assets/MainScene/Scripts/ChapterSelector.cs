@@ -1,21 +1,21 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using DG.Tweening;
 using System.Collections.Generic;
 using Cinemachine;
 
 public class ChapterSelector : MonoBehaviour
 {
-    // === ÀÎ½ºÆåÅÍ ¼³Á¤ ===
-    public List<GameObject> planets;
+Â  Â  // === ì¸ìŠ¤í™í„° ì„¤ì • ===
+Â  Â  public List<GameObject> planets;
     public Transform planetPivot;
-    public Camera mainCamera; 
+    public Camera mainCamera;
 
-    [Header("DOTween ¼³Á¤")]
+    [Header("DOTween ì„¤ì •")]
     public float rotationDuration = 0.5f;
     public Ease easeType = Ease.OutBack;
-    public float cameraBlendDelay = 1.0f; // Ä«¸Ş¶ó ºí·»µù ÈÄ ±â´É È°¼ºÈ­±îÁö ´ë±â ½Ã°£ (ÃÊ)
+    public float cameraBlendDelay = 1.0f; // ì¹´ë©”ë¼ ë¸”ë Œë”© í›„ ê¸°ëŠ¥ í™œì„±í™”ê¹Œì§€ ëŒ€ê¸° ì‹œê°„ (ì´ˆ)
 
-    [Header("Cinemachine Á¦¾î")]
+Â  Â  [Header("Cinemachine ì œì–´")]
     public CinemachineVirtualCamera logoVCam;
     public CinemachineVirtualCamera chapterVCam;
     public int activePriority = 20;
@@ -23,52 +23,52 @@ public class ChapterSelector : MonoBehaviour
     public float continuousRotationSpeed = 5f;
 
     [Header("Chapter Alignment")]
-    [Tooltip("È¸Àü º¸Á¤À» À§ÇÑ °¢µµ ¿ÀÇÁ¼Â.")]
-    public float alignmentOffset = 0f; // ¿ÀÇÁ¼Â º¯¼ö Ãß°¡
+    [Tooltip("íšŒì „ ë³´ì •ì„ ìœ„í•œ ê°ë„ ì˜¤í”„ì…‹.")]
+    public float alignmentOffset = 0f; // ì˜¤í”„ì…‹ ë³€ìˆ˜ ì¶”ê°€
 
-    // === ³»ºÎ º¯¼ö ===
-    private int currentChapterIndex = 0;
+Â  Â  // === ë‚´ë¶€ ë³€ìˆ˜ ===
+Â  Â  private int currentChapterIndex = 0;
     private int totalChapters = 0;
     private bool isAnimating = false;
     private float currentTargetRotation = 0f;
     private StageSelector currentStageSelector = null;
 
-    // »óÅÂ Á¦¾î¸¦ À§ÇÑ ÇÙ½É º¯¼ö
-    private bool isChapterSelectionActive = false; // ÃÊ±â°ª: false (·Î°í ¸ğµå)
+Â  Â  // ìƒíƒœ ì œì–´ë¥¼ ìœ„í•œ í•µì‹¬ ë³€ìˆ˜
+Â  Â  private bool isChapterSelectionActive = false; // ì´ˆê¸°ê°’: false (ë¡œê³  ëª¨ë“œ)
 
-    void Start()
+Â  Â  void Start()
     {
         totalChapters = planets.Count;
         currentTargetRotation = 0f;
 
-        // VCam ÃÊ±â ¼³Á¤
-        logoVCam.Priority = activePriority;
+Â  Â  Â  Â  // VCam ì´ˆê¸° ì„¤ì •
+Â  Â  Â  Â  logoVCam.Priority = activePriority;
         chapterVCam.Priority = inactivePriority;
 
-        // Chapter VCam Follow/LookAtÀº °íÁ¤ Ä«¸Ş¶ó »ç¿ëÀ» À§ÇØ null·Î ¼³Á¤
-        chapterVCam.Follow = null;
+Â  Â  Â  Â  // Chapter VCam Follow/LookAtì€ ê³ ì • ì¹´ë©”ë¼ ì‚¬ìš©ì„ ìœ„í•´ nullë¡œ ì„¤ì •
+Â  Â  Â  Â  chapterVCam.Follow = null;
         chapterVCam.LookAt = null;
 
         isChapterSelectionActive = false;
-        UpdatePlanetSelection(0); // ·Î°í ¸ğµå ÃÊ±âÈ­
-    }
+        UpdatePlanetSelection(0); // ë¡œê³  ëª¨ë“œ ì´ˆê¸°í™”
+Â  Â  }
 
     void Update()
     {
-        // 1. ·Î°í ¸ğµå
-        if (!isChapterSelectionActive)
+Â  Â  Â  Â  // 1. ë¡œê³  ëª¨ë“œ
+Â  Â  Â  Â  if (!isChapterSelectionActive)
         {
             planetPivot.Rotate(0, continuousRotationSpeed * Time.deltaTime, 0, Space.Self);
 
             if (Input.GetMouseButtonDown(0))
             {
-                //PlanetClicker.cs
-            }
+Â  Â  Â  Â  Â  Â  Â  Â  //PlanetClicker.cs
+Â  Â  Â  Â  Â  Â  }
             return;
         }
 
-        // 2. Ã©ÅÍ ¼±ÅÃ ¸ğµå
-        if (isAnimating) return;
+Â  Â  Â  Â  // 2. ì±•í„° ì„ íƒ ëª¨ë“œ
+Â  Â  Â  Â  if (isAnimating) return;
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -76,15 +76,15 @@ public class ChapterSelector : MonoBehaviour
             return;
         }
 
-        // ÀÎµ¦½º¸¦ ¿ªÀüÇÏ´Â ·ÎÁ÷ ¾øÀÌ, »ó/ÇÏ ÀÔ·Â¿¡ µû¶ó Á¤Á÷ÇÏ°Ô -1, 1À» Àü´ŞÇÕ´Ï´Ù.
-        if (Input.GetKeyDown(KeyCode.W))
+Â  Â  Â  Â  // ì¸ë±ìŠ¤ë¥¼ ì—­ì „í•˜ëŠ” ë¡œì§ ì—†ì´, ìƒ/í•˜ ì…ë ¥ì— ë”°ë¼ ì •ì§í•˜ê²Œ -1, 1ì„ ì „ë‹¬í•©ë‹ˆë‹¤.
+Â  Â  Â  Â  if (Input.GetKeyDown(KeyCode.W))
         {
-            ChangeChapter(1); // ÀÌÀü Ã©ÅÍ
-        }
+            ChangeChapter(1); // ì´ì „ ì±•í„°
+Â  Â  Â  Â  }
         else if (Input.GetKeyDown(KeyCode.S))
         {
-            ChangeChapter(-1); // ´ÙÀ½ Ã©ÅÍ
-        }
+            ChangeChapter(-1); // ë‹¤ìŒ ì±•í„°
+Â  Â  Â  Â  }
     }
 
     public int GetTotalChapters()
@@ -94,14 +94,14 @@ public class ChapterSelector : MonoBehaviour
 
     public void HandlePlanetClick(int chapterIndex)
     {
-        // Ã©ÅÍ ¼±ÅÃ ¸ğµå°¡ ÀÌ¹Ì È°¼ºÈ­µÇ¾î ÀÖ°Å³ª ¾Ö´Ï¸ŞÀÌ¼Ç ÁßÀÌ¸é ¹«½Ã
-        if (isChapterSelectionActive || isAnimating) return;
+Â  Â  Â  Â  // ì±•í„° ì„ íƒ ëª¨ë“œê°€ ì´ë¯¸ í™œì„±í™”ë˜ì–´ ìˆê±°ë‚˜ ì• ë‹ˆë©”ì´ì…˜ ì¤‘ì´ë©´ ë¬´ì‹œ
+Â  Â  Â  Â  if (isChapterSelectionActive || isAnimating) return;
 
-        // ÇöÀç Ã©ÅÍ ÀÎµ¦½º¸¦ Å¬¸¯µÈ Çà¼ºÀ¸·Î ¼³Á¤
-        currentChapterIndex = chapterIndex;
+Â  Â  Â  Â  // í˜„ì¬ ì±•í„° ì¸ë±ìŠ¤ë¥¼ í´ë¦­ëœ í–‰ì„±ìœ¼ë¡œ ì„¤ì •
+Â  Â  Â  Â  currentChapterIndex = chapterIndex;
 
-        // Ã©ÅÍ ¼±ÅÃ ¸ğµå È°¼ºÈ­ ½ÃÀÛ
-        ActivateChapterSelection();
+Â  Â  Â  Â  // ì±•í„° ì„ íƒ ëª¨ë“œ í™œì„±í™” ì‹œì‘
+Â  Â  Â  Â  ActivateChapterSelection();
     }
 
     public bool IsChapterSelectionActive()
@@ -109,43 +109,43 @@ public class ChapterSelector : MonoBehaviour
         return isChapterSelectionActive;
     }
 
-    // ·Î°í »óÅÂ¿¡¼­ Ã©ÅÍ ¼±ÅÃ »óÅÂ·Î ÀüÈ¯ÇÏ´Â ÇÔ¼ö
-    void ActivateChapterSelection()
+Â  Â  // ë¡œê³  ìƒíƒœì—ì„œ ì±•í„° ì„ íƒ ìƒíƒœë¡œ ì „í™˜í•˜ëŠ” í•¨ìˆ˜
+Â  Â  void ActivateChapterSelection()
     {
         isAnimating = true;
         isChapterSelectionActive = true;
 
         int targetIndex = currentChapterIndex;
 
-        // 1. Ä«¸Ş¶ó ÀüÈ¯
-        logoVCam.Priority = inactivePriority;
+Â  Â  Â  Â  // 1. ì¹´ë©”ë¼ ì „í™˜
+Â  Â  Â  Â  logoVCam.Priority = inactivePriority;
         chapterVCam.Priority = activePriority;
 
-        // VCamÀÇ ÃßÀû ´ë»ó ÇØÁ¦ (°íÁ¤ ½ÃÁ¡ À¯Áö)
-        chapterVCam.Follow = null;
+Â  Â  Â  Â  // VCamì˜ ì¶”ì  ëŒ€ìƒ í•´ì œ (ê³ ì • ì‹œì  ìœ ì§€)
+Â  Â  Â  Â  chapterVCam.Follow = null;
         chapterVCam.LookAt = null;
 
-        // 2. Çà¼º ±Ëµµ Á¤·ÄÀ» À§ÇÑ ¸ñÇ¥ È¸Àü°ª °è»ê
-        float anglePerChapter = 360f / totalChapters;
+Â  Â  Â  Â  // 2. í–‰ì„± ê¶¤ë„ ì •ë ¬ì„ ìœ„í•œ ëª©í‘œ íšŒì „ê°’ ê³„ì‚°
+Â  Â  Â  Â  float anglePerChapter = 360f / totalChapters;
         float targetYRotation = (targetIndex * anglePerChapter) + alignmentOffset;
         targetYRotation %= 360f;
 
-        // DOTween Sequence ½ÃÀÛ
-        Sequence activationSequence = DOTween.Sequence();
+Â  Â  Â  Â  // DOTween Sequence ì‹œì‘
+Â  Â  Â  Â  Sequence activationSequence = DOTween.Sequence();
 
-        // Çà¼º ±Ëµµ Á¤·Ä ¾Ö´Ï¸ŞÀÌ¼Ç Ãß°¡
-        activationSequence.Append(
-            planetPivot.DORotate(
-                new Vector3(0, targetYRotation, 0),
-                rotationDuration
-            ).SetEase(easeType)
-        );
+Â  Â  Â  Â  // í–‰ì„± ê¶¤ë„ ì •ë ¬ ì• ë‹ˆë©”ì´ì…˜ ì¶”ê°€
+Â  Â  Â  Â  activationSequence.Append(
+      planetPivot.DORotate(
+        new Vector3(0, targetYRotation, 0),
+        rotationDuration
+      ).SetEase(easeType)
+    );
 
-        // Ä«¸Ş¶ó ºí·»µùÀÌ ³¡³¯ ¶§±îÁö Ãß°¡ ´ë±â
-        activationSequence.AppendInterval(cameraBlendDelay);
+Â  Â  Â  Â  // ì¹´ë©”ë¼ ë¸”ë Œë”©ì´ ëë‚  ë•Œê¹Œì§€ ì¶”ê°€ ëŒ€ê¸°
+Â  Â  Â  Â  activationSequence.AppendInterval(cameraBlendDelay);
 
-        // Sequence ¿Ï·á ½Ã ±â´É È°¼ºÈ­
-        activationSequence.OnComplete(() =>
+Â  Â  Â  Â  // Sequence ì™„ë£Œ ì‹œ ê¸°ëŠ¥ í™œì„±í™”
+Â  Â  Â  Â  activationSequence.OnComplete(() =>
         {
             UpdatePlanetSelection(currentChapterIndex);
             HighlightPlanet(planets[currentChapterIndex]);
@@ -159,19 +159,19 @@ public class ChapterSelector : MonoBehaviour
         isChapterSelectionActive = false;
         isAnimating = false;
 
-        // Çà¼º Å©±â ¿ø»ó º¹±¸
-        if (currentStageSelector != null)
+Â  Â  Â  Â  // í–‰ì„± í¬ê¸° ì›ìƒ ë³µêµ¬
+Â  Â  Â  Â  if (currentStageSelector != null)
         {
             Transform selectedPlanetTransform = currentStageSelector.transform;
             selectedPlanetTransform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutQuad);
         }
 
-        // 1. Ä«¸Ş¶ó ÀüÈ¯
-        chapterVCam.Priority = inactivePriority;
+Â  Â  Â  Â  // 1. ì¹´ë©”ë¼ ì „í™˜
+Â  Â  Â  Â  chapterVCam.Priority = inactivePriority;
         logoVCam.Priority = activePriority;
 
-        // 2. Ã©ÅÍ ±â´É ºñÈ°¼ºÈ­ (¸ğµç ½ºÅ×ÀÌÁö ¼û±è)
-        UpdatePlanetSelection(currentChapterIndex);
+Â  Â  Â  Â  // 2. ì±•í„° ê¸°ëŠ¥ ë¹„í™œì„±í™” (ëª¨ë“  ìŠ¤í…Œì´ì§€ ìˆ¨ê¹€)
+Â  Â  Â  Â  UpdatePlanetSelection(currentChapterIndex);
     }
 
     void ChangeChapter(int direction)
@@ -185,14 +185,14 @@ public class ChapterSelector : MonoBehaviour
         targetYRotation %= 360f;
 
         Vector3 targetRotationVector = new Vector3(
-            0,
-            targetYRotation,
-            0
+          0,
+          targetYRotation,
+          0
         );
 
         planetPivot.DORotate(
-            targetRotationVector,
-            rotationDuration
+          targetRotationVector,
+          rotationDuration
         ).SetEase(easeType)
         .OnComplete(() =>
         {
@@ -235,6 +235,13 @@ public class ChapterSelector : MonoBehaviour
                 if (isChapterSelectionActive)
                 {
                     HighlightPlanet(planets[i]);
+
+                    selector.OnEnable();
+
+                    if (selector != null)
+                    {
+                        selector.InitializeSelection();
+                    }                    
                 }
             }
         }

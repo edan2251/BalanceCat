@@ -1,63 +1,55 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using DG.Tweening;
 using System.Collections.Generic;
 
 public class StageSelector : MonoBehaviour
 {
-    // === ÀÎ½ºÆåÅÍ ¼³Á¤ ===
-    // ÀÌ ¸®½ºÆ®´Â ChapterPlanetCreator³ª ¼öµ¿À¸·Î ¿¬°áµË´Ï´Ù.
-    public List<GameObject> stagePoints;
+Â  Â  // === ì¸ìŠ¤í™í„° ì„¤ì • ===
+Â  Â  // ì´ ë¦¬ìŠ¤íŠ¸ëŠ” ChapterPlanetCreatorë‚˜ ìˆ˜ë™ìœ¼ë¡œ ì—°ê²°ë©ë‹ˆë‹¤.
+Â  Â  public List<GameObject> stagePoints;
     public float rotationDuration = 0.3f;
     public Ease easeType = Ease.OutQuad;
 
-    [Header("¶óÀÎ ¿¬°á ¼³Á¤")]
+    [Header("ë¼ì¸ ì—°ê²° ì„¤ì •")]
     public LineRenderer pathRenderer;
     public int segmentsPerStage = 20;
 
-    // === ³»ºÎ º¯¼ö ===
-    private int currentStageIndex = 0;
+Â  Â  // === ë‚´ë¶€ ë³€ìˆ˜ ===
+Â  Â  private int currentStageIndex = 0;
     private int totalStages = 0;
     private bool isAnimating = false;
 
     private ChapterSelector chapterController;
 
-    [Header("ÇÏÀÌ¶óÀÌÆ® ¼³Á¤")]
-    // ÀÎ½ºÆåÅÍ¿¡ ÇÒ´çÇÒ ÇÏÀÌ¶óÀÌÆ® ¸ÓÆ¼¸®¾ó
-    public Material highlightMaterial;
+    [Header("í•˜ì´ë¼ì´íŠ¸ ì„¤ì •")]
+Â  Â  // ì¸ìŠ¤í™í„°ì— í• ë‹¹í•  í•˜ì´ë¼ì´íŠ¸ ë¨¸í‹°ë¦¬ì–¼
+Â  Â  public Material highlightMaterial;
 
-    // ÀÌÀü ¼±ÅÃµÈ ½ºÅ×ÀÌÁöÀÇ MeshRenderer ÄÄÆ÷³ÍÆ®¸¦ ÀúÀå
-    private MeshRenderer lastSelectedRenderer;
-    // ÀÌÀü ¼±ÅÃµÈ ½ºÅ×ÀÌÁöÀÇ ¿ø·¡ ¸ÓÆ¼¸®¾óÀ» ÀúÀå
-    private Material originalMaterial;
+Â  Â  // ì´ì „ ì„ íƒëœ ìŠ¤í…Œì´ì§€ì˜ MeshRenderer ì»´í¬ë„ŒíŠ¸ë¥¼ ì €ì¥
+Â  Â  private MeshRenderer lastSelectedRenderer;
+Â  Â  // ì´ì „ ì„ íƒëœ ìŠ¤í…Œì´ì§€ì˜ ì›ë˜ ë¨¸í‹°ë¦¬ì–¼ì„ ì €ì¥
+Â  Â  private Material originalMaterial;
 
 
-    void Start()
+    void Awake()
     {
         chapterController = FindObjectOfType<ChapterSelector>();
-        if (chapterController == null)
-        {
-            Debug.LogError("ChapterSelector¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù. PlanetPivot¿¡ ºÙ¾î ÀÖ´ÂÁö È®ÀÎÇÏ¼¼¿ä.");
-        }
 
         totalStages = stagePoints.Count;
 
-        if (stagePoints.Count > 0)
+        
+
+        if (totalStages == 0)
         {
-            HighlightStage(stagePoints[0]);
+            Debug.LogError(gameObject.name + "ì— StagePointê°€ ì—†ìŠµë‹ˆë‹¤. ìŠ¤í…Œì´ì§€ ê¸°ëŠ¥ ë¹„í™œì„±í™”.");
+            this.enabled = false;
+            return; // Start í•¨ìˆ˜ ì‹¤í–‰ ì¤‘ë‹¨
         }
 
-        //Ã³À½¿¡´Â StageSelector¸¦ ºñÈ°¼ºÈ­ »óÅÂ·Î ½ÃÀÛÇØ¾ß ÇÕ´Ï´Ù.
-        // ChapterSelector°¡ ¼±ÅÃµÈ Çà¼º¸¸ È°¼ºÈ­ÇÕ´Ï´Ù.
-        this.enabled = false;
+        SetStagesVisibility(false);
 
-        // ¸ğµç ½ºÅ×ÀÌÁö Æ÷ÀÎÆ®¸¦ º¸ÀÌµµ·Ï ¼³Á¤ (»ç¿ëÀÚ ¿äÃ» ¹İ¿µ)
-        foreach (var point in stagePoints)
-        {
-            point.SetActive(true);
-        }
-
-        // ¶óÀÎ ÃÊ±âÈ­ (Çà¼º ¹İÁö¸§Àº Çà¼º ½ºÄÉÀÏ ±â¹İÀ¸·Î °¡Á¤)
-        float planetRadius = transform.localScale.x * 0.5f;
+Â  Â  Â  Â  // ë¼ì¸ ì´ˆê¸°í™” (í–‰ì„± ë°˜ì§€ë¦„ì€ í–‰ì„± ìŠ¤ì¼€ì¼ ê¸°ë°˜ìœ¼ë¡œ ê°€ì •)
+Â  Â  Â  Â  float planetRadius = transform.localScale.x * 0.5f;
         DrawCurvedPath(planetRadius);
 
         InitializeRotation();
@@ -72,148 +64,175 @@ public class StageSelector : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.A))
         {
-            ChangeStage(-1); // ÀÌÀü ½ºÅ×ÀÌÁö
-        }
+            ChangeStage(-1); // ì´ì „ ìŠ¤í…Œì´ì§€
+Â  Â  Â  Â  }
         else if (Input.GetKeyDown(KeyCode.D))
         {
-            ChangeStage(1); // ´ÙÀ½ ½ºÅ×ÀÌÁö
+            ChangeStage(1); // ë‹¤ìŒ ìŠ¤í…Œì´ì§€
+Â  Â  Â  Â  }
+    }
+
+    public void OnEnable()
+    {
+        // chapterControllerê°€ ë¹„ì–´ìˆìœ¼ë©´ ë‹¤ì‹œ í• ë‹¹
+        if (chapterController == null)
+            chapterController = FindObjectOfType<ChapterSelector>();
+
+        // ì´ ìŠ¤í…Œì´ì§€ ìˆ˜ ì¬ê³„ì‚°
+        totalStages = stagePoints.Count;
+
+        // ì´ˆê¸° í•˜ì´ë¼ì´íŠ¸ ë³´ì •
+        if (totalStages > 0 && currentStageIndex < totalStages)
+        {
+            HighlightStage(stagePoints[currentStageIndex]);
         }
     }
 
 
-    // ÃÊ±â È¸Àü ¼³Á¤: 0¹ø ÀÎµ¦½º ½ºÅ×ÀÌÁö°¡ È­¸é Áß¾Ó¿¡ ¿Àµµ·Ï Çà¼ºÀ» µ¹¸³´Ï´Ù.
-    void InitializeRotation()
+Â  Â  // ì´ˆê¸° íšŒì „ ì„¤ì •: 0ë²ˆ ì¸ë±ìŠ¤ ìŠ¤í…Œì´ì§€ê°€ í™”ë©´ ì¤‘ì•™ì— ì˜¤ë„ë¡ í–‰ì„±ì„ ëŒë¦½ë‹ˆë‹¤.
+Â  Â  void InitializeRotation()
     {
         float anglePerStage = 360f / totalStages;
         transform.localEulerAngles = new Vector3(0, 0, 0);
     }
 
-
-    // ½ºÅ×ÀÌÁö º¯°æ ·ÎÁ÷
-    void ChangeStage(int direction)
+    public void InitializeSelection()
     {
-        // 1. ´ÙÀ½ ½ºÅ×ÀÌÁö ÀÎµ¦½º °è»ê ¹× ¼øÈ¯
-        int nextIndex = (currentStageIndex + direction + totalStages) % totalStages;
+        if (totalStages == 0) return;
+
+Â  Â  Â  Â  // 1. ì¸ë±ìŠ¤ë¥¼ 0ìœ¼ë¡œ ê°•ì œ ì´ˆê¸°í™”
+Â  Â  Â  Â  currentStageIndex = 0;
+
+Â  Â  Â  Â  // 2. 1ë²ˆ ìŠ¤í…Œì´ì§€ë¥¼ ì¦‰ì‹œ í•˜ì´ë¼ì´íŠ¸í•˜ì—¬ ì„ íƒ ìƒíƒœë¥¼ ëª…í™•íˆ í•¨
+Â  Â  Â  Â  ChangeStage(0);
+
+    }
+
+Â  Â  // ìŠ¤í…Œì´ì§€ ë³€ê²½ ë¡œì§
+Â  Â  void ChangeStage(int direction)
+    {
+Â  Â  Â  Â  // 1. ë‹¤ìŒ ìŠ¤í…Œì´ì§€ ì¸ë±ìŠ¤ ê³„ì‚° ë° ìˆœí™˜
+Â  Â  Â  Â  int nextIndex = (currentStageIndex + direction + totalStages) % totalStages;
 
         isAnimating = true;
 
-        // 2. ´ÙÀ½ ¼±ÅÃµÉ ½ºÅ×ÀÌÁö Æ÷ÀÎÆ®ÀÇ ·ÎÄÃ À§Ä¡¸¦ °¡Á®¿É´Ï´Ù.
-        GameObject nextStagePoint = stagePoints[nextIndex];
+Â  Â  Â  Â  // 2. ë‹¤ìŒ ì„ íƒë  ìŠ¤í…Œì´ì§€ í¬ì¸íŠ¸ì˜ ë¡œì»¬ ìœ„ì¹˜ë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
+Â  Â  Â  Â  GameObject nextStagePoint = stagePoints[nextIndex];
         Vector3 pointLocalPosition = nextStagePoint.transform.localPosition;
 
-        // 3. ¸ñÇ¥ È¸Àü °è»ê (ÃÖÁ¾ ¾ÈÁ¤È­ ·ÎÁ÷)
-        // -----------------------------------------------------------
+Â  Â  Â  Â  // 3. ëª©í‘œ íšŒì „ ê³„ì‚° (ìµœì¢… ì•ˆì •í™” ë¡œì§)
+Â  Â  Â  Â  // -----------------------------------------------------------
 
-        // 3-1. Up º¤ÅÍ Á¤ÀÇ:
-        Vector3 localUp = Vector3.up;
+Â  Â  Â  Â  // 3-1. Up ë²¡í„° ì •ì˜:
+Â  Â  Â  Â  Vector3 localUp = Vector3.up;
 
-        // 3-2. LookRotation °è»ê: ½ºÅ×ÀÌÁö Æ÷ÀÎÆ®°¡ Çà¼ºÀÇ ·ÎÄÃ -ZÃà¿¡ ¿Àµµ·Ï ÇÏ´Â È¸Àü°ª
-        Quaternion rotationToPointBack = Quaternion.LookRotation(
-            -pointLocalPosition.normalized, // Çà¼º Áß½É ¹æÇâ (Local -ZÃà¿¡ Á¤·ÄµÉ ¹æÇâ)
-            localUp                        // YÃàÀ» ±âÁØÀ¸·Î È¸ÀüÇÏµµ·Ï °­Á¦
-        );
+Â  Â  Â  Â  // 3-2. LookRotation ê³„ì‚°: ìŠ¤í…Œì´ì§€ í¬ì¸íŠ¸ê°€ í–‰ì„±ì˜ ë¡œì»¬ -Zì¶•ì— ì˜¤ë„ë¡ í•˜ëŠ” íšŒì „ê°’
+Â  Â  Â  Â  Quaternion rotationToPointBack = Quaternion.LookRotation(
+      -pointLocalPosition.normalized, // í–‰ì„± ì¤‘ì‹¬ ë°©í–¥ (Local -Zì¶•ì— ì •ë ¬ë  ë°©í–¥)
+Â  Â  Â  Â  Â  Â  localUpÂ  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  // Yì¶•ì„ ê¸°ì¤€ìœ¼ë¡œ íšŒì „í•˜ë„ë¡ ê°•ì œ
+Â  Â  Â  Â  );
 
-        // 3-3. Á¤¸é ÀÀ½Ã ¸ñÇ¥ È¸Àü°ª: Inverse¸¦ Àû¿ëÇÏ¿© ½ºÅ×ÀÌÁö Æ÷ÀÎÆ®°¡ ·ÎÄÃ +ZÃà¿¡ ¿Àµµ·Ï ÇÕ´Ï´Ù.
-        Quaternion targetRotation = Quaternion.Inverse(rotationToPointBack);
+Â  Â  Â  Â  // 3-3. ì •ë©´ ì‘ì‹œ ëª©í‘œ íšŒì „ê°’: Inverseë¥¼ ì ìš©í•˜ì—¬ ìŠ¤í…Œì´ì§€ í¬ì¸íŠ¸ê°€ ë¡œì»¬ +Zì¶•ì— ì˜¤ë„ë¡ í•©ë‹ˆë‹¤.
+Â  Â  Â  Â  Quaternion targetRotation = Quaternion.Inverse(rotationToPointBack);
 
-        // -----------------------------------------------------------
+Â  Â  Â  Â  // -----------------------------------------------------------
 
-        // 4. DOTweenÀ» »ç¿ëÇÏ¿© Çà¼º ¿ÀºêÁ§Æ® ÀÚÃ¼¸¦ ¸ñÇ¥ È¸Àü°ªÀ¸·Î ºÎµå·´°Ô È¸Àü½ÃÅµ´Ï´Ù.
-        transform.DOLocalRotateQuaternion(
-            targetRotation,
-            rotationDuration
-        ).SetEase(easeType)
-        .OnComplete(() =>
-        {
-            currentStageIndex = nextIndex;
-            isAnimating = false;
+Â  Â  Â  Â  // 4. DOTweenì„ ì‚¬ìš©í•˜ì—¬ í–‰ì„± ì˜¤ë¸Œì íŠ¸ ìì²´ë¥¼ ëª©í‘œ íšŒì „ê°’ìœ¼ë¡œ ë¶€ë“œëŸ½ê²Œ íšŒì „ì‹œí‚µë‹ˆë‹¤.
+Â  Â  Â  Â  transform.DOLocalRotateQuaternion(
+      targetRotation,
+      rotationDuration
+    ).SetEase(easeType)
+    .OnComplete(() =>
+    {
+        currentStageIndex = nextIndex;
+        isAnimating = false;
 
-            HighlightStage(stagePoints[currentStageIndex]);
-        });
+        HighlightStage(stagePoints[currentStageIndex]);
+    });
     }
 
-    // ¼±ÅÃµÈ ½ºÅ×ÀÌÁö ÇÏÀÌ¶óÀÌÆ® (¿¹½Ã)
-    void HighlightStage(GameObject selectedPoint)
+Â  Â  // ì„ íƒëœ ìŠ¤í…Œì´ì§€ í•˜ì´ë¼ì´íŠ¸ (ì˜ˆì‹œ)
+Â  Â  void HighlightStage(GameObject selectedPoint)
     {
-        // 1. ÀÌÀü ½ºÅ×ÀÌÁö ¿øº¹
-        if (lastSelectedRenderer != null && originalMaterial != null)
+Â  Â  Â  Â  // 1. ì´ì „ ìŠ¤í…Œì´ì§€ ì›ë³µ
+Â  Â  Â  Â  if (lastSelectedRenderer != null && originalMaterial != null)
         {
-            // ÀÌÀü¿¡ ¼±ÅÃµÈ ½ºÅ×ÀÌÁöÀÇ ¸ÓÆ¼¸®¾óÀ» ¿ø·¡ ¸ÓÆ¼¸®¾ó·Î µÇµ¹¸³´Ï´Ù.
-            lastSelectedRenderer.material = originalMaterial;
+Â  Â  Â  Â  Â  Â  // ì´ì „ì— ì„ íƒëœ ìŠ¤í…Œì´ì§€ì˜ ë¨¸í‹°ë¦¬ì–¼ì„ ì›ë˜ ë¨¸í‹°ë¦¬ì–¼ë¡œ ë˜ëŒë¦½ë‹ˆë‹¤.
+Â  Â  Â  Â  Â  Â  lastSelectedRenderer.material = originalMaterial;
         }
 
-        // 2. »õ·Î¿î ½ºÅ×ÀÌÁö ÇÏÀÌ¶óÀÌÆ®
-        MeshRenderer currentRenderer = selectedPoint.GetComponent<MeshRenderer>();
+Â  Â  Â  Â  // 2. ìƒˆë¡œìš´ ìŠ¤í…Œì´ì§€ í•˜ì´ë¼ì´íŠ¸
+Â  Â  Â  Â  MeshRenderer currentRenderer = selectedPoint.GetComponent<MeshRenderer>();
 
         if (currentRenderer != null && highlightMaterial != null)
         {
-            // 2-1. ¿ø·¡ ¸ÓÆ¼¸®¾ó ÀúÀå
-            // SharedMaterial ´ë½Å .materialÀ» »ç¿ëÇØ¾ß ÀÎ½ºÅÏ½º¿¡¸¸ Àû¿ëµË´Ï´Ù.
-            originalMaterial = currentRenderer.material;
+Â  Â  Â  Â  Â  Â  // 2-1. ì›ë˜ ë¨¸í‹°ë¦¬ì–¼ ì €ì¥
+Â  Â  Â  Â  Â  Â  // SharedMaterial ëŒ€ì‹  .materialì„ ì‚¬ìš©í•´ì•¼ ì¸ìŠ¤í„´ìŠ¤ì—ë§Œ ì ìš©ë©ë‹ˆë‹¤.
+Â  Â  Â  Â  Â  Â  originalMaterial = currentRenderer.material;
 
-            // 2-2. ÇÏÀÌ¶óÀÌÆ® ¸ÓÆ¼¸®¾ó·Î ±³Ã¼
-            currentRenderer.material = highlightMaterial;
+Â  Â  Â  Â  Â  Â  // 2-2. í•˜ì´ë¼ì´íŠ¸ ë¨¸í‹°ë¦¬ì–¼ë¡œ êµì²´
+Â  Â  Â  Â  Â  Â  currentRenderer.material = highlightMaterial;
 
-            // 2-3. ÇöÀç Renderer¸¦ ÀúÀåÇÏ¿© ´ÙÀ½ ¹ø¿¡ ¿øº¹ÇÒ ¼ö ÀÖµµ·Ï ÁØºñ
-            lastSelectedRenderer = currentRenderer;
+Â  Â  Â  Â  Â  Â  // 2-3. í˜„ì¬ Rendererë¥¼ ì €ì¥í•˜ì—¬ ë‹¤ìŒ ë²ˆì— ì›ë³µí•  ìˆ˜ ìˆë„ë¡ ì¤€ë¹„
+Â  Â  Â  Â  Â  Â  lastSelectedRenderer = currentRenderer;
         }
         else if (currentRenderer == null)
         {
-            // ½ºÅ×ÀÌÁö Æ÷ÀÎÆ®¿¡ MeshRenderer°¡ ¾øÀ¸¸é °æ°í ¸Ş½ÃÁö Ãâ·Â
-            Debug.LogWarning($"{selectedPoint.name}¿¡ MeshRenderer ÄÄÆ÷³ÍÆ®°¡ ¾ø½À´Ï´Ù. ÇÏÀÌ¶óÀÌÆ® ÇÒ ¼ö ¾ø½À´Ï´Ù.");
+Â  Â  Â  Â  Â  Â  // ìŠ¤í…Œì´ì§€ í¬ì¸íŠ¸ì— MeshRendererê°€ ì—†ìœ¼ë©´ ê²½ê³  ë©”ì‹œì§€ ì¶œë ¥
+Â  Â  Â  Â  Â  Â  Debug.LogWarning($"{selectedPoint.name}ì— MeshRenderer ì»´í¬ë„ŒíŠ¸ê°€ ì—†ìŠµë‹ˆë‹¤. í•˜ì´ë¼ì´íŠ¸ í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
         }
     }
 
-    // ¶óÀÎÀÌ ½ºÅ×ÀÌÁö Æ÷ÀÎÆ®ÀÇ LocalPositionÀ» ±âÁØÀ¸·Î Çà¼º Ç¥¸éÀ» µû¶ó°¡µµ·Ï ±×¸³´Ï´Ù.
-    public void DrawCurvedPath(float radius)
+Â  Â  // ë¼ì¸ì´ ìŠ¤í…Œì´ì§€ í¬ì¸íŠ¸ì˜ LocalPositionì„ ê¸°ì¤€ìœ¼ë¡œ í–‰ì„± í‘œë©´ì„ ë”°ë¼ê°€ë„ë¡ ê·¸ë¦½ë‹ˆë‹¤.
+Â  Â  public void DrawCurvedPath(float radius)
     {
         if (pathRenderer == null || stagePoints.Count < 2) return;
 
-        // ¿¬°áÇØ¾ß ÇÒ ¼¼±×¸ÕÆ®ÀÇ ÃÑ °³¼ö (7°³¸é 6°³¸¸ ¿¬°á)
-        int totalSegments = stagePoints.Count - 1;
+Â  Â  Â  Â  // ì—°ê²°í•´ì•¼ í•  ì„¸ê·¸ë¨¼íŠ¸ì˜ ì´ ê°œìˆ˜ (7ê°œë©´ 6ê°œë§Œ ì—°ê²°)
+Â  Â  Â  Â  int totalSegments = stagePoints.Count - 1;
         if (totalSegments <= 0)
         {
             pathRenderer.positionCount = 0;
             return;
         }
 
-        // ÇÊ¿äÇÑ ÃÑ Á¡ÀÇ °³¼ö
-        int totalPoints = totalSegments * segmentsPerStage;
+Â  Â  Â  Â  // í•„ìš”í•œ ì´ ì ì˜ ê°œìˆ˜
+Â  Â  Â  Â  int totalPoints = totalSegments * segmentsPerStage;
 
         pathRenderer.positionCount = totalPoints;
 
-        // ¼øÈ¯ ¿¬°áÀ» ÄÚµå·Î ¸í½ÃÀû ÇØÁ¦
-        pathRenderer.loop = false;
+Â  Â  Â  Â  // ìˆœí™˜ ì—°ê²°ì„ ì½”ë“œë¡œ ëª…ì‹œì  í•´ì œ
+Â  Â  Â  Â  pathRenderer.loop = false;
 
-        for (int i = 0; i < totalSegments; i++) // 
-        {
+        for (int i = 0; i < totalSegments; i++) //Â 
+Â  Â  Â  Â  {
             Vector3 startLocalPos = stagePoints[i].transform.localPosition;
-            Vector3 endLocalPos = stagePoints[i + 1].transform.localPosition; // ´ÙÀ½ Æ÷ÀÎÆ®
+            Vector3 endLocalPos = stagePoints[i + 1].transform.localPosition; // ë‹¤ìŒ í¬ì¸íŠ¸
 
-            for (int j = 0; j < segmentsPerStage; j++)
+Â  Â  Â  Â  Â  Â  for (int j = 0; j < segmentsPerStage; j++)
             {
                 float t = (float)j / segmentsPerStage;
 
-                // Slerp (±¸¸é ¼±Çü º¸°£)
-                Vector3 currentPos = Vector3.Slerp(startLocalPos, endLocalPos, t);
+Â  Â  Â  Â  Â  Â  Â  Â  // Slerp (êµ¬ë©´ ì„ í˜• ë³´ê°„)
+Â  Â  Â  Â  Â  Â  Â  Â  Vector3 currentPos = Vector3.Slerp(startLocalPos, endLocalPos, t);
                 currentPos = currentPos.normalized * radius;
 
-                // LineRendererÀÇ PositionCount¿¡ ¸Â°Ô ÀÎµ¦½º °è»ê
-                int pointIndex = (i * segmentsPerStage) + j;
+Â  Â  Â  Â  Â  Â  Â  Â  // LineRendererì˜ PositionCountì— ë§ê²Œ ì¸ë±ìŠ¤ ê³„ì‚°
+Â  Â  Â  Â  Â  Â  Â  Â  int pointIndex = (i * segmentsPerStage) + j;
 
                 pathRenderer.SetPosition(pointIndex, currentPos);
             }
         }
 
-        // ¸¶Áö¸· ÁöÁ¡ (7¹ø ½ºÅ×ÀÌÁö)À» ¸í½ÃÀûÀ¸·Î Ãß°¡ÇÕ´Ï´Ù.
-        pathRenderer.positionCount = totalPoints + 1;
+Â  Â  Â  Â  // ë§ˆì§€ë§‰ ì§€ì  (7ë²ˆ ìŠ¤í…Œì´ì§€)ì„ ëª…ì‹œì ìœ¼ë¡œ ì¶”ê°€í•©ë‹ˆë‹¤.
+Â  Â  Â  Â  pathRenderer.positionCount = totalPoints + 1;
         pathRenderer.SetPosition(totalPoints, stagePoints[totalSegments].transform.localPosition);
     }
 
     public void SetStagesVisibility(bool isVisible)
     {
-        // ½ºÅ×ÀÌÁö Æ÷ÀÎÆ® ÀüÃ¼ °¡½Ã¼º Á¦¾î
-        foreach (var point in stagePoints)
+Â  Â  Â  Â  // ìŠ¤í…Œì´ì§€ í¬ì¸íŠ¸ ì „ì²´ ê°€ì‹œì„± ì œì–´
+Â  Â  Â  Â  foreach (var point in stagePoints)
         {
             if (point != null)
             {
@@ -221,8 +240,8 @@ public class StageSelector : MonoBehaviour
             }
         }
 
-        // ¶óÀÎ ·»´õ·¯ °¡½Ã¼º Á¦¾î
-        if (pathRenderer != null)
+Â  Â  Â  Â  // ë¼ì¸ ë Œë”ëŸ¬ ê°€ì‹œì„± ì œì–´
+Â  Â  Â  Â  if (pathRenderer != null)
         {
             pathRenderer.enabled = isVisible;
         }
