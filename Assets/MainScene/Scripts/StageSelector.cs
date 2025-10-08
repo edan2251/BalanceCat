@@ -4,11 +4,29 @@ using System.Collections.Generic;
 
 public class StageSelector : MonoBehaviour
 {
+    [System.Serializable]
+    public struct StageRotationGroup
+    {
+        [Tooltip("회전 시작하는 스테이지")]
+        public int startIndex;
+        [Tooltip("회전 끝나는 스테이지")]
+        public int endIndex;
+        [Tooltip("X축 회전 목표값")]
+        public float targetLocalXRotation;
+        [Tooltip("Y축 회전 목표값")]
+        public float targetLocalYRotation; // Y축 회전값 추가
+        [Tooltip("Z축 회전 목표값")]
+        public float targetLocalZRotation;
+    }
+
     // === 인스펙터 설정 ===
     // 이 리스트는 ChapterPlanetCreator나 수동으로 연결됩니다.
     public List<GameObject> stagePoints;
     public float rotationDuration = 0.3f;
     public Ease easeType = Ease.OutQuad;
+
+    [Header("스테이지 기반 회전 설정")]
+    public List<StageRotationGroup> rotationGroups;
 
     [Header("라인 연결 설정")]
     public LineRenderer pathRenderer;
@@ -37,19 +55,17 @@ public class StageSelector : MonoBehaviour
 
         totalStages = stagePoints.Count;
 
-        
-
         if (totalStages == 0)
         {
             Debug.LogError(gameObject.name + "에 StagePoint가 없습니다. 스테이지 기능 비활성화.");
             this.enabled = false;
-            return; // Start 함수 실행 중단
+            return;
         }
 
         SetStagesVisibility(false);
 
-        // 라인 초기화 (행성 반지름은 행성 스케일 기반으로 가정)
-        float planetRadius = transform.localScale.x * 0.5f;
+        // 라인 초기화 (행성 반지름은 행성 스케일 기반으로 가정)
+        float planetRadius = transform.localScale.x * 0.5f;
         DrawCurvedPath(planetRadius);
 
         InitializeRotation();
@@ -57,7 +73,7 @@ public class StageSelector : MonoBehaviour
 
     void Update()
     {
-        if (isAnimating || chapterController == null || !chapterController.IsChapterSelectionActive())
+        if (chapterController == null || !chapterController.IsChapterSelectionActive())
         {
             return;
         }
@@ -65,26 +81,23 @@ public class StageSelector : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.A))
         {
             ChangeStage(-1); // 이전 스테이지
-        }
+        }
         else if (Input.GetKeyDown(KeyCode.D))
         {
             ChangeStage(1); // 다음 스테이지
-        }
+        }
     }
 
     public void OnEnable()
     {
-        // chapterController가 비어있으면 다시 할당
         if (chapterController == null)
             chapterController = FindObjectOfType<ChapterSelector>();
 
-        // 총 스테이지 수 재계산
         totalStages = stagePoints.Count;
 
-        // 초기 하이라이트 보정
         if (totalStages > 0 && currentStageIndex < totalStages)
         {
-            HighlightStage(stagePoints[currentStageIndex]);
+            ChangeStage(0);
         }
     }
 
@@ -92,7 +105,6 @@ public class StageSelector : MonoBehaviour
     // 초기 회전 설정: 0번 인덱스 스테이지가 화면 중앙에 오도록 행성을 돌립니다.
     void InitializeRotation()
     {
-        float anglePerStage = 360f / totalStages;
         transform.localEulerAngles = new Vector3(0, 0, 0);
     }
 
@@ -100,11 +112,10 @@ public class StageSelector : MonoBehaviour
     {
         if (totalStages == 0) return;
 
-        // 1. 인덱스를 0으로 강제 초기화
-        currentStageIndex = 0;
+        currentStageIndex = 0;
 
-        // 2. 1번 스테이지를 즉시 하이라이트하여 선택 상태를 명확히 함
-        ChangeStage(0);
+        // 0번 스테이지로 초기화하면서 회전 및 하이라이트 적용
+        ChangeStage(0);
 
     }
 
@@ -112,75 +123,94 @@ public class StageSelector : MonoBehaviour
     void ChangeStage(int direction)
     {
         // 1. 다음 스테이지 인덱스 계산 및 순환
-        int nextIndex = (currentStageIndex + direction + totalStages) % totalStages;
+        int nextIndex = (currentStageIndex + direction + totalStages) % totalStages;
 
-        isAnimating = true;
+        if (direction != 0 && nextIndex == currentStageIndex) return;
 
-        // 2. 다음 선택될 스테이지 포인트의 로컬 위치를 가져옵니다.
-        GameObject nextStagePoint = stagePoints[nextIndex];
-        Vector3 pointLocalPosition = nextStagePoint.transform.localPosition;
+        // **딜레이 제거 핵심:** 현재 실행 중인 모든 DOTween 애니메이션을 즉시 중단합니다.
+        // 이는 빠른 입력 시 애니메이션이 겹치거나 지연되는 것을 방지합니다.
+        transform.DOKill();
+        isAnimating = true; // 애니메이션 추적용 플래그만 유지
 
-        // 3. 목표 회전 계산 (최종 안정화 로직)
-        // -----------------------------------------------------------
+        // 2. 현재 인덱스에 해당하는 목표 X, Y, Z 회전 데이터를 찾습니다.
+        StageRotationGroup rotationData = GetRotationDataForStage(nextIndex);
 
-        // 3-1. Up 벡터 정의:
-        Vector3 localUp = Vector3.up;
+        // 3. 목표 로컬 오일러 각도 벡터 생성
+        Vector3 targetRotationVector = new Vector3(
+            rotationData.targetLocalXRotation, // X축 회전 적용
+            rotationData.targetLocalYRotation, // Y축 회전 적용
+            rotationData.targetLocalZRotation  // Z축 회전 적용
+        );
 
-        // 3-2. LookRotation 계산: 스테이지 포인트가 행성의 로컬 -Z축에 오도록 하는 회전값
-        Quaternion rotationToPointBack = Quaternion.LookRotation(
-      -pointLocalPosition.normalized, // 행성 중심 방향 (Local -Z축에 정렬될 방향)
-            localUp                        // Y축을 기준으로 회전하도록 강제
-        );
+        // 4. DOTween을 사용하여 행성 오브젝트 자체를 목표 회전값으로 부드럽게 회전시킵니다.
+        transform.DOLocalRotate(
+            targetRotationVector,
+            rotationDuration
+        ).SetEase(easeType)
+        .OnComplete(() =>
+        {
+            currentStageIndex = nextIndex;
+            isAnimating = false; // 애니메이션 완료
 
-        // 3-3. 정면 응시 목표 회전값: Inverse를 적용하여 스테이지 포인트가 로컬 +Z축에 오도록 합니다.
-        Quaternion targetRotation = Quaternion.Inverse(rotationToPointBack);
-
-        // -----------------------------------------------------------
-
-        // 4. DOTween을 사용하여 행성 오브젝트 자체를 목표 회전값으로 부드럽게 회전시킵니다.
-        transform.DOLocalRotateQuaternion(
-      targetRotation,
-      rotationDuration
-    ).SetEase(easeType)
-    .OnComplete(() =>
-    {
-        currentStageIndex = nextIndex;
-        isAnimating = false;
-
-        HighlightStage(stagePoints[currentStageIndex]);
-    });
+            // 회전 완료 후 하이라이트 적용
+            HighlightStage(stagePoints[currentStageIndex]);
+        });
     }
 
     // 선택된 스테이지 하이라이트 (예시)
     void HighlightStage(GameObject selectedPoint)
     {
         // 1. 이전 스테이지 원복
-        if (lastSelectedRenderer != null && originalMaterial != null)
+        if (lastSelectedRenderer != null && originalMaterial != null)
         {
-            // 이전에 선택된 스테이지의 머티리얼을 원래 머티리얼로 되돌립니다.
-            lastSelectedRenderer.material = originalMaterial;
+            // 이전에 선택된 스테이지의 머티리얼을 원래 머티리얼로 되돌립니다.
+            lastSelectedRenderer.material = originalMaterial;
         }
 
-        // 2. 새로운 스테이지 하이라이트
-        MeshRenderer currentRenderer = selectedPoint.GetComponent<MeshRenderer>();
+        // 2. 새로운 스테이지 하이라이트
+        MeshRenderer currentRenderer = selectedPoint.GetComponent<MeshRenderer>();
 
         if (currentRenderer != null && highlightMaterial != null)
         {
-            // 2-1. 원래 머티리얼 저장
-            // SharedMaterial 대신 .material을 사용해야 인스턴스에만 적용됩니다.
-            originalMaterial = currentRenderer.material;
+            // 2-1. 원래 머티리얼 저장
+            originalMaterial = currentRenderer.material;
 
-            // 2-2. 하이라이트 머티리얼로 교체
-            currentRenderer.material = highlightMaterial;
+            // 2-2. 하이라이트 머티리얼로 교체
+            currentRenderer.material = highlightMaterial;
 
-            // 2-3. 현재 Renderer를 저장하여 다음 번에 원복할 수 있도록 준비
-            lastSelectedRenderer = currentRenderer;
+            // 2-3. 현재 Renderer를 저장하여 다음 번에 원복할 수 있도록 준비
+            lastSelectedRenderer = currentRenderer;
         }
         else if (currentRenderer == null)
         {
-            // 스테이지 포인트에 MeshRenderer가 없으면 경고 메시지 출력
-            Debug.LogWarning($"{selectedPoint.name}에 MeshRenderer 컴포넌트가 없습니다. 하이라이트 할 수 없습니다.");
+            // 스테이지 포인트에 MeshRenderer가 없으면 경고 메시지 출력
+            Debug.LogWarning($"{selectedPoint.name}에 MeshRenderer 컴포넌트가 없습니다. 하이라이트 할 수 없습니다.");
         }
+    }
+
+    // 현재 스테이지 인덱스에 맞는 목표 X, Z축 회전 데이터를 찾는 함수
+    StageRotationGroup GetRotationDataForStage(int stageIndex)
+    {
+        int stageID = stageIndex + 1;
+
+        foreach (var group in rotationGroups)
+        {
+            if (stageID >= group.startIndex && stageID <= group.endIndex)
+            {
+                return group;
+            }
+        }
+
+        // 일치하는 그룹이 없으면 현재 회전값을 기본값으로 하는 데이터를 반환
+        Vector3 currentRotation = transform.localEulerAngles;
+        return new StageRotationGroup
+        {
+            startIndex = -1,
+            endIndex = -1,
+            targetLocalXRotation = currentRotation.x,
+            targetLocalYRotation = currentRotation.y, // 현재 Y값 유지
+            targetLocalZRotation = currentRotation.z
+        };
     }
 
     // 라인이 스테이지 포인트의 LocalPosition을 기준으로 행성 표면을 따라가도록 그립니다.
