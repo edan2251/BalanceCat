@@ -39,7 +39,6 @@ public class StageSelector : MonoBehaviour
     // === 내부 변수 ===
     private int currentStageIndex = 0;
     private int totalStages = 0;
-    private bool isAnimating = false;
 
     private StageUIManager uiManager;
 
@@ -138,7 +137,6 @@ public class StageSelector : MonoBehaviour
         // **딜레이 제거 핵심:** 현재 실행 중인 모든 DOTween 애니메이션을 즉시 중단합니다.
         // 이는 빠른 입력 시 애니메이션이 겹치거나 지연되는 것을 방지합니다.
         transform.DOKill();
-        isAnimating = true; // 애니메이션 추적용 플래그만 유지
 
         // 2. 현재 인덱스에 해당하는 목표 X, Y, Z 회전 데이터를 찾습니다.
         StageRotationGroup rotationData = GetRotationDataForStage(nextIndex);
@@ -158,7 +156,6 @@ public class StageSelector : MonoBehaviour
         .OnComplete(() =>
         {
             currentStageIndex = nextIndex;
-            isAnimating = false; // 애니메이션 완료
 
             // 1. 회전 완료 후 하이라이트 적용
             HighlightStage(stagePoints[currentStageIndex]);

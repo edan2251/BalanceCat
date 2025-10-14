@@ -1,44 +1,87 @@
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.UI; // UI 사용을 위해 필수
+using System;
 
 public class StageUIManager : MonoBehaviour
 {
-    // 인스펙터에 연결할 UI 요소들
-    public Text chapterNameText;
-    public Text stageTitleText;
-    public Text stageSynopsisText;
-    public Text questText;
-    public Text rewardText;
-    public Button startButton; // 시작 버튼
+    [Header("Main UI Panel")]
+    public GameObject mainUIPanel;
 
-    // StageSelector가 호출할 메인 업데이트 함수
+    // === UI 요소 연결 (인스펙터에서 할당) ===
+    [Header("UI Text Fields")]
+    public Text chapterNameText;     // [ 챕터명 ]
+    public Text stageTitleText;      // [ 1 스테이지 ]
+    public Text stageSynopsisText;   // 스테이지 시놉시스
+    public Text questText;           // 주어진 퀘스트
+    public Text rewardText;          // 보상 정보
+
+    [Header("UI Button")]
+    public Button startButton;       // 시작 버튼
+
+    [Header("참조")]
+    public ChapterSelector chapterSelector; 
+
+
+    void Start()
+    {
+        if (chapterSelector == null)
+        {
+            chapterSelector = FindObjectOfType<ChapterSelector>();
+        }
+
+        if (chapterSelector == null || !chapterSelector.IsChapterSelectionActive())
+        {
+            gameObject.SetActive(false);
+        }
+    }
+
+
+    // StageSelector가 호출하여 UI 정보를 업데이트하는 함수
     public void UpdateStageInfo(StageData data)
     {
+        gameObject.SetActive(true);
+
         if (data == null)
         {
-            // 데이터가 null일 경우 UI를 숨기거나 초기화
+            Debug.LogError("StageData가 NULL입니다. UI 업데이트를 건너뜁니다.");
+            // 데이터가 없으면 UI를 숨깁니다.
+            chapterNameText.text = "데이터 오류";
+            stageTitleText.text = "";
             gameObject.SetActive(false);
             return;
         }
 
-        gameObject.SetActive(true);
+        // === 데이터 기반으로 UI 텍스트 업데이트 ===
 
-        // 텍스트 업데이트
-        chapterNameText.text = data.chapterName;
-        // "3 스테이지" 처럼 현재 스테이지 ID와 함께 표시   /*{data.stageID}*/
+        // 1. 챕터명 및 스테이지명
+        chapterNameText.text = $"{data.chapterName}";
         stageTitleText.text = $"{data.stageTitle}";
+
+        // 2. 상세 정보
         stageSynopsisText.text = data.synopsis;
         questText.text = $"{data.questDescription}";
         rewardText.text = $"{data.rewardName}";
 
-        // 시작 버튼 이벤트 설정 (예시)
+        // 3. 시작 버튼 리스너 업데이트
         startButton.onClick.RemoveAllListeners();
         startButton.onClick.AddListener(() => StartStage(data));
+    }
+
+    // UI 숨기기 (예: 챕터 선택 모드를 빠져나갈 때 ChapterSelector에서 호출)
+    public void HideUI()
+    {
+        if (mainUIPanel != null)
+        {
+            mainUIPanel.SetActive(false);
+        }
     }
 
     private void StartStage(StageData data)
     {
         Debug.Log($"스테이지 시작: 챕터 {data.chapterName}, ID {data.stageID}");
-        // 실제 씬 로딩 또는 게임 로직 호출
+
+        // TODO:
+        // 1. ChapterSelector를 통해 챕터 선택 모드 비활성화 (카메라 원래 위치 복귀 등)
+        // 2. 실제 게임 씬 로드 로직 (SceneManager.LoadScene 등) 추가
     }
 }

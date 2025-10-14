@@ -33,6 +33,8 @@ public class ChapterSelector : MonoBehaviour
     private float currentTargetRotation = 0f;
     private StageSelector currentStageSelector = null;
 
+    public StageUIManager uiManager;
+
     // 상태 제어를 위한 핵심 변수
     private bool isChapterSelectionActive = false; // 초기값: false (로고 모드)
 
@@ -51,13 +53,24 @@ public class ChapterSelector : MonoBehaviour
 
         isChapterSelectionActive = false;
         UpdatePlanetSelection(0); // 로고 모드 초기화
-    }
+
+        if (uiManager != null)
+        {
+            uiManager.HideUI();
+        }
+    }
 
     void Update()
     {
         // 1. 로고 모드
         if (!isChapterSelectionActive)
         {
+            if (uiManager != null && uiManager.mainUIPanel != null && uiManager.mainUIPanel.activeSelf)
+            {
+                Debug.Log("UI숨겼음");
+                uiManager.HideUI();
+            }
+
             planetPivot.Rotate(0, continuousRotationSpeed * Time.deltaTime, 0, Space.Self);
 
             if (Input.GetMouseButtonDown(0))
@@ -159,6 +172,11 @@ public class ChapterSelector : MonoBehaviour
         isChapterSelectionActive = false;
         isAnimating = false;
 
+        if (uiManager != null)
+        {
+            uiManager.HideUI();
+        }
+
         // 행성 크기 원상 복구
         if (currentStageSelector != null)
         {
@@ -234,6 +252,14 @@ public class ChapterSelector : MonoBehaviour
 
                 if (isChapterSelectionActive)
                 {
+                    if (uiManager != null)
+                    {
+                        if (uiManager.mainUIPanel != null && !uiManager.mainUIPanel.activeSelf)
+                        {
+                            uiManager.mainUIPanel.SetActive(true);
+                        }
+                    }
+
                     HighlightPlanet(planets[i]);
 
                     selector.OnEnable();

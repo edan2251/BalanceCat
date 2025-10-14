@@ -12,4 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98d56198f6e7c6348b2145c077832751, type: 3}
   m_Name: ChapterData_ 1
   m_EditorClassIdentifier: 
-  stages: []
+  stages:
+  - {fileID: 11400000, guid: d943ebf97726bcf48b8d5666e218c224, type: 2}
+  - {fileID: 11400000, guid: ee6bdc47665d2f2479114a680b11bfef, type: 2}
+  - {fileID: 11400000, guid: ac9c236223f706240afc06d08f5622af, type: 2}
