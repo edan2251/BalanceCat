@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd3f85b616fd4d14982007fd9696fc72, type: 3}
+  m_Name: StageData_4_ 3
+  m_EditorClassIdentifier: 
+  stageID: 1
+  chapterName: "\uCC55\uD130 \uC774\uB984"
+  stageTitle: "\uC2A4\uD14C\uC774\uC9C0 \uC774\uB984"
+  synopsis: "\uC2A4\uD14C\uC774\uC9C0\uC758 \uAC04\uB7B5\uD55C \uBC30\uACBD \uC774\uC57C\uAE30\uB098
+    \uBAA9\uD45C\uB97C \uC124\uBA85\uD569\uB2C8\uB2E4."
+  questDescription: "\uC774\uACF3\uC5D0 \uD018\uC2A4\uD2B8 \uC124\uBA85\uC744 \uC785\uB825\uD558\uC2DC\uC624"
+  rewardName: "\uC774\uACF3\uC5D0 \uD018\uC2A4\uD2B8 \uBCF4\uC0C1\uC744 \uC785\uB825\uD558\uC2DC\uC624"

@@ -22,6 +22,10 @@ public class StageSelector : MonoBehaviour
     // === 인스펙터 설정 ===
     // 이 리스트는 ChapterPlanetCreator나 수동으로 연결됩니다.
     public List<GameObject> stagePoints;
+
+    [Header("ChapterData ScriptableOBJ연결")]
+    public ChapterData chapterData;
+
     public float rotationDuration = 0.3f;
     public Ease easeType = Ease.OutQuad;
 
@@ -37,6 +41,8 @@ public class StageSelector : MonoBehaviour
     private int totalStages = 0;
     private bool isAnimating = false;
 
+    private StageUIManager uiManager;
+
     private ChapterSelector chapterController;
 
     [Header("하이라이트 설정")]
@@ -51,6 +57,8 @@ public class StageSelector : MonoBehaviour
 
     void Awake()
     {
+        uiManager = FindObjectOfType<StageUIManager>();
+
         chapterController = FindObjectOfType<ChapterSelector>();
 
         totalStages = stagePoints.Count;
@@ -152,8 +160,14 @@ public class StageSelector : MonoBehaviour
             currentStageIndex = nextIndex;
             isAnimating = false; // 애니메이션 완료
 
-            // 회전 완료 후 하이라이트 적용
+            // 1. 회전 완료 후 하이라이트 적용
             HighlightStage(stagePoints[currentStageIndex]);
+
+            // 2. UI 매니저에 현재 데이터 전달하여 업데이트 요청
+            if (uiManager != null)
+            {
+                uiManager.UpdateStageInfo(GetCurrentSelectedStageData());
+            }
         });
     }
 
@@ -276,4 +290,25 @@ public class StageSelector : MonoBehaviour
             pathRenderer.enabled = isVisible;
         }
     }
+
+    // 현재 선택된 스테이지의 데이터를 반환하는 함수
+    public StageData GetCurrentSelectedStageData()
+    {
+        if (chapterData == null)
+        {
+            Debug.LogError("Chapter Data가 StageSelector에 연결되지 않았습니다!");
+            return null;
+        }
+
+        if (currentStageIndex < 0 || currentStageIndex >= chapterData.stages.Count)
+        {
+            Debug.LogError($"잘못된 Stage Index: {currentStageIndex}.");
+            return null;
+        }
+
+        // currentStageIndex는 0부터 시작하는 리스트 인덱스를 나타냅니다.
+        // StageData 리스트에서 해당 인덱스의 데이터를 반환합니다.
+        return chapterData.stages[currentStageIndex];
+    }
+
 }
