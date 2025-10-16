@@ -12,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
     public float airMultiplier;
     bool readyToJump = true;
 
+
     [Header("Keybinds")]
     public KeyCode jumpKey = KeyCode.Space;
 
@@ -19,6 +20,10 @@ public class PlayerMovement : MonoBehaviour
     public float playerHeight;
     public LayerMask whatIsGround;
     bool grounded;
+
+    //SpriteDirectionalController_Octo 에서 참조하는 것들
+    [HideInInspector] public bool IsGrounded => grounded;
+    [HideInInspector] public float FlatSpeed => new Vector3(rb.velocity.x, 0f, rb.velocity.z).magnitude;
 
     [Header("References")]
     public Transform orientation;
@@ -37,7 +42,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
+        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.15f + 0.11f, whatIsGround);
 
         GetInput();
         SpeedControl();
@@ -47,20 +52,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (CameraToggle.use2D)
-            MovePlayer2D();
-        else
-        {
             MovePlayer();
             RotatePlayer();
-        }
-    }
-
-    private void MovePlayer2D()
-    {
-        float inputX = Input.GetAxisRaw("Horizontal");
-        Vector3 move = new Vector3(inputX, 0f, 0f); // x축 이동만
-        rb.MovePosition(rb.position + move * moveSpeed * Time.fixedDeltaTime);
     }
 
     private void GetInput()
@@ -109,6 +102,8 @@ public class PlayerMovement : MonoBehaviour
     {
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+
+        grounded = false;
     }
 
     private void ResetJump()

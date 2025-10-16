@@ -15,8 +15,6 @@ public class SpirteDirectionalController : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (CameraToggle.use2D) return;
-
         float horizontalInput = playerMovement.horizontalInput;
         float verticalInput = playerMovement.verticalInput;
 
@@ -56,52 +54,3 @@ public class SpirteDirectionalController : MonoBehaviour
         animator.SetBool("isMoving", flatVel.magnitude > 0.1f);
     }
 }
-
-
-/*
- * using UnityEngine;
-
-public class SpirteDirectionalController : MonoBehaviour
-{
-    [SerializeField] Rigidbody rb;
-    [SerializeField] float backAngle = 65f;
-    [SerializeField] float sideAngle = 155f;
-    [SerializeField] Transform mainTransform;
-    [SerializeField] Animator animator;
-    [SerializeField] SpriteRenderer spriteRenderer;
-
-    private void LateUpdate()
-    {
-        Vector3 camForward = new Vector3(Camera.main.transform.forward.x, 0f, Camera.main.transform.forward.z);
-        Vector3 charForward = mainTransform.forward;
-
-        float signedAngle = Vector3.SignedAngle(charForward, camForward, Vector3.up);
-
-        // 기본 방향
-        Vector2 animationDirection = new Vector2(0f, -1f);
-
-        float angle = Mathf.Abs(signedAngle);
-
-        if (angle < backAngle)
-            animationDirection = new Vector2(0f, -1f); // Front
-        else if (angle < sideAngle)
-        {
-            animationDirection = signedAngle < 0 ? new Vector2(-1f, 0f) : new Vector2(1f, 0f); // Left/Right
-        }
-        else
-            animationDirection = new Vector2(0f, 1f); // Back
-
-        // 방향 전달
-        animator.SetFloat("MoveX", animationDirection.x);
-        animator.SetFloat("MoveY", animationDirection.y);
-
-        // 이동 여부
-        Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-        bool isMoving = flatVel.magnitude > 0.1f;
-        animator.SetBool("isMoving", isMoving);
-    }
-
-
-}
-
- */
