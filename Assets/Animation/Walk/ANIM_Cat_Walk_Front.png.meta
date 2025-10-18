@@ -1,12 +1,12 @@
 fileFormatVersion: 2
-guid: 9e8783c1e4faa5348ac47232389ad104
+guid: f7c8e842f6c44024d9fe6bdab6888d28
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 0
+    enableMipMap: 1
     sRGBTexture: 1
     linearTexture: 0
     fadeOut: 0
@@ -37,8 +37,8 @@ TextureImporter:
     filterMode: 1
     aniso: 1
     mipBias: 0
-    wrapU: 1
-    wrapV: 1
+    wrapU: 0
+    wrapV: 0
     wrapW: 0
   nPOTScale: 0
   lightmap: 0
@@ -52,7 +52,7 @@ TextureImporter:
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
-  alphaIsTransparency: 1
+  alphaIsTransparency: 0
   spriteTessellationDetail: -1
   textureType: 8
   textureShape: 1
@@ -97,169 +97,169 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Cat_Walk_Front
+      name: ANIM_Cat_Walk_Front_0
       rect:
         serializedVersion: 2
-        x: 69
+        x: 0
+        y: 0
+        width: 241
+        height: 320
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: af8a3adb18f96a34c8f87ff100c82170
+      internalID: 2042892383
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ANIM_Cat_Walk_Front_1
+      rect:
+        serializedVersion: 2
+        x: 259
         y: 0
         width: 242
         height: 320
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fe0d087c1e4acec428da84dce0702a10
-      internalID: -601099018
+      spriteID: 0492fd5137d19624a96d306c3c3e0afb
+      internalID: 344959850
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cat_Walk_FrontLeft
+      name: ANIM_Cat_Walk_Front_2
       rect:
         serializedVersion: 2
-        x: 418
-        y: 0
-        width: 304
-        height: 320
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 63de89fa03fed304f9d03360c787806e
-      internalID: 805082217
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Cat_Walk_Left
-      rect:
-        serializedVersion: 2
-        x: 758
-        y: 0
-        width: 384
-        height: 320
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 7b1aadb5352f67f4faa64d8e3df454f3
-      internalID: 282501496
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Cat_Walk_BackLeft
-      rect:
-        serializedVersion: 2
-        x: 1178
-        y: 0
-        width: 304
-        height: 320
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 5ad51294b97549548a3d149e2ea3b792
-      internalID: -865583312
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Cat_Walk_Back
-      rect:
-        serializedVersion: 2
-        x: 1589
+        x: 519
         y: 0
         width: 242
         height: 320
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 49d64cd4fea1e1b4ea3098f9ed89f03c
-      internalID: 1420918291
+      spriteID: 3e26da31ed0a9fb4cbb08cebf528077f
+      internalID: 1689964346
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cat_Walk_BackRight
+      name: ANIM_Cat_Walk_Front_3
       rect:
         serializedVersion: 2
-        x: 1938
+        x: 779
         y: 0
-        width: 304
+        width: 242
         height: 320
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9e63e50f7709d37408301e0c2b37b20b
-      internalID: 845436480
+      spriteID: f111df8e02b190c42b1c613645665679
+      internalID: -796631627
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cat_Walk_Right
+      name: ANIM_Cat_Walk_Front_4
       rect:
         serializedVersion: 2
-        x: 2278
+        x: 1039
         y: 0
-        width: 384
+        width: 242
         height: 320
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 76735e3ba54a8294b9fec33972626fe8
-      internalID: -1115166247
+      spriteID: 38a017920aa3dbb4cab7e05d4971a1c2
+      internalID: 1281551775
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Cat_Walk_FrontRight
+      name: ANIM_Cat_Walk_Front_5
       rect:
         serializedVersion: 2
-        x: 2698
+        x: 1299
         y: 0
-        width: 304
+        width: 242
         height: 320
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 195275563e506fd4495f670ab9f3228d
-      internalID: 741375633
+      spriteID: 07ab4e51d1ec96549b34097b3a6a169b
+      internalID: 502493331
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ANIM_Cat_Walk_Front_6
+      rect:
+        serializedVersion: 2
+        x: 1559
+        y: 0
+        width: 242
+        height: 320
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7d3e4ca86b96aa947b4c40de9713d22c
+      internalID: -1643252273
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ANIM_Cat_Walk_Front_7
+      rect:
+        serializedVersion: 2
+        x: 1819
+        y: 0
+        width: 241
+        height: 320
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1c556c3be4a50e2469954d7d2336f9a9
+      internalID: -1127573041
       vertices: []
       indices: 
       edges: []
@@ -267,7 +267,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 3ab406ae47c6b9d4a86cdf9bd030bc05
+    spriteID: c0154b02985e4d84aa02903f96bbd79f
     internalID: 0
     vertices: []
     indices: 
@@ -275,14 +275,14 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Cat_Walk_Back: 1420918291
-      Cat_Walk_BackLeft: -865583312
-      Cat_Walk_BackRight: 845436480
-      Cat_Walk_Front: -601099018
-      Cat_Walk_FrontLeft: 805082217
-      Cat_Walk_FrontRight: 741375633
-      Cat_Walk_Left: 282501496
-      Cat_Walk_Right: -1115166247
+      ANIM_Cat_Walk_Front_0: 2042892383
+      ANIM_Cat_Walk_Front_1: 344959850
+      ANIM_Cat_Walk_Front_2: 1689964346
+      ANIM_Cat_Walk_Front_3: -796631627
+      ANIM_Cat_Walk_Front_4: 1281551775
+      ANIM_Cat_Walk_Front_5: 502493331
+      ANIM_Cat_Walk_Front_6: -1643252273
+      ANIM_Cat_Walk_Front_7: -1127573041
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
