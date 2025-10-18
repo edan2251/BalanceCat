@@ -16,8 +16,8 @@ TagManager:
   - Interactable
   - 
   - whatIsGround
-  - 
-  - 
+  - WightSensor
+  - WightPlatform
   - 
   - 
   - 
