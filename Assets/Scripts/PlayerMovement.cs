@@ -16,12 +16,18 @@ public class PlayerMovement : MonoBehaviour
     [Header("Keybinds")]
     public KeyCode jumpKey = KeyCode.Space;
 
+    // --- 지면 체크 설정 ---
     [Header("Ground Check")]
-    public float playerHeight;
+    [Tooltip("플레이어 콜라이더의 높이 절반값 (반지름)")]
+    public float playerHeight = 1.0f;
+    [Tooltip("지면 체크 박스의 가로/세로 크기 (절반 크기)")]
+    public float groundCheckExtent = 0.4f;
+    [Tooltip("지면 체크 박스를 아래로 쏘는 추가 거리 (안정성 마진)")]
+    public float groundCheckMargin = 0.1f;
     public LayerMask whatIsGround;
     bool grounded;
 
-    //SpriteDirectionalController_Octo 에서 참조하는 것들
+    // SpriteDirectionalController_Octo 에서 참조하는 속성
     [HideInInspector] public bool IsGrounded => grounded;
     [HideInInspector] public float FlatSpeed => new Vector3(rb.velocity.x, 0f, rb.velocity.z).magnitude;
 
@@ -38,22 +44,44 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
+        if (rb == null) rb = GetComponent<Rigidbody>();
     }
 
     private void Update()
     {
-        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.15f + 0.11f, whatIsGround);
+        // ----------------------------------------------------
+        // BoxCast를 사용한 지면 체크
+        // ----------------------------------------------------
+
+        // 캡슐 콜라이더의 발바닥 근처를 중심으로 설정
+        Vector3 boxCenter = transform.position + Vector3.down * (playerHeight - 0.05f);
+
+        // 체크 박스의 절반 크기 
+        Vector3 boxHalfExtents = new Vector3(groundCheckExtent, 0.05f, groundCheckExtent);
+
+        // BoxCast 실행: 박스를 아래로 쏴서 지면 레이어에 닿는지 확인
+        grounded = Physics.BoxCast(
+            boxCenter,
+            boxHalfExtents,
+            Vector3.down,
+            Quaternion.identity,
+            groundCheckMargin, // 최대 검색 거리 (margin만큼 더 쏴서 안정성 확보)
+            whatIsGround
+        );
+        // ----------------------------------------------------
+
 
         GetInput();
         SpeedControl();
 
+        // 지면에 있을 때만 드래그 적용
         rb.drag = grounded ? groundDrag : 0f;
     }
 
     private void FixedUpdate()
     {
-            MovePlayer();
-            RotatePlayer();
+        MovePlayer();
+        RotatePlayer();
     }
 
     private void GetInput()
@@ -71,6 +99,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void MovePlayer()
     {
+        // 카메라 방향에 맞게 이동 방향 계산
         Vector3 camForward = new Vector3(orientation.forward.x, 0f, orientation.forward.z).normalized;
         Vector3 camRight = new Vector3(orientation.right.x, 0f, orientation.right.z).normalized;
         moveDirection = (camForward * verticalInput + camRight * horizontalInput).normalized;
@@ -78,6 +107,7 @@ public class PlayerMovement : MonoBehaviour
         if (grounded)
             rb.AddForce(moveDirection * moveSpeed * 10f, ForceMode.Force);
         else
+            // 공중에서는 airMultiplier를 곱하여 이동 제어
             rb.AddForce(moveDirection * moveSpeed * 10f * airMultiplier, ForceMode.Force);
     }
 
@@ -85,7 +115,7 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector3 flatInput = new Vector3(horizontalInput, 0f, verticalInput);
         if (flatInput.magnitude >= 0.1f)
-            transform.forward = moveDirection;
+            transform.forward = moveDirection; // 입력 방향으로 회전
     }
 
     private void SpeedControl()
@@ -100,14 +130,28 @@ public class PlayerMovement : MonoBehaviour
 
     private void Jump()
     {
+        // Y축 속도를 0으로 초기화하여 점프 높이를 일관성 있게 만듭니다.
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
 
-        grounded = false;
+        grounded = false; // 점프 시 강제로 착지 상태 해제
     }
 
     private void ResetJump()
     {
         readyToJump = true;
+    }
+
+
+
+    private void OnDrawGizmos()
+    {
+        Vector3 boxCenter = transform.position + Vector3.down * (playerHeight - 0.05f);
+        Vector3 boxHalfExtents = new Vector3(groundCheckExtent, 0.05f, groundCheckExtent);
+        Vector3 boxSize = boxHalfExtents * 2f;
+        Gizmos.color = grounded ? Color.green : Color.red;
+        Gizmos.DrawWireCube(boxCenter, boxSize);
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireCube(boxCenter + Vector3.down * groundCheckMargin, boxSize);
     }
 }
