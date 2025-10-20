@@ -1,12 +1,12 @@
 fileFormatVersion: 2
-guid: fd97a7291a4dd3d4a847d92a5b80f1c9
+guid: c23b7fab2e3ec6d4d9a51e281b6b04fc
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 1
+    enableMipMap: 0
     sRGBTexture: 1
     linearTexture: 0
     fadeOut: 0
@@ -37,8 +37,8 @@ TextureImporter:
     filterMode: 1
     aniso: 1
     mipBias: 0
-    wrapU: 0
-    wrapV: 0
+    wrapU: 1
+    wrapV: 1
     wrapW: 0
   nPOTScale: 0
   lightmap: 0
@@ -52,7 +52,7 @@ TextureImporter:
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
-  alphaIsTransparency: 0
+  alphaIsTransparency: 1
   spriteTessellationDetail: -1
   textureType: 8
   textureShape: 1
@@ -97,169 +97,148 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ANIM_Cat_Walk_Right_0
+      name: ANIM_Cat_Jump_Front_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 423
-        height: 320
+        y: 300
+        width: 240
+        height: 290
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: aa52292388f002a499d44dd34a1023a5
-      internalID: -94593189
+      spriteID: c78e69283a40fff418cee3541d183a7f
+      internalID: -666456213
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ANIM_Cat_Walk_Right_1
+      name: ANIM_Cat_Jump_Front_1
       rect:
         serializedVersion: 2
-        x: 468
-        y: 0
-        width: 424
-        height: 320
+        x: 290
+        y: 280
+        width: 240
+        height: 310
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c9d682624b4147b489962d3253b95dd1
-      internalID: -1258947243
+      spriteID: eaf6c5cf4012a5e4b8f858069ff728fe
+      internalID: -1327332396
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ANIM_Cat_Walk_Right_2
+      name: ANIM_Cat_Jump_Front_2
       rect:
         serializedVersion: 2
-        x: 937
-        y: 0
-        width: 426
-        height: 320
+        x: 580
+        y: 130
+        width: 240
+        height: 460
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c9bb870b0ca4fe0468cdc8ecf9ed6957
-      internalID: 426269933
+      spriteID: 1a7135a4ab72b2641bcd0a7a53d06f83
+      internalID: -370029721
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ANIM_Cat_Walk_Right_3
+      name: ANIM_Cat_Jump_Front_3
       rect:
         serializedVersion: 2
-        x: 1418
-        y: 0
-        width: 414
-        height: 320
+        x: 870
+        y: 250
+        width: 240
+        height: 340
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 15f493d832ddf1741be3a5f334e36a93
-      internalID: 2013998824
+      spriteID: 0ddca75c979f4204a9d8f66c6248a50e
+      internalID: -1076116699
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ANIM_Cat_Walk_Right_4
+      name: ANIM_Cat_Jump_Front_4
       rect:
         serializedVersion: 2
-        x: 1878
-        y: 0
-        width: 424
-        height: 320
+        x: 1160
+        y: 280
+        width: 240
+        height: 310
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 818b3f7721f63554890ddb10a31d15eb
-      internalID: -1736864184
+      spriteID: ce1a95d0171d6b14d833a1b158c26e65
+      internalID: 328213841
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ANIM_Cat_Walk_Right_5
+      name: ANIM_Cat_Jump_Front_6
       rect:
         serializedVersion: 2
-        x: 2347
-        y: 0
-        width: 426
-        height: 320
+        x: 1740
+        y: 290
+        width: 240
+        height: 300
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: df2d31008341fd74381c3f4f6766f266
-      internalID: -693889952
+      spriteID: 7f6f788034eaecf4ab24d4196271cddf
+      internalID: 919877836
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ANIM_Cat_Walk_Right_6
+      name: ANIM_Cat_Jump_Front_5
       rect:
         serializedVersion: 2
-        x: 2818
-        y: 0
-        width: 424
-        height: 320
+        x: 1450
+        y: 180
+        width: 240
+        height: 410
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e9ee95c1b7ac1f449b9c70167c7ab659
-      internalID: 1122338855
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ANIM_Cat_Walk_Right_7
-      rect:
-        serializedVersion: 2
-        x: 3287
-        y: 0
-        width: 423
-        height: 320
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 58dd9d62e513f8a48b3e9853aee8300d
-      internalID: -196068155
+      spriteID: e052d282cc27a7a4e9579f09694424b9
+      internalID: 1447754282
       vertices: []
       indices: 
       edges: []
@@ -267,7 +246,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: e3634412b2b1d7748aa2538ebda3a2af
+    spriteID: f4bbd8884b61fdb4dac2934dd4245503
     internalID: 0
     vertices: []
     indices: 
@@ -275,14 +254,14 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      ANIM_Cat_Walk_Right_0: -94593189
-      ANIM_Cat_Walk_Right_1: -1258947243
-      ANIM_Cat_Walk_Right_2: 426269933
-      ANIM_Cat_Walk_Right_3: 2013998824
-      ANIM_Cat_Walk_Right_4: -1736864184
-      ANIM_Cat_Walk_Right_5: -693889952
-      ANIM_Cat_Walk_Right_6: 1122338855
-      ANIM_Cat_Walk_Right_7: -196068155
+      ANIM_Cat_Jump_Front_0: -666456213
+      ANIM_Cat_Jump_Front_1: -1327332396
+      ANIM_Cat_Jump_Front_2: -370029721
+      ANIM_Cat_Jump_Front_3: -1076116699
+      ANIM_Cat_Jump_Front_4: 328213841
+      ANIM_Cat_Jump_Front_5: 1447754282
+      ANIM_Cat_Jump_Front_6: 919877836
+      ANIM_Cat_Jump_Front_7: 312615189
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

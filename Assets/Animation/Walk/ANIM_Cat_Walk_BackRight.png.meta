@@ -102,7 +102,7 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 302
+        width: 312
         height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -121,9 +121,9 @@ TextureImporter:
       name: ANIM_Cat_Walk_BackRight_1
       rect:
         serializedVersion: 2
-        x: 318
+        x: 359
         y: 0
-        width: 304
+        width: 313
         height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -142,9 +142,9 @@ TextureImporter:
       name: ANIM_Cat_Walk_BackRight_2
       rect:
         serializedVersion: 2
-        x: 638
+        x: 729
         y: 0
-        width: 304
+        width: 303
         height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -163,7 +163,7 @@ TextureImporter:
       name: ANIM_Cat_Walk_BackRight_3
       rect:
         serializedVersion: 2
-        x: 958
+        x: 1088
         y: 0
         width: 304
         height: 320
@@ -184,9 +184,9 @@ TextureImporter:
       name: ANIM_Cat_Walk_BackRight_4
       rect:
         serializedVersion: 2
-        x: 1278
+        x: 1459
         y: 0
-        width: 304
+        width: 292
         height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -205,9 +205,9 @@ TextureImporter:
       name: ANIM_Cat_Walk_BackRight_5
       rect:
         serializedVersion: 2
-        x: 1598
+        x: 1829
         y: 0
-        width: 304
+        width: 283
         height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -226,9 +226,9 @@ TextureImporter:
       name: ANIM_Cat_Walk_BackRight_6
       rect:
         serializedVersion: 2
-        x: 1918
+        x: 2188
         y: 0
-        width: 304
+        width: 283
         height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -247,9 +247,9 @@ TextureImporter:
       name: ANIM_Cat_Walk_BackRight_7
       rect:
         serializedVersion: 2
-        x: 2238
+        x: 2538
         y: 0
-        width: 302
+        width: 292
         height: 320
       alignment: 0
       pivot: {x: 0, y: 0}

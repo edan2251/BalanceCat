@@ -102,7 +102,7 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 302
+        width: 312
         height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -121,9 +121,9 @@ TextureImporter:
       name: ANIM_Cat_Walk_FrontRight_1
       rect:
         serializedVersion: 2
-        x: 318
+        x: 349
         y: 0
-        width: 304
+        width: 293
         height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -142,9 +142,9 @@ TextureImporter:
       name: ANIM_Cat_Walk_FrontRight_2
       rect:
         serializedVersion: 2
-        x: 638
+        x: 679
         y: 0
-        width: 304
+        width: 293
         height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -163,9 +163,9 @@ TextureImporter:
       name: ANIM_Cat_Walk_FrontRight_3
       rect:
         serializedVersion: 2
-        x: 958
+        x: 1009
         y: 0
-        width: 304
+        width: 293
         height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -184,9 +184,9 @@ TextureImporter:
       name: ANIM_Cat_Walk_FrontRight_4
       rect:
         serializedVersion: 2
-        x: 1278
+        x: 1329
         y: 0
-        width: 304
+        width: 303
         height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -205,9 +205,9 @@ TextureImporter:
       name: ANIM_Cat_Walk_FrontRight_5
       rect:
         serializedVersion: 2
-        x: 1598
+        x: 1648
         y: 0
-        width: 304
+        width: 314
         height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -226,9 +226,9 @@ TextureImporter:
       name: ANIM_Cat_Walk_FrontRight_6
       rect:
         serializedVersion: 2
-        x: 1918
+        x: 1978
         y: 0
-        width: 304
+        width: 314
         height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -247,9 +247,9 @@ TextureImporter:
       name: ANIM_Cat_Walk_FrontRight_7
       rect:
         serializedVersion: 2
-        x: 2238
+        x: 2319
         y: 0
-        width: 302
+        width: 301
         height: 320
       alignment: 0
       pivot: {x: 0, y: 0}

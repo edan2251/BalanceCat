@@ -121,7 +121,7 @@ TextureImporter:
       name: ANIM_Cat_Walk_Front_1
       rect:
         serializedVersion: 2
-        x: 259
+        x: 289
         y: 0
         width: 242
         height: 320
@@ -142,7 +142,7 @@ TextureImporter:
       name: ANIM_Cat_Walk_Front_2
       rect:
         serializedVersion: 2
-        x: 519
+        x: 579
         y: 0
         width: 242
         height: 320
@@ -163,9 +163,9 @@ TextureImporter:
       name: ANIM_Cat_Walk_Front_3
       rect:
         serializedVersion: 2
-        x: 779
+        x: 868
         y: 0
-        width: 242
+        width: 243
         height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -184,9 +184,9 @@ TextureImporter:
       name: ANIM_Cat_Walk_Front_4
       rect:
         serializedVersion: 2
-        x: 1039
+        x: 1159
         y: 0
-        width: 242
+        width: 243
         height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -205,7 +205,7 @@ TextureImporter:
       name: ANIM_Cat_Walk_Front_5
       rect:
         serializedVersion: 2
-        x: 1299
+        x: 1449
         y: 0
         width: 242
         height: 320
@@ -226,7 +226,7 @@ TextureImporter:
       name: ANIM_Cat_Walk_Front_6
       rect:
         serializedVersion: 2
-        x: 1559
+        x: 1739
         y: 0
         width: 242
         height: 320
@@ -247,7 +247,7 @@ TextureImporter:
       name: ANIM_Cat_Walk_Front_7
       rect:
         serializedVersion: 2
-        x: 1819
+        x: 2029
         y: 0
         width: 241
         height: 320
