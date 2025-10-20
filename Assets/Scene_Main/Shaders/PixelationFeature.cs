@@ -3,12 +3,12 @@ using UnityEngine.Rendering.Universal;
 
 public class PixelationFeature : ScriptableRendererFeature
 {
+    public static int GlobalPixelResolution = 256;
+
     [System.Serializable]
     public class PixelationSettings
     {
         public Material material;
-        [Range(32, 1024)]
-        public int pixelResolution = 256;
     }
 
     public PixelationSettings settings = new PixelationSettings();
@@ -26,16 +26,16 @@ public class PixelationFeature : ScriptableRendererFeature
     {
         if (settings.material == null) return;
 
+        int currentResolution = GlobalPixelResolution;
+
         // 픽셀 크기 계산 및 셰이더에 전달
         Vector2 pixelSize = new Vector2(
-            1.0f / settings.pixelResolution, // _PixelSize.x
-            1.0f / (settings.pixelResolution * (float)renderingData.cameraData.camera.pixelHeight / (float)renderingData.cameraData.camera.pixelWidth) // _PixelSize.y (화면 비율 보정)
+            1.0f / currentResolution, // _PixelSize.x
+            1.0f / (currentResolution * (float)renderingData.cameraData.camera.pixelHeight / (float)renderingData.cameraData.camera.pixelWidth) // _PixelSize.y
         );
 
         settings.material.SetVector("_PixelSize", new Vector4(pixelSize.x, pixelSize.y, 0, 0));
 
-        // 렌더 패스 설정
-        // **오류 발생 지점 제거: pixelationPass.Setup(renderer.cameraColorTargetHandle);**
 
         renderer.EnqueuePass(pixelationPass);
     }
