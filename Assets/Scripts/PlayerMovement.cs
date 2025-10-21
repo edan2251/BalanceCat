@@ -13,6 +13,12 @@ public class PlayerMovement : MonoBehaviour
     public float airMultiplier;
     bool readyToJump = true;
 
+    [Header("Jump Control")]
+    [Tooltip("점프 상승 시 중력에 추가할 배율 (1.0이면 기본 중력)")]
+    public float ascentMultiplier = 1.5f;
+    [Tooltip("점프 하강 시 중력에 추가할 배율 (1.0이면 기본 중력)")]
+    public float descentMultiplier = 1.5f; // 기존 fallSpeedMultiplier 대체
+
 
     [Header("Keybinds")]
     public KeyCode jumpKey = KeyCode.Space;
@@ -95,6 +101,8 @@ public class PlayerMovement : MonoBehaviour
     {
         MovePlayer();
         RotatePlayer();
+
+        ApplyVariableGravity();
     }
 
     private void GetInput()
@@ -149,7 +157,9 @@ public class PlayerMovement : MonoBehaviour
     {
         // Y축 속도를 0으로 초기화하여 점프 높이를 일관성 있게 만듭니다.
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-        rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+
+        float adjustedJumpForce = jumpForce * ascentMultiplier;
+        rb.AddForce(transform.up * adjustedJumpForce, ForceMode.Impulse);
 
         grounded = false; // 점프 시 강제로 착지 상태 해제
 
@@ -164,6 +174,33 @@ public class PlayerMovement : MonoBehaviour
         readyToJump = true;
     }
 
+    private void ApplyVariableGravity()
+    {
+        // 땅에 있을 때는 적용하지 않음
+        if (grounded) return;
+
+        float gravityScale;
+
+        if (rb.velocity.y > 0)
+        {
+            // 상승 중: ascentMultiplier 적용 (점프 높이를 살짝 희생하여 시간을 단축)
+            gravityScale = ascentMultiplier;
+        }
+        else
+        {
+            // 하강 중: descentMultiplier 적용 (하강 시간을 크게 단축)
+            gravityScale = descentMultiplier;
+        }
+
+        // 기본 중력(Physics.gravity)은 이미 적용되고 있으므로,
+        // (배율 - 1) 만큼 추가적인 중력 힘을 가합니다.
+        if (gravityScale > 1.0f)
+        {
+            float additionalGravity = Physics.gravity.y * (gravityScale - 1) * rb.mass;
+            rb.AddForce(Vector3.up * additionalGravity, ForceMode.Force);
+        }
+    }
+
 
     private void UpdateAnimator()
     {
@@ -172,7 +209,6 @@ public class PlayerMovement : MonoBehaviour
         bool isMoving = horizontalInput != 0 || verticalInput != 0;
         bool isRunning = Input.GetKey(runKey) && isMoving;
         playerAnimator.SetBool("isRunning", isRunning);
-
     }
 
 
@@ -181,8 +217,18 @@ public class PlayerMovement : MonoBehaviour
         Vector3 boxCenter = transform.position + Vector3.down * (playerHeight - 0.05f);
         Vector3 boxHalfExtents = new Vector3(groundCheckExtent, 0.05f, groundCheckExtent);
         Vector3 boxSize = boxHalfExtents * 2f;
-        Gizmos.color = grounded ? Color.green : Color.red;
+
+        if (Application.isPlaying)
+        {
+            Gizmos.color = grounded ? Color.green : Color.red;
+        }
+        else
+        {
+            Gizmos.color = Color.cyan;
+        }
+
         Gizmos.DrawWireCube(boxCenter, boxSize);
+
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireCube(boxCenter + Vector3.down * groundCheckMargin, boxSize);
     }
