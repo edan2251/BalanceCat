@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement")]
     public float moveSpeed;
+    public float runMultiplier = 3.0f;
     public float groundDrag;
     public float jumpForce;
     public float jumpCooldown;
@@ -15,6 +16,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Keybinds")]
     public KeyCode jumpKey = KeyCode.Space;
+    public KeyCode runKey = KeyCode.LeftShift;
 
     // --- 지면 체크 설정 ---
     [Header("Ground Check")]
@@ -35,16 +37,25 @@ public class PlayerMovement : MonoBehaviour
     public Transform orientation;
     public Rigidbody rb;
 
+    [Header("Animator")]
+    public Animator playerAnimator;
+
     [HideInInspector] public float horizontalInput;
     [HideInInspector] public float verticalInput;
 
     Vector3 moveDirection;
+    float currentMoveSpeed;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
         if (rb == null) rb = GetComponent<Rigidbody>();
+
+        if (playerAnimator == null)
+        {
+            playerAnimator = GetComponentInChildren<Animator>();
+        }
     }
 
     private void Update()
@@ -74,6 +85,8 @@ public class PlayerMovement : MonoBehaviour
         GetInput();
         SpeedControl();
 
+        UpdateAnimator();
+
         // 지면에 있을 때만 드래그 적용
         rb.drag = grounded ? groundDrag : 0f;
     }
@@ -88,6 +101,10 @@ public class PlayerMovement : MonoBehaviour
     {
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
+
+        bool isRunningInput = Input.GetKey(runKey);
+        float speedMultiplier = isRunningInput ? runMultiplier : 1.0f;
+        currentMoveSpeed = moveSpeed * speedMultiplier;
 
         if (Input.GetKey(jumpKey) && readyToJump && grounded)
         {
@@ -105,10 +122,10 @@ public class PlayerMovement : MonoBehaviour
         moveDirection = (camForward * verticalInput + camRight * horizontalInput).normalized;
 
         if (grounded)
-            rb.AddForce(moveDirection * moveSpeed * 10f, ForceMode.Force);
+            rb.AddForce(moveDirection * currentMoveSpeed * 10f, ForceMode.Force);
         else
             // 공중에서는 airMultiplier를 곱하여 이동 제어
-            rb.AddForce(moveDirection * moveSpeed * 10f * airMultiplier, ForceMode.Force);
+            rb.AddForce(moveDirection * currentMoveSpeed * 10f * airMultiplier, ForceMode.Force);
     }
 
     private void RotatePlayer()
@@ -121,9 +138,9 @@ public class PlayerMovement : MonoBehaviour
     private void SpeedControl()
     {
         Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-        if (flatVel.magnitude > moveSpeed)
+        if (flatVel.magnitude > currentMoveSpeed)
         {
-            Vector3 limitedVel = flatVel.normalized * moveSpeed;
+            Vector3 limitedVel = flatVel.normalized * currentMoveSpeed;
             rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
         }
     }
@@ -135,6 +152,11 @@ public class PlayerMovement : MonoBehaviour
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
 
         grounded = false; // 점프 시 강제로 착지 상태 해제
+
+        if (playerAnimator != null)
+        {
+            playerAnimator.SetTrigger("JumpTrigger");
+        }
     }
 
     private void ResetJump()
@@ -142,6 +164,16 @@ public class PlayerMovement : MonoBehaviour
         readyToJump = true;
     }
 
+
+    private void UpdateAnimator()
+    {
+        if (playerAnimator == null) return;
+
+        bool isMoving = horizontalInput != 0 || verticalInput != 0;
+        bool isRunning = Input.GetKey(runKey) && isMoving;
+        playerAnimator.SetBool("isRunning", isRunning);
+
+    }
 
 
     private void OnDrawGizmos()

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8241373914891745176}
   - component: {fileID: 8241373914892842328}
   - component: {fileID: -1461520121547851692}
+  - component: {fileID: 1671352256403787305}
   m_Layer: 10
   m_Name: Ground_Sand_Mix_B
   m_TagString: Untagged
@@ -122,3 +123,25 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!64 &1671352256403787305
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8241373914894773144}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300000, guid: 93d136b8b1833924c9b563d5d4f71bdf, type: 3}

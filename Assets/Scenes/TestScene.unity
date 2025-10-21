@@ -7702,11 +7702,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 2
+  runMultiplier: 3
   groundDrag: 5
   jumpForce: 6
   jumpCooldown: 0.25
   airMultiplier: 0.1
   jumpKey: 32
+  runKey: 304
   playerHeight: 0.34
   groundCheckExtent: 0.22
   groundCheckMargin: 0.1
@@ -7715,6 +7717,7 @@ MonoBehaviour:
     m_Bits: 7168
   orientation: {fileID: 1427215540}
   rb: {fileID: 0}
+  playerAnimator: {fileID: 528482199}
   horizontalInput: 0
   verticalInput: 0
 --- !u!4 &160494510
