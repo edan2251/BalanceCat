@@ -17,7 +17,7 @@ public class PlayerMovement : MonoBehaviour
     [Tooltip("점프 상승 시 중력에 추가할 배율 (1.0이면 기본 중력)")]
     public float ascentMultiplier = 1.5f;
     [Tooltip("점프 하강 시 중력에 추가할 배율 (1.0이면 기본 중력)")]
-    public float descentMultiplier = 1.5f; // 기존 fallSpeedMultiplier 대체
+    public float descentMultiplier = 1.5f;
 
 
     [Header("Keybinds")]
@@ -66,23 +66,21 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        // ----------------------------------------------------
-        // BoxCast를 사용한 지면 체크
-        // ----------------------------------------------------
+        CapsuleCollider capsule = GetComponent<CapsuleCollider>();
+        float capsuleRadius = capsule != null ? capsule.radius : 0.5f;
 
-        // 캡슐 콜라이더의 발바닥 근처를 중심으로 설정
-        Vector3 boxCenter = transform.position + Vector3.down * (playerHeight - 0.05f);
+        Vector3 footPosition = transform.position + Vector3.down * (playerHeight - capsuleRadius);
 
-        // 체크 박스의 절반 크기 
+        Vector3 boxCenter = footPosition + Vector3.up * 0.01f;
+
         Vector3 boxHalfExtents = new Vector3(groundCheckExtent, 0.05f, groundCheckExtent);
 
-        // BoxCast 실행: 박스를 아래로 쏴서 지면 레이어에 닿는지 확인
         grounded = Physics.BoxCast(
             boxCenter,
             boxHalfExtents,
             Vector3.down,
             Quaternion.identity,
-            groundCheckMargin, // 최대 검색 거리 (margin만큼 더 쏴서 안정성 확보)
+            groundCheckMargin, 
             whatIsGround
         );
         // ----------------------------------------------------
@@ -183,12 +181,12 @@ public class PlayerMovement : MonoBehaviour
 
         if (rb.velocity.y > 0)
         {
-            // 상승 중: ascentMultiplier 적용 (점프 높이를 살짝 희생하여 시간을 단축)
+            // 상승 중: ascentMultiplier 적용
             gravityScale = ascentMultiplier;
         }
         else
         {
-            // 하강 중: descentMultiplier 적용 (하강 시간을 크게 단축)
+            // 하강 중: descentMultiplier 적용
             gravityScale = descentMultiplier;
         }
 
@@ -214,7 +212,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Vector3 boxCenter = transform.position + Vector3.down * (playerHeight - 0.05f);
+        CapsuleCollider capsule = GetComponent<CapsuleCollider>();
+        float capsuleRadius = capsule != null ? capsule.radius : 0.5f;
+
+        Vector3 footPosition = transform.position + Vector3.down * (playerHeight - capsuleRadius);
+        Vector3 boxCenter = footPosition + Vector3.up * 0.01f;
         Vector3 boxHalfExtents = new Vector3(groundCheckExtent, 0.05f, groundCheckExtent);
         Vector3 boxSize = boxHalfExtents * 2f;
 
