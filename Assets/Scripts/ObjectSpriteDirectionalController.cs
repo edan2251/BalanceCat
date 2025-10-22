@@ -27,16 +27,6 @@ public class ObjectSpriteDirectionalController : MonoBehaviour
         }
         else if (angle < sideAngle)
         {
-            //animationDirection = new Vector2(1f, 0f);
-
-            //if (signedAngle < 0)
-            //{
-            //    spriteRenderer.flipX = true;
-            //}
-            //else
-            //{
-            //    spriteRenderer.flipX = false;
-            //}
 
             if (signedAngle < 0)
             {
