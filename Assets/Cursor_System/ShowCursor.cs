@@ -4,6 +4,10 @@ public class ShowCursor : MonoBehaviour
 {
     public static bool IsLocked { get; private set; } = true;
 
+    // NEW: Public field to force the cursor to stay unlocked
+    [Tooltip("If true, the cursor will always be visible and unlocked, and the Escape key toggle will be disabled.")]
+    public bool ForceUnlocked = false; 
+
     [SerializeField]
     private Texture2D ReleasedState;
 
@@ -17,12 +21,28 @@ public class ShowCursor : MonoBehaviour
 
     void Start()
     {
-        LockCursor();
+        
+        if (ForceUnlocked)
+        {
+            UnlockCursor();
+        }
+        else
+        {
+            LockCursor();
+        }
     }
 
-    // Event Function
     private void Update()
     {
+        if (ForceUnlocked)
+        {
+            if (Cursor.visible)
+            {
+                ApplyCustomCursorTexture();
+            }
+            return; 
+        }
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (IsLocked)
@@ -37,27 +57,36 @@ public class ShowCursor : MonoBehaviour
 
         if (Cursor.visible)
         {
-            Cursor.SetCursor(ReleasedState, _hotspot, _cursorMode);
+            ApplyCustomCursorTexture();
+        }
+    }
 
-            if (Input.GetMouseButton(0))
-            {
-                Cursor.SetCursor(PressedState, _hotspot, _cursorMode);
-            }
+    private void ApplyCustomCursorTexture()
+    {
+        Cursor.SetCursor(ReleasedState, _hotspot, _cursorMode);
+
+        if (Input.GetMouseButton(0))
+        {
+            Cursor.SetCursor(PressedState, _hotspot, _cursorMode);
         }
     }
 
     private void LockCursor()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-        IsLocked = true; 
+        if (!ForceUnlocked)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            IsLocked = true;
+        }
     }
 
-    public void UnlockCursor() 
+    public void UnlockCursor()
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        IsLocked = false; 
-        Cursor.SetCursor(ReleasedState, _hotspot, _cursorMode);
+        IsLocked = false;
+
+        ApplyCustomCursorTexture();
     }
 }
