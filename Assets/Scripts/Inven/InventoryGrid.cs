@@ -122,4 +122,13 @@ public class InventoryGrid
         }
         return false;
     }
+
+    public bool CanPlaceIgnoring(int x, int y, int w, int h, ItemPlacement ignore)
+    {
+        if (x < 0 || y < 0 || (x + w) > width || (y + h) > height) return false;
+        for (int yy = y; yy < y + h; yy++)
+            for (int xx = x; xx < x + w; xx++)
+                if (owner[xx, yy] != null && owner[xx, yy] != ignore) return false; // 자기 자신은 통과
+        return true;
+    }
 }

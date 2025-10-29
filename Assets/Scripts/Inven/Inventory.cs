@@ -36,9 +36,9 @@ public class Inventory : MonoBehaviour
         get
         {
             float sum = 0f;
-            foreach (var p in leftGrid.placements) 
+            foreach (var p in leftGrid.placements)
                 sum += p.item.TotalWeight;
-            foreach (var p in rightGrid.placements) 
+            foreach (var p in rightGrid.placements)
                 sum += p.item.TotalWeight;
             return sum;
         }
@@ -47,7 +47,7 @@ public class Inventory : MonoBehaviour
     {
         if (item == null || item.data == null) return false;
         int count = Mathf.Max(1, item.quantity);
-                
+
         var order = new (BagSide side, Area area)[]
         {
             (BagSide.Left, Area.Top),
@@ -81,6 +81,52 @@ public class Inventory : MonoBehaviour
                 if (placedCount > 0) OnChanged?.Invoke();
                 return false;
             }
+        }
+
+        OnChanged?.Invoke();
+        return true;
+    }
+
+    public bool TryMove(ItemPlacement p, BagSide fromSide, BagSide toSide, int x, int y, bool rotated)
+    {
+        if (p == null) return false;
+        EnsureReady();
+
+        var from = (fromSide == BagSide.Left) ? leftGrid : rightGrid;
+        var to = (toSide == BagSide.Left) ? leftGrid : rightGrid;
+
+        int w = rotated ? p.item.data.sizeH : p.item.data.sizeW;
+        int h = rotated ? p.item.data.sizeW : p.item.data.sizeH;
+
+        // === 같은 그리드 내 이동: 자기 자신과의 겹침 허용 ===
+        if (from == to)
+        {
+            // 1) 선검사: 자기 자신 무시하고 배치 가능 여부 체크 (상태 변경 X)
+            bool can = to.CanPlaceIgnoring(x, y, w, h, p);
+            if (!can) return false;
+
+            // 2) 실제 이동(이 시점에만 상태 변경)
+            from.Remove(p);
+            bool ok = to.Place(p.item, x, y, rotated);
+            if (!ok)
+            {
+                // 이론상 거의 없음: 안전 복구
+                to.Place(p.item, p.x, p.y, p.item.rotated90);
+                return false;
+            }
+            OnChanged?.Invoke();
+            return true;
+        }
+
+        // === 서로 다른 그리드 간 이동 ===
+        if (!to.CanPlace(x, y, w, h)) return false;
+
+        from.Remove(p);
+        bool placed = to.Place(p.item, x, y, rotated);
+        if (!placed)
+        {
+            from.Place(p.item, p.x, p.y, p.item.rotated90);
+            return false;
         }
 
         OnChanged?.Invoke();

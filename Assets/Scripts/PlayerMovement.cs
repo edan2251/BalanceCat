@@ -49,6 +49,10 @@ public class PlayerMovement : MonoBehaviour
     [HideInInspector] public float horizontalInput;
     [HideInInspector] public float verticalInput;
 
+    [Header("Control/Links")]
+    [SerializeField] InventorySideBias sideBias;
+    bool _controlEnabled = true;
+
     Vector3 moveDirection;
     float currentMoveSpeed;
 
@@ -66,6 +70,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        if (!_controlEnabled)
+        {
+            sideBias?.SetCorrectionInput(0f); // 잠금 시 보정 해제
+            return;                           // 입력 처리 차단(중력/물리는 기존 FixedUpdate에 맡김)
+        }
+
         CapsuleCollider capsule = GetComponent<CapsuleCollider>();
         float capsuleRadius = capsule != null ? capsule.radius : 0.5f;
 
@@ -83,12 +93,9 @@ public class PlayerMovement : MonoBehaviour
             groundCheckMargin, 
             whatIsGround
         );
-        // ----------------------------------------------------
-
-
+        
         GetInput();
         SpeedControl();
-
         UpdateAnimator();
 
         // 지면에 있을 때만 드래그 적용
@@ -111,6 +118,11 @@ public class PlayerMovement : MonoBehaviour
         bool isRunningInput = Input.GetKey(runKey);
         float speedMultiplier = isRunningInput ? runMultiplier : 1.0f;
         currentMoveSpeed = moveSpeed * speedMultiplier;
+
+        float corr = 0f;
+        if (Input.GetKey(KeyCode.Z)) corr -= 1f;
+        if (Input.GetKey(KeyCode.C)) corr += 1f;
+        sideBias?.SetCorrectionInput(corr);
 
         if (Input.GetKey(jumpKey) && readyToJump && grounded)
         {
@@ -233,5 +245,10 @@ public class PlayerMovement : MonoBehaviour
 
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireCube(boxCenter + Vector3.down * groundCheckMargin, boxSize);
+    }
+
+    public void SetControlEnabled(bool v) 
+    { 
+        _controlEnabled = v;
     }
 }
