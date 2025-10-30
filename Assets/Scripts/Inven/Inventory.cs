@@ -132,4 +132,36 @@ public class Inventory : MonoBehaviour
         OnChanged?.Invoke();
         return true;
     }
+
+    public bool TryMoveToOtherInventory(ItemPlacement p, BagSide fromSide, Inventory other, BagSide toSide, int x, int y, bool rotated)
+    {
+        if (p == null || other == null) return false;
+        EnsureReady();
+        other.EnsureReady();
+
+        var from = (fromSide == BagSide.Left) ? leftGrid : rightGrid;
+        var to = (toSide == BagSide.Left) ? other.leftGrid : other.rightGrid;
+
+        int w = rotated ? p.item.data.sizeH : p.item.data.sizeW;
+        int h = rotated ? p.item.data.sizeW : p.item.data.sizeH;
+
+        if (!to.CanPlace(x, y, w, h)) return false;
+
+        // 원복용 좌표/회전 백업
+        int ox = p.x, oy = p.y; bool orot = p.item.rotated90;
+
+        from.Remove(p);
+        bool placed = to.Place(p.item, x, y, rotated);
+        if (!placed)
+        {
+            // 실패시 원상복구
+            from.Place(p.item, ox, oy, orot);
+            return false;
+        }
+
+        // 양쪽 UI 갱신
+        OnChanged?.Invoke();
+        other.OnChanged?.Invoke();
+        return true;
+    }
 }

@@ -56,6 +56,8 @@ public class PlayerMovement : MonoBehaviour
     Vector3 moveDirection;
     float currentMoveSpeed;
 
+    public bool IsControlEnabled => _controlEnabled;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -250,5 +252,25 @@ public class PlayerMovement : MonoBehaviour
     public void SetControlEnabled(bool v) 
     { 
         _controlEnabled = v;
+
+        if (!v)
+        {
+            // [FIX] 입력/방향 클리어
+            horizontalInput = 0f;
+            verticalInput = 0f;
+            moveDirection = Vector3.zero;
+
+            // [FIX] 수평 속도 정지(관성 제거)
+            if (rb)
+                rb.velocity = new Vector3(0f, rb.velocity.y, 0f);
+
+            // [FIX] 애니메이터 기본화
+            if (playerAnimator)
+            {
+                playerAnimator.SetBool("isRunning", false);
+                // 있으면 쓰고, 없으면 무시됨(경고가 뜨면 빼도 됨)
+                playerAnimator.SetBool("isMoving", false);
+            }
+        }
     }
 }
