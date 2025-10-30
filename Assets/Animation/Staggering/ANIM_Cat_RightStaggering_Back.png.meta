@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: f90665684b567eb47ab15039abf28f28
+guid: 7ede657491c7d264f9ffc35c4d13830e
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -97,106 +97,64 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ANIM_Cat_RightFall_Right_0
+      name: ANIM_Cat_RightStaggering_Back_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 381
-        height: 320
+        width: 240
+        height: 310
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ef6a68fbbc642424facfd86d4331b50e
-      internalID: 1145493274
+      spriteID: d05af86d69e531b448c4b9d88cb2338a
+      internalID: 1954926851
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ANIM_Cat_RightFall_Right_1
+      name: ANIM_Cat_RightStaggering_Back_1
       rect:
         serializedVersion: 2
-        x: 429
+        x: 420
         y: 0
-        width: 382
-        height: 320
+        width: 240
+        height: 310
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2345ee514c431854ea7c2cee2f831a8d
-      internalID: 527545994
+      spriteID: 217acf070d59c754ba5b0e9d7a7056d3
+      internalID: 327793826
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ANIM_Cat_RightFall_Right_2
+      name: ANIM_Cat_RightStaggering_Back_2
       rect:
         serializedVersion: 2
-        x: 859
+        x: 870
         y: 0
-        width: 362
-        height: 320
+        width: 240
+        height: 300
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 55f5e0ec61b3fce449f25a870daa6d23
-      internalID: 446114707
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ANIM_Cat_RightFall_Right_3
-      rect:
-        serializedVersion: 2
-        x: 1288
-        y: 0
-        width: 362
-        height: 320
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: df797413412dae7408aa17d362961c43
-      internalID: 876623475
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ANIM_Cat_RightFall_Right_4
-      rect:
-        serializedVersion: 2
-        x: 1719
-        y: 0
-        width: 381
-        height: 320
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 86d1a7a823c1bd342bb0d6c707216c1c
-      internalID: 1255822576
+      spriteID: cf3185ff215493e469b63e2566209b09
+      internalID: 16245750
       vertices: []
       indices: 
       edges: []
@@ -204,7 +162,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 0b8724cd58de00148a03bac220965ab1
     internalID: 0
     vertices: []
     indices: 
@@ -212,11 +170,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      ANIM_Cat_RightFall_Right_0: 1145493274
-      ANIM_Cat_RightFall_Right_1: 527545994
-      ANIM_Cat_RightFall_Right_2: 446114707
-      ANIM_Cat_RightFall_Right_3: 876623475
-      ANIM_Cat_RightFall_Right_4: 1255822576
+      ANIM_Cat_RightStaggering_Back_0: 1954926851
+      ANIM_Cat_RightStaggering_Back_1: 327793826
+      ANIM_Cat_RightStaggering_Back_2: 16245750
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
