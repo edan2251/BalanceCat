@@ -7,21 +7,15 @@ public class StageSelector : MonoBehaviour
     [System.Serializable]
     public struct StageRotationGroup
     {
-        [Tooltip("회전 시작하는 스테이지")]
         public int startIndex;
-        [Tooltip("회전 끝나는 스테이지")]
         public int endIndex;
-        [Tooltip("X축 회전 목표값")]
         public float targetLocalXRotation;
-        [Tooltip("Y축 회전 목표값")]
-        public float targetLocalYRotation; // Y축 회전값 추가
-        [Tooltip("Z축 회전 목표값")]
+        public float targetLocalYRotation;
         public float targetLocalZRotation;
     }
 
-    // === 인스펙터 설정 ===
-    // 이 리스트는 ChapterPlanetCreator나 수동으로 연결됩니다.
-    public List<GameObject> stagePoints;
+    // === 인스펙터 설정 ===
+    public List<GameObject> stagePoints;
 
     [Header("ChapterData ScriptableOBJ연결")]
     public ChapterData chapterData;
@@ -36,30 +30,38 @@ public class StageSelector : MonoBehaviour
     public LineRenderer pathRenderer;
     public int segmentsPerStage = 20;
 
-    // === 내부 변수 ===
-    private int currentStageIndex = 0;
+    // === 내부 변수 ===
+    public int currentStageIndex = 0;
     private int totalStages = 0;
 
     private StageUIManager uiManager;
-
     private ChapterSelector chapterController;
 
-    [Header("하이라이트 설정")]
-    // 인스펙터에 할당할 하이라이트 머티리얼
-    public Material highlightMaterial;
+    [HideInInspector]
+    public int chapterIndex = 0;
 
-    // 이전 선택된 스테이지의 MeshRenderer 컴포넌트를 저장
-    private MeshRenderer lastSelectedRenderer;
-    // 이전 선택된 스테이지의 원래 머티리얼을 저장
-    private Material originalMaterial;
+    [Header("하이라이트 및 잠금 머티리얼")]
+    public Material highlightMaterial;
+    // --- NEW: 스테이지 잠금 머티리얼 ---
+    [Tooltip("잠긴 스테이지 포인트에 적용할 머티리얼 (회색 등)")]
+    public Material lockedStageMaterial;
+
+    [Header("챕터 잠금 머티리얼 설정")]
+    [Tooltip("이 챕터(행성)가 잠겼을 때 머티리얼이 변경될 모든 MeshRenderer 리스트입니다.")]
+    public List<MeshRenderer> materialTargets;
+
+    // --- CHANGED: 다중 머티리얼 하이라이트/복원용 ---
+    private MeshRenderer lastSelectedRenderer;
+    private Material[] originalMaterials; // 'originalMaterial' (단수) -> 'originalMaterials' (배열)
+
+    // --- NEW: 모든 스테이지의 원본 머티리얼(배열) 저장용 ---
+    private Dictionary<MeshRenderer, Material[]> originalStageMaterialsCache = new Dictionary<MeshRenderer, Material[]>();
 
 
     void Awake()
     {
         uiManager = FindObjectOfType<StageUIManager>();
-
         chapterController = FindObjectOfType<ChapterSelector>();
-
         totalStages = stagePoints.Count;
 
         if (totalStages == 0)
@@ -69,9 +71,21 @@ public class StageSelector : MonoBehaviour
             return;
         }
 
-        SetStagesVisibility(false);
+        // --- NEW: 모든 스테이지 포인트의 원본 머티리얼(들)을 캐시 ---
+        originalStageMaterialsCache.Clear();
+        foreach (var point in stagePoints)
+        {
+            // 자식에 메시가 있을 수 있으므로 GetComponentInChildren 사용
+            MeshRenderer renderer = point.GetComponentInChildren<MeshRenderer>();
+            if (renderer != null && !originalStageMaterialsCache.ContainsKey(renderer))
+            {
+                // 'materials' (복수)를 저장
+                originalStageMaterialsCache[renderer] = renderer.materials;
+            }
+        }
+        // --- END NEW ---
 
-        // 라인 초기화 (행성 반지름은 행성 스케일 기반으로 가정)
+        SetStagesVisibility(false);
         float planetRadius = transform.localScale.x * 0.5f;
         DrawCurvedPath(planetRadius);
 
@@ -109,8 +123,7 @@ public class StageSelector : MonoBehaviour
     }
 
 
-    // 초기 회전 설정: 0번 인덱스 스테이지가 화면 중앙에 오도록 행성을 돌립니다.
-    void InitializeRotation()
+    void InitializeRotation()
     {
         transform.localEulerAngles = new Vector3(0, 0, 0);
     }
@@ -119,36 +132,103 @@ public class StageSelector : MonoBehaviour
     {
         if (totalStages == 0) return;
 
+        // --- NEW: 스테이지 머티리얼 상태부터 갱신 ---
+        UpdateAllStageMaterials();
+        // --- END NEW ---
+
         currentStageIndex = 0;
-
-        // 0번 스테이지로 초기화하면서 회전 및 하이라이트 적용
         ChangeStage(0);
-
     }
 
-    // 스테이지 변경 로직
-    void ChangeStage(int direction)
+    // --- NEW: 'P' 키 테스트용으로 public으로 변경 ---
+    /// <summary>
+    /// 모든 스테이지의 머티리얼을 잠금/해제 상태로 갱신합니다.
+    /// </summary>
+    public void UpdateAllStageMaterials()
     {
-        // 1. 다음 스테이지 인덱스 계산 및 순환
-        int nextIndex = (currentStageIndex + direction + totalStages) % totalStages;
+        if (lockedStageMaterial == null) return;
 
+        for (int i = 0; i < totalStages; i++)
+        {
+            GameObject point = stagePoints[i];
+            if (point == null) continue;
+
+            MeshRenderer renderer = point.GetComponentInChildren<MeshRenderer>();
+            if (renderer == null || !originalStageMaterialsCache.ContainsKey(renderer)) continue;
+
+            bool isPlayable = IsStagePlayable(i);
+
+            // 캐시에서 원본 머티리얼 배열을 가져옴
+            Material[] originalMats = originalStageMaterialsCache[renderer];
+
+            if (isPlayable)
+            {
+                // [플레이 가능]: 원본 머티리얼(들)로 복원
+                renderer.materials = originalMats;
+            }
+            else
+            {
+                // [잠김]: 'lockedStageMaterial'로 모든 슬롯을 덮어씀
+                int materialCount = originalMats.Length;
+                Material[] lockedMaterials = new Material[materialCount];
+                for (int j = 0; j < materialCount; j++)
+                {
+                    lockedMaterials[j] = lockedStageMaterial;
+                }
+                renderer.materials = lockedMaterials;
+            }
+        }
+    }
+
+
+    public bool IsStagePlayable(int stageIndex)
+    {
+        if (chapterData == null || stageIndex < 0 || stageIndex >= chapterData.stages.Count)
+        {
+            return false;
+        }
+
+        StageData targetStage = chapterData.stages[stageIndex];
+        int targetStageID = targetStage.stageID; // 1-based ID
+
+        // Case 1: 챕터 0의 스테이지 1 (ID 1)은 항상 플레이 가능
+        if (chapterIndex == 0 && targetStageID == 1)
+        {
+            return true;
+        }
+
+        // Case 2: 챕터 내 두 번째 스테이지 이상 (ID > 1)
+        if (targetStageID > 1)
+        {
+            // 바로 이전 스테이지(ID - 1)가 클리어되었는지 확인
+            return GameProgressManager.IsStageCleared(chapterIndex, targetStageID - 1);
+        }
+
+        // Case 3: 챕터 1 이상의 첫 번째 스테이지 (ID == 1 && Chapter > 0)
+        if (targetStageID == 1 && chapterIndex > 0)
+        {
+            if (chapterController == null) chapterController = FindObjectOfType<ChapterSelector>();
+            return chapterController.IsChapterUnlocked(chapterIndex);
+        }
+
+        return false;
+    }
+
+
+    void ChangeStage(int direction)
+    {
+        int nextIndex = (currentStageIndex + direction + totalStages) % totalStages;
         if (direction != 0 && nextIndex == currentStageIndex) return;
 
-        // **딜레이 제거 핵심:** 현재 실행 중인 모든 DOTween 애니메이션을 즉시 중단합니다.
-        // 이는 빠른 입력 시 애니메이션이 겹치거나 지연되는 것을 방지합니다.
         transform.DOKill();
 
-        // 2. 현재 인덱스에 해당하는 목표 X, Y, Z 회전 데이터를 찾습니다.
         StageRotationGroup rotationData = GetRotationDataForStage(nextIndex);
-
-        // 3. 목표 로컬 오일러 각도 벡터 생성
         Vector3 targetRotationVector = new Vector3(
-            rotationData.targetLocalXRotation, // X축 회전 적용
-            rotationData.targetLocalYRotation, // Y축 회전 적용
-            rotationData.targetLocalZRotation  // Z축 회전 적용
+            rotationData.targetLocalXRotation,
+            rotationData.targetLocalYRotation,
+            rotationData.targetLocalZRotation
         );
 
-        // 4. DOTween을 사용하여 행성 오브젝트 자체를 목표 회전값으로 부드럽게 회전시킵니다.
         transform.DOLocalRotate(
             targetRotationVector,
             rotationDuration
@@ -157,49 +237,68 @@ public class StageSelector : MonoBehaviour
         {
             currentStageIndex = nextIndex;
 
-            // 1. 회전 완료 후 하이라이트 적용
-            HighlightStage(stagePoints[currentStageIndex]);
+            // --- CHANGED: isPlayable을 먼저 계산 ---
+            bool isPlayable = IsStagePlayable(currentStageIndex);
+            // --- END CHANGED ---
 
-            // 2. UI 매니저에 현재 데이터 전달하여 업데이트 요청
+            // 1. 하이라이트 적용 (isPlayable 값 전달)
+            HighlightStage(stagePoints[currentStageIndex], isPlayable);
+
+            // 2. UI 매니저에 현재 데이터 전달
             if (uiManager != null)
             {
-                uiManager.UpdateStageInfo(GetCurrentSelectedStageData());
+                StageData currentData = GetCurrentSelectedStageData();
+                // isPlayable은 이미 위에서 계산됨
+                uiManager.UpdateStageInfo(currentData, isPlayable);
             }
         });
     }
 
-    // 선택된 스테이지 하이라이트 (예시)
-    void HighlightStage(GameObject selectedPoint)
+    // --- CHANGED: 다중 머티리얼을 지원하도록 수정 ---
+    void HighlightStage(GameObject selectedPoint, bool isPlayable)
     {
-        // 1. 이전 스테이지 원복
-        if (lastSelectedRenderer != null && originalMaterial != null)
+        // 1. 이전 스테이지 원복
+        if (lastSelectedRenderer != null && originalMaterials != null)
         {
-            // 이전에 선택된 스테이지의 머티리얼을 원래 머티리얼로 되돌립니다.
-            lastSelectedRenderer.material = originalMaterial;
+            // 이전에 선택된 스테이지의 머티리얼을 'originalMaterials' (저장된 배열)로 되돌립니다.
+            lastSelectedRenderer.materials = originalMaterials;
         }
 
-        // 2. 새로운 스테이지 하이라이트
-        MeshRenderer currentRenderer = selectedPoint.GetComponent<MeshRenderer>();
+        // 2. 새로운 스테이지 Renderer 찾기
+        MeshRenderer currentRenderer = selectedPoint.GetComponentInChildren<MeshRenderer>();
 
-        if (currentRenderer != null && highlightMaterial != null)
+        if (currentRenderer == null)
         {
-            // 2-1. 원래 머티리얼 저장
-            originalMaterial = currentRenderer.material;
-
-            // 2-2. 하이라이트 머티리얼로 교체
-            currentRenderer.material = highlightMaterial;
-
-            // 2-3. 현재 Renderer를 저장하여 다음 번에 원복할 수 있도록 준비
-            lastSelectedRenderer = currentRenderer;
+            Debug.LogWarning($"{selectedPoint.name}에 MeshRenderer 컴포넌트가 없습니다.");
+            lastSelectedRenderer = null; // 이전 선택 기록 초기화
+            originalMaterials = null;    // 이전 머티리얼 기록 초기화
+            return;
         }
-        else if (currentRenderer == null)
+
+        // 3. 'originalMaterials'에 현재 상태(locked일 수도, original일 수도 있음)를 저장
+        //    (이후 '이전 스테이지 원복' 시 사용)
+        originalMaterials = currentRenderer.materials;
+
+        // --- CHANGED: 플레이 가능한 스테이지'만' 하이라이트 ---
+        if (isPlayable && highlightMaterial != null)
         {
-            // 스테이지 포인트에 MeshRenderer가 없으면 경고 메시지 출력
-            Debug.LogWarning($"{selectedPoint.name}에 MeshRenderer 컴포넌트가 없습니다. 하이라이트 할 수 없습니다.");
+            // 4-A. [플레이 가능]: 하이라이트 머티리얼로 교체
+            int materialCount = originalMaterials.Length;
+            Material[] highlightMaterials = new Material[materialCount];
+            for (int i = 0; i < materialCount; i++)
+            {
+                highlightMaterials[i] = highlightMaterial;
+            }
+            currentRenderer.materials = highlightMaterials;
         }
+        // 4-B. [잠김] (isPlayable == false):
+        //     하이라이트 머티리얼을 적용하지 않습니다.
+        //     (originalMaterials 에는 이미 lockedStageMaterial이 적용된 상태가 저장됨)
+
+        // 5. 현재 Renderer를 '마지막'으로 저장 (다음 원복을 위해)
+        lastSelectedRenderer = currentRenderer;
     }
 
-    // 현재 스테이지 인덱스에 맞는 목표 X, Z축 회전 데이터를 찾는 함수
     StageRotationGroup GetRotationDataForStage(int stageIndex)
     {
         int stageID = stageIndex + 1;
@@ -212,68 +311,55 @@ public class StageSelector : MonoBehaviour
             }
         }
 
-        // 일치하는 그룹이 없으면 현재 회전값을 기본값으로 하는 데이터를 반환
         Vector3 currentRotation = transform.localEulerAngles;
         return new StageRotationGroup
         {
             startIndex = -1,
             endIndex = -1,
             targetLocalXRotation = currentRotation.x,
-            targetLocalYRotation = currentRotation.y, // 현재 Y값 유지
+            targetLocalYRotation = currentRotation.y,
             targetLocalZRotation = currentRotation.z
         };
     }
 
-    // 라인이 스테이지 포인트의 LocalPosition을 기준으로 행성 표면을 따라가도록 그립니다.
-    public void DrawCurvedPath(float radius)
+    public void DrawCurvedPath(float radius)
     {
         if (pathRenderer == null || stagePoints.Count < 2) return;
 
-        // 연결해야 할 세그먼트의 총 개수 (7개면 6개만 연결)
-        int totalSegments = stagePoints.Count - 1;
+        int totalSegments = stagePoints.Count - 1;
         if (totalSegments <= 0)
         {
             pathRenderer.positionCount = 0;
             return;
         }
 
-        // 필요한 총 점의 개수
-        int totalPoints = totalSegments * segmentsPerStage;
-
+        int totalPoints = totalSegments * segmentsPerStage;
         pathRenderer.positionCount = totalPoints;
+        pathRenderer.loop = false;
 
-        // 순환 연결을 코드로 명시적 해제
-        pathRenderer.loop = false;
-
-        for (int i = 0; i < totalSegments; i++) // 
-        {
+        for (int i = 0; i < totalSegments; i++)
+        {
             Vector3 startLocalPos = stagePoints[i].transform.localPosition;
-            Vector3 endLocalPos = stagePoints[i + 1].transform.localPosition; // 다음 포인트
+            Vector3 endLocalPos = stagePoints[i + 1].transform.localPosition;
 
-            for (int j = 0; j < segmentsPerStage; j++)
+            for (int j = 0; j < segmentsPerStage; j++)
             {
                 float t = (float)j / segmentsPerStage;
-
-                // Slerp (구면 선형 보간)
-                Vector3 currentPos = Vector3.Slerp(startLocalPos, endLocalPos, t);
+                Vector3 currentPos = Vector3.Slerp(startLocalPos, endLocalPos, t);
                 currentPos = currentPos.normalized * radius;
 
-                // LineRenderer의 PositionCount에 맞게 인덱스 계산
-                int pointIndex = (i * segmentsPerStage) + j;
-
+                int pointIndex = (i * segmentsPerStage) + j;
                 pathRenderer.SetPosition(pointIndex, currentPos);
             }
         }
 
-        // 마지막 지점 (7번 스테이지)을 명시적으로 추가합니다.
-        pathRenderer.positionCount = totalPoints + 1;
+        pathRenderer.positionCount = totalPoints + 1;
         pathRenderer.SetPosition(totalPoints, stagePoints[totalSegments].transform.localPosition);
     }
 
     public void SetStagesVisibility(bool isVisible)
     {
-        // 스테이지 포인트 전체 가시성 제어
-        foreach (var point in stagePoints)
+        foreach (var point in stagePoints)
         {
             if (point != null)
             {
@@ -281,14 +367,12 @@ public class StageSelector : MonoBehaviour
             }
         }
 
-        // 라인 렌더러 가시성 제어
-        if (pathRenderer != null)
+        if (pathRenderer != null)
         {
             pathRenderer.enabled = isVisible;
         }
     }
 
-    // 현재 선택된 스테이지의 데이터를 반환하는 함수
     public StageData GetCurrentSelectedStageData()
     {
         if (chapterData == null)
@@ -303,9 +387,6 @@ public class StageSelector : MonoBehaviour
             return null;
         }
 
-        // currentStageIndex는 0부터 시작하는 리스트 인덱스를 나타냅니다.
-        // StageData 리스트에서 해당 인덱스의 데이터를 반환합니다.
         return chapterData.stages[currentStageIndex];
     }
-
 }
