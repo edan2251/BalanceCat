@@ -12,7 +12,7 @@ public class StageUIManager : MonoBehaviour
     public Text chapterNameText;     // [ 챕터명 ]
     public Text stageTitleText;      // [ 1 스테이지 ]
     public Text stageSynopsisText;   // 스테이지 시놉시스
-    public Text questText;           // 주어진 퀘스트
+    //public Text questText;           // 주어진 퀘스트
     public Text rewardText;          // 보상 정보
 
     [Header("UI Button")]
@@ -59,7 +59,7 @@ public class StageUIManager : MonoBehaviour
 
         // 2. 상세 정보
         stageSynopsisText.text = data.synopsis;
-        questText.text = $"{data.questDescription}";
+        //questText.text = $"{data.questDescription}";
         rewardText.text = $"{data.rewardName}";
 
         // 3. 시작 버튼 리스너 업데이트

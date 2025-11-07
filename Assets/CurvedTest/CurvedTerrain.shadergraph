@@ -1390,8 +1390,8 @@
     "m_ObjectId": "12ec4323ae1f427e98520fd882a710a4",
     "m_Title": "Normal-based layer picking",
     "m_Position": {
-        "x": -2026.4000244140625,
-        "y": 1951.2000732421875
+        "x": -2026.6666259765625,
+        "y": 1952.000244140625
     }
 }
 
@@ -1553,8 +1553,8 @@
     "m_ObjectId": "27a8233a0ce440909fc3b504dba05d4e",
     "m_Title": "Layer 3 Sample",
     "m_Position": {
-        "x": -822.3999633789063,
-        "y": 2977.60009765625
+        "x": -822.6666259765625,
+        "y": 2978.666748046875
     }
 }
 
@@ -1712,8 +1712,8 @@
     "m_ObjectId": "320ea5fc03744d7fb666cd696058c7ef",
     "m_Title": "Control map Sample",
     "m_Position": {
-        "x": -936.800048828125,
-        "y": 1060.0
+        "x": -936.6666259765625,
+        "y": 1061.3333740234375
     }
 }
 
@@ -2805,7 +2805,7 @@
     "m_RefNameGeneratedByDisplayName": "CurvedStrength",
     "m_DefaultReferenceName": "_CurvedStrength",
     "m_OverrideReferenceName": "",
-    "m_GeneratePropertyBlock": true,
+    "m_GeneratePropertyBlock": false,
     "m_UseCustomSlotLabel": false,
     "m_CustomSlotLabel": "",
     "m_DismissedVersion": 0,
@@ -3150,8 +3150,8 @@
     "m_ObjectId": "68b9c134e4c2419c9a49105850ee27f3",
     "m_Title": "Layer 2 Sample",
     "m_Position": {
-        "x": -829.60009765625,
-        "y": 2560.7998046875
+        "x": -829.333251953125,
+        "y": 2561.999755859375
     }
 }
 
@@ -3452,8 +3452,8 @@
     "m_ObjectId": "808a69d836294ebbb3cc6f711905509c",
     "m_Title": "Layer 1 Sample",
     "m_Position": {
-        "x": -1093.5999755859375,
-        "y": 2116.800048828125
+        "x": -1093.3333740234375,
+        "y": 2117.999755859375
     }
 }
 
@@ -3524,8 +3524,8 @@
     "m_ObjectId": "86dfaa5e59684d35adf29bdbf650c32d",
     "m_Title": "Texture layer addition",
     "m_Position": {
-        "x": -64.7999267578125,
-        "y": 1705.599853515625
+        "x": -64.66650390625,
+        "y": 1706.6666259765625
     }
 }
 
@@ -4866,8 +4866,8 @@
     "m_ObjectId": "b8dc61bb909d40f39985785a79b89178",
     "m_Title": "Layer 0 Sample",
     "m_Position": {
-        "x": -1156.8001708984375,
-        "y": 1661.599853515625
+        "x": -1156.6666259765625,
+        "y": 1662.6666259765625
     }
 }
 
