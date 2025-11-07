@@ -20,13 +20,8 @@ public class StageData : ScriptableObject
     [TextArea(3, 10)]
     public string synopsis = "스테이지의 간략한 배경 이야기나 목표를 설명합니다.";
 
-    public string rewardName = "이곳에 퀘스트 보상을 입력하시오";
-    // 필요한 경우, 실제 보상 오브젝트나 아이콘을 위한 변수 추가 가능
-    // public Sprite rewardIcon; 
 
     [Header("퀘스트 할당")]
-    // 퀘스트 1은 "클리어"로 고정되므로, QuestData가 필요 없을 수도 있습니다.
-    // 여기서는 퀘스트 2, 3만 SO로 할당하는 구조를 제안합니다.
 
     [Tooltip("퀘스트 1: 스테이지 클리어 (기본 제공)")]
     public QuestData MainQuest;

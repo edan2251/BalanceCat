@@ -12,7 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33be76edc8722b84a89c4cbcfea1c452, type: 3}
   m_Name: QuestData_MainQuest
   m_EditorClassIdentifier: 
-  questName: "\uC2A4\uD14C\uC774\uC9C0 \uD074\uB9AC\uC5B4"
-  description: "\uD574\uB2F9 \uC2A4\uD14C\uC774\uC9C0\uB97C \uD074\uB9AC\uC5B4 \uD558\uC138\uC694"
-  questType: 0
-  conditionValue: 60
+  questTitle: "\uBA54\uC778\uD018\uC2A4\uD2B8"
+  questDescription: "\uC2A4\uD14C\uC774\uC9C0\uB97C \uD074\uB9AC\uC5B4 \uD558\uC138\uC694"
