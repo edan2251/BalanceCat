@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33be76edc8722b84a89c4cbcfea1c452, type: 3}
+  m_Name: QuestData_2_2_Quest3
+  m_EditorClassIdentifier: 
+  questTitle: "[\uB465\uB465..\uC2E0\uAE30\uD558\uB2E4!]"
+  questDescription: "\uC2E0\uBE44\uD55C \uC911\uB825\uC11D \uC870\uAC01 3\uAC1C \uD68D\uB4DD\uD558\uAE30"

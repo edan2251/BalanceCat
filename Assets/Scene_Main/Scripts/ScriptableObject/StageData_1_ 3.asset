@@ -18,7 +18,6 @@ MonoBehaviour:
   stageTitle: "3 \uC2A4\uD14C\uC774\uC9C0"
   synopsis: "\uC2A4\uD14C\uC774\uC9C0\uC758 \uAC04\uB7B5\uD55C \uBC30\uACBD \uC774\uC57C\uAE30\uB098
     \uBAA9\uD45C\uB97C \uC124\uBA85\uD569\uB2C8\uB2E4."
-  rewardName: "\uC774\uACF3\uC5D0 \uD018\uC2A4\uD2B8 \uBCF4\uC0C1\uC744 \uC785\uB825\uD558\uC2DC\uC624"
-  MainQuest: {fileID: 11400000, guid: ca84226b777a84d45a4098b356562a40, type: 2}
-  quest2: {fileID: 0}
-  quest3: {fileID: 0}
+  MainQuest: {fileID: 11400000, guid: ee0c980e1f180bf46a841d4b9a7ce20b, type: 2}
+  quest2: {fileID: 11400000, guid: 32ac8458346f9274db40766b9e69cb4b, type: 2}
+  quest3: {fileID: 11400000, guid: 5a226f05bd029784cae426a39913dbff, type: 2}

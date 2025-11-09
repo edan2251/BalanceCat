@@ -168,7 +168,9 @@ public class StageUIManager : MonoBehaviour
     {
         if (questData != null)
         {
-            questText.text = questData.questDescription;
+            // [수정] questTitle과 questDescription을 함께 표시
+            questText.text = $"{questData.questTitle}\n{questData.questDescription}";
+
             questText.gameObject.SetActive(true);
             starImage.gameObject.SetActive(true);
 
