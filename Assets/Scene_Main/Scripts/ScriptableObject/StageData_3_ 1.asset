@@ -16,9 +16,10 @@ MonoBehaviour:
   stageID: 1
   chapterName: "\uC6A9\uC554 \uC9C0\uB300"
   stageTitle: "1 \uC2A4\uD14C\uC774\uC9C0"
-  synopsis: "\uB610\uB2E4\uC2DC \uBD88\uC2DC\uCC29! \uC8FC\uBCC0\uC774 \uC628\uD1B5
-    \uC6A9\uC554\uC774\uB2E4. \uB728\uAC70\uC6B4 \uC5F4\uAE30 \uB54C\uBB38\uC5D0
-    \uAC00\uBC29 \uC18D \uC544\uC774\uD15C\uC774 \uC190\uC0C1\uB418\uAE30 \uC2DC\uC791\uD55C\uB2E4."
+  synopsis: "\uC6B0\uC8FC\uC120\uC744 \uD0C0\uACE0 \uACE0\uD5A5\uC73C\uB85C \uAC00\uB294
+    \uB3C4\uC911 \uB9C8\uC8FC\uCE5C \uC5C4\uCCAD\uB098\uAC8C \uB728\uAC70\uC6B4 \uD589\uC131.
+    \uC6B0\uC8FC\uC120\uC758 \uB0A0\uAC1C\uAC00 \uB179\uC544\uC11C \uB610\uB2E4\uC2DC
+    \uCD94\uB77D\uD558\uAC8C \uB41C\uB2E4."
   MainQuest: {fileID: 11400000, guid: ee0c980e1f180bf46a841d4b9a7ce20b, type: 2}
   quest2: {fileID: 11400000, guid: c184fadca51400243999b0b4f9defca2, type: 2}
   quest3: {fileID: 11400000, guid: fa8bfd27375efdf4f8ece91b014b13c6, type: 2}
