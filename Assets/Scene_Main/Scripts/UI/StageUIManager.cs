@@ -123,17 +123,25 @@ public class StageUIManager : MonoBehaviour
             startButton.interactable = false;
         }
 
-        // --- NEW: 퀘스트 UI 업데이트 ---
+        // --- CHANGED: 퀘스트 UI 업데이트 로직 수정 ---
         if (currentStageSelector != null)
         {
-            ToggleQuestUI(true, data, currentStageSelector.chapterIndex, data.stageID);
+            // isPlayable이 true일 때만 퀘스트 UI를 켭니다.
+            if (isPlayable)
+            {
+                ToggleQuestUI(true, data, currentStageSelector.chapterIndex, data.stageID);
+            }
+            else
+            {
+                // 잠긴 스테이지(isPlayable == false)면 퀘스트 UI를 끕니다.
+                ToggleQuestUI(false, null, 0, 0);
+            }
         }
         else
         {
             Debug.LogError("CurrentStageSelector 참조가 없습니다. 퀘스트 UI를 업데이트할 수 없습니다.");
             ToggleQuestUI(false, null, 0, 0);
         }
-        // --- END NEW ---
     }
 
     // --- NEW: 퀘스트 UI를 켜고 끄거나 내용을 업데이트하는 함수 ---
