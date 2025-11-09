@@ -101,18 +101,18 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 128
-        width: 351
-        height: 462
+        y: 129
+        width: 361
+        height: 461
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: dcd009769ce61ed4692554b7b872dcfa
-      internalID: 78710069
+      spriteID: 951b8a5cbe8d26944afaa3c1ead657d2
+      internalID: -559223132
       vertices: []
       indices: 
       edges: []
@@ -123,17 +123,17 @@ TextureImporter:
         serializedVersion: 2
         x: 428
         y: 169
-        width: 384
+        width: 383
         height: 421
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 28c616ae6a890074f8bee7248692d564
-      internalID: -310768305
+      spriteID: ccf5f66664055b048b4a8ecda05694ce
+      internalID: -1631921944
       vertices: []
       indices: 
       edges: []
@@ -143,18 +143,18 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 858
-        y: 268
+        y: 249
         width: 383
-        height: 322
+        height: 341
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8cb7a2475f48a5f46ac409bdf6be1ae4
-      internalID: -122886020
+      spriteID: abae80ecf96b9e54f9bdd9215b18a446
+      internalID: 1407273899
       vertices: []
       indices: 
       edges: []
@@ -164,18 +164,18 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 1289
-        y: 278
+        y: 239
         width: 383
-        height: 294
+        height: 333
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 800d0d35d11f9cf45b44ba9d848c0a21
-      internalID: 1131096508
+      spriteID: 172739fad5834ff4f9fe41feb35527a1
+      internalID: 1525657544
       vertices: []
       indices: 
       edges: []
@@ -189,14 +189,14 @@ TextureImporter:
         width: 383
         height: 413
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f97c31108d46c094fae3d4c0929d2f10
-      internalID: 911844169
+      spriteID: 15807f0bfecfa1747b3a090454929645
+      internalID: -2090486116
       vertices: []
       indices: 
       edges: []
@@ -208,16 +208,16 @@ TextureImporter:
         x: 2149
         y: 0
         width: 381
-        height: 291
+        height: 301
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 824d8935bf9be8c499ad4bbb4f0e5ce4
-      internalID: 938680578
+      spriteID: 13bfd8c3c6a55d641b8d8425b9ce9368
+      internalID: 1988019175
       vertices: []
       indices: 
       edges: []
@@ -225,7 +225,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: efb3b06b00cefb84ab4d4c51f538c39c
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -233,12 +233,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      ANIM_Cat_Jump_Left_0: 78710069
-      ANIM_Cat_Jump_Left_1: -310768305
-      ANIM_Cat_Jump_Left_2: -122886020
-      ANIM_Cat_Jump_Left_3: 1131096508
-      ANIM_Cat_Jump_Left_4: 911844169
-      ANIM_Cat_Jump_Left_5: 938680578
+      ANIM_Cat_Jump_Left_0: -559223132
+      ANIM_Cat_Jump_Left_1: -1631921944
+      ANIM_Cat_Jump_Left_2: 1407273899
+      ANIM_Cat_Jump_Left_3: 1525657544
+      ANIM_Cat_Jump_Left_4: -2090486116
+      ANIM_Cat_Jump_Left_5: 1988019175
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
