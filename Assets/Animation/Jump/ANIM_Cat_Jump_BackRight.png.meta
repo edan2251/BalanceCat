@@ -100,9 +100,9 @@ TextureImporter:
       name: ANIM_Cat_Jump_BackRight_0
       rect:
         serializedVersion: 2
-        x: 49
+        x: 39
         y: 129
-        width: 252
+        width: 262
         height: 461
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -111,8 +111,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4a9e5b76ff759e3458251c074375b295
-      internalID: -640254570
+      spriteID: 037d1777034b59d479b256c190b25330
+      internalID: 967100258
       vertices: []
       indices: 
       edges: []
@@ -132,8 +132,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f271f28ecc8eed34da1712b215caab33
-      internalID: 479623847
+      spriteID: 16e34b2468ba35140bc7ba4d7bb24e01
+      internalID: 566387556
       vertices: []
       indices: 
       edges: []
@@ -143,9 +143,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 719
-        y: 269
+        y: 249
         width: 282
-        height: 321
+        height: 341
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -153,8 +153,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ab5ed95725331a44481214cc21efe376
-      internalID: 878032838
+      spriteID: 605cec372130bbc4a9eb44cfc49ea441
+      internalID: 1202488818
       vertices: []
       indices: 
       edges: []
@@ -164,9 +164,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 1069
-        y: 279
+        y: 239
         width: 282
-        height: 292
+        height: 332
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -174,8 +174,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b34b4abe0da571046a2f94ee11c6578b
-      internalID: 1639491472
+      spriteID: ea274f4a8d45ed24db7d2a0037d927d3
+      internalID: -784982660
       vertices: []
       indices: 
       edges: []
@@ -195,8 +195,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e31add52ccdd9994985d675e9285d5c1
-      internalID: 1939722438
+      spriteID: 7bd1a93e37b55a1419e8e7d05c09596f
+      internalID: -1248387728
       vertices: []
       indices: 
       edges: []
@@ -216,8 +216,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f0b9a0f55d2033a40971687aa4e4d3f9
-      internalID: -636224772
+      spriteID: de14fa487f06efd47a34f89e7de16153
+      internalID: 1258322330
       vertices: []
       indices: 
       edges: []
@@ -225,7 +225,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 2a17bce904404e843abb3fc80a0af89b
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -233,12 +233,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      ANIM_Cat_Jump_BackRight_0: -640254570
-      ANIM_Cat_Jump_BackRight_1: 479623847
-      ANIM_Cat_Jump_BackRight_2: 878032838
-      ANIM_Cat_Jump_BackRight_3: 1639491472
-      ANIM_Cat_Jump_BackRight_4: 1939722438
-      ANIM_Cat_Jump_BackRight_5: -636224772
+      ANIM_Cat_Jump_BackRight_0: 967100258
+      ANIM_Cat_Jump_BackRight_1: 566387556
+      ANIM_Cat_Jump_BackRight_2: 1202488818
+      ANIM_Cat_Jump_BackRight_3: -784982660
+      ANIM_Cat_Jump_BackRight_4: -1248387728
+      ANIM_Cat_Jump_BackRight_5: 1258322330
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
