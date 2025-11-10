@@ -107,7 +107,7 @@ public class StageUIManager : MonoBehaviour
         }
 
         // 1. 기본 정보 업데이트
-        chapterNameText.text = $"{data.chapterName}";
+        chapterNameText.text = $"{data.chapterName}{"_"}";
 
         // 2. 시작 버튼 및 시놉시스
         startButton.onClick.RemoveAllListeners();
