@@ -70,6 +70,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Control/Links")]
     [SerializeField] InventorySideBias sideBias;
     bool _controlEnabled = true;
+    private bool _speedControlEnabled = true;
 
     Vector3 moveDirection;
     float currentMoveSpeed;
@@ -151,7 +152,10 @@ public class PlayerMovement : MonoBehaviour
         }
 
         GetInput();
-        SpeedControl();
+        if (_speedControlEnabled)
+        {
+            SpeedControl();
+        }
         UpdateAnimator();
 
         // 지면에 있을 때만 드래그 적용
@@ -203,6 +207,11 @@ public class PlayerMovement : MonoBehaviour
             Jump();
             Invoke(nameof(ResetJump), jumpCooldown);
         }
+    }
+
+    public void SetSpeedControl(bool isEnabled)
+    {
+        _speedControlEnabled = isEnabled;
     }
 
     private void MovePlayer()
@@ -344,6 +353,14 @@ public class PlayerMovement : MonoBehaviour
             _isDrowning = false;
             rb.drag = 0f;
         }
+
+        if (!inWater)
+        {
+            // 물에서 나왔을 때
+            _isDrowning = false;
+            rb.drag = 0f;
+            SetSpeedControl(true); // [신규] 속도 제한 복구
+        }
     }
 
     private void OnDrawGizmos()
@@ -458,6 +475,11 @@ public class PlayerMovement : MonoBehaviour
         yield return StartCoroutine(FadeCanvas(0f, fadeDuration));
 
         // 5. 조작 권한 돌려주기
+        SetControlEnabled(true);
+        _isRespawning = false;
+
+        // 4. 조작 권한 돌려주기
+        SetSpeedControl(true); // [신규] 속도 제한 복구
         SetControlEnabled(true);
         _isRespawning = false;
     }
