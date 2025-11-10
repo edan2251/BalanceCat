@@ -24,6 +24,21 @@ public class PlayerMovement : MonoBehaviour
     public KeyCode jumpKey = KeyCode.Space;
     public KeyCode runKey = KeyCode.LeftShift;
 
+    // --- 물 관련 설정 추가 ---
+    [Header("Water Physics")]
+    [Tooltip("물 속에서 움직이는 속도 (천천히)")]
+    public float waterMoveSpeed = 2.0f;
+    [Tooltip("물에서 둥둥 뜨게 하는 기본 부력")]
+    public float floatingForce = 10.0f;
+    [Tooltip("물 속에서의 저항 (움직임을 둔하게 만듦)")]
+    public float waterDrag = 2.0f;
+
+    // --- [여기에 아래 2줄 추가] ---
+    [Tooltip("둥실거리는 파도의 속도 (낮을수록 '두웅~')")]
+    public float waterBobbingSpeed = 1.0f;
+    [Tooltip("둥실거리는 파도의 높낮이 (클수록 '시일~')")]
+    public float waterBobbingAmount = 0.5f;
+
     // --- 지면 체크 설정 ---
     [Header("Ground Check")]
     [Tooltip("플레이어 콜라이더의 높이 절반값 (반지름)")]
@@ -34,6 +49,9 @@ public class PlayerMovement : MonoBehaviour
     public float groundCheckMargin = 0.1f;
     public LayerMask whatIsGround;
     bool grounded;
+
+    // --- 물 상태 변수 추가 ---
+    private bool _isInWater = false;
 
     // SpriteDirectionalController_Octo 에서 참조하는 속성
     [HideInInspector] public bool IsGrounded => grounded;
@@ -87,21 +105,24 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 boxHalfExtents = new Vector3(groundCheckExtent, 0.05f, groundCheckExtent);
 
-        grounded = Physics.BoxCast(
-            boxCenter,
-            boxHalfExtents,
-            Vector3.down,
-            Quaternion.identity,
-            groundCheckMargin, 
-            whatIsGround
-        );
-        
+        grounded = !_isInWater && Physics.BoxCast(
+             boxCenter,
+             boxHalfExtents,
+             Vector3.down,
+             Quaternion.identity,
+             groundCheckMargin,
+             whatIsGround
+         );
+
         GetInput();
         SpeedControl();
         UpdateAnimator();
 
         // 지면에 있을 때만 드래그 적용
-        rb.drag = grounded ? groundDrag : 0f;
+        if (!_isInWater)
+        {
+            rb.drag = grounded ? groundDrag : 0f;
+        }
     }
 
     private void FixedUpdate()
@@ -109,7 +130,14 @@ public class PlayerMovement : MonoBehaviour
         MovePlayer();
         RotatePlayer();
 
-        ApplyVariableGravity();
+        if (_isInWater)
+        {
+            ApplyWaterBuoyancy();
+        }
+        else
+        {
+            ApplyVariableGravity();
+        }
     }
 
     private void GetInput()
@@ -117,16 +145,23 @@ public class PlayerMovement : MonoBehaviour
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
-        bool isRunningInput = Input.GetKey(runKey);
+        // [수정] 물 속에선 달리기(runKey) 입력을 무시
+        bool isRunningInput = Input.GetKey(runKey) && !_isInWater;
         float speedMultiplier = isRunningInput ? runMultiplier : 1.0f;
         currentMoveSpeed = moveSpeed * speedMultiplier;
+
+        // [추가] 물 속에 있다면, 이동 속도를 waterMoveSpeed로 덮어씀
+        if (_isInWater)
+        {
+            currentMoveSpeed = waterMoveSpeed;
+        }
 
         float corr = 0f;
         if (Input.GetKey(KeyCode.Z)) corr -= 1f;
         if (Input.GetKey(KeyCode.C)) corr += 1f;
         sideBias?.SetCorrectionInput(corr);
 
-        if (Input.GetKey(jumpKey) && readyToJump && grounded)
+        if (Input.GetKey(jumpKey) && readyToJump && grounded && !_isInWater)
         {
             readyToJump = false;
             Jump();
@@ -141,7 +176,12 @@ public class PlayerMovement : MonoBehaviour
         Vector3 camRight = new Vector3(orientation.right.x, 0f, orientation.right.z).normalized;
         moveDirection = (camForward * verticalInput + camRight * horizontalInput).normalized;
 
-        if (grounded)
+        if (_isInWater)
+        {
+            // 물 속에서는 airMultiplier 없이, waterMoveSpeed가 적용된 currentMoveSpeed 사용
+            rb.AddForce(moveDirection * currentMoveSpeed * 10f, ForceMode.Force);
+        }
+        else if (grounded)
             rb.AddForce(moveDirection * currentMoveSpeed * 10f, ForceMode.Force);
         else
             // 공중에서는 airMultiplier를 곱하여 이동 제어
@@ -188,8 +228,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void ApplyVariableGravity()
     {
-        // 땅에 있을 때는 적용하지 않음
-        if (grounded) return;
+        // [수정] 물 속에 있거나 땅에 있을 때는 적용하지 않음
+        if (grounded || _isInWater) return;
 
         float gravityScale;
 
@@ -213,16 +253,59 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    private void ApplyWaterBuoyancy()
+    {
+        if (!_isInWater) return;
+
+        float bobbingFactor = Mathf.Sin(Time.time * waterBobbingSpeed) * waterBobbingAmount;
+
+        float totalUpwardForce = floatingForce + bobbingFactor;
+
+        rb.AddForce(Vector3.up * totalUpwardForce, ForceMode.Force);
+
+    }
 
     private void UpdateAnimator()
     {
         if (playerAnimator == null) return;
+
+        // [추가] 애니메이터에게 물 속에 있는지 전달
+        playerAnimator.SetBool("isInWater", _isInWater);
+
+        // [수정] 물 속에 있을 때는 강제로 멈춤 (Idle_Stand 상태 유도)
+        if (_isInWater)
+        {
+            playerAnimator.SetBool("isRunning", false);
+            // 만약 'isMoving' 같은 bool도 사용한다면 여기서 false로 설정
+            // playerAnimator.SetBool("isMoving", false); 
+            return; // 물 속에선 아래 로직 실행 안 함
+        }
 
         bool isMoving = horizontalInput != 0 || verticalInput != 0;
         bool isRunning = Input.GetKey(runKey) && isMoving;
         playerAnimator.SetBool("isRunning", isRunning);
     }
 
+    public void SetInWater(bool inWater)
+    {
+        _isInWater = inWater;
+
+        if (_isInWater)
+        {
+            // 물에 들어갔을 때
+            // [삭제] rb.useGravity = false; // <-- 이 줄을 반드시 삭제하거나 주석 처리!
+            rb.drag = waterDrag;   // 물 저항 적용
+
+            // 물에 빠지는 순간 Y축 속도를 0에 가깝게 줄여서 '첨벙' 느낌을 줌 (선택 사항)
+            rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y * 0.1f, rb.velocity.z);
+        }
+        else
+        {
+            // 물에서 나왔을 때
+            // [삭제] rb.useGravity = true; // <-- 이 줄도 삭제!
+            rb.drag = 0f; // 기본 드래그 (Update에서 'grounded' 상태에 따라 다시 설정됨)
+        }
+    }
 
     private void OnDrawGizmos()
     {
