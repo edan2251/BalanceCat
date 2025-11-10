@@ -3,43 +3,41 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class WaterZone : MonoBehaviour
 {
+    // [신규] 물 오브젝트의 콜라이더를 저장할 변수
+    private Collider _waterCollider;
+
     private void Awake()
     {
-        // 이 스크립트가 작동하려면 반드시 콜라이더가 Trigger여야 함
-        Collider col = GetComponent<Collider>();
-        if (!col.isTrigger)
+        _waterCollider = GetComponent<Collider>();
+        if (!_waterCollider.isTrigger)
         {
             Debug.LogWarning($"WaterZone '{gameObject.name}'의 콜라이더가 Trigger가 아닙니다. Is Trigger를 체크해주세요.", this);
-            col.isTrigger = true; // 강제로 설정
+            _waterCollider.isTrigger = true;
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        // 플레이어만 감지
         if (other.CompareTag("Player"))
         {
-            // 플레이어의 PlayerMovement 스크립트를 찾음
             PlayerMovement player = other.GetComponent<PlayerMovement>();
             if (player != null)
             {
-                // 플레이어에게 물에 들어왔다고 알림
-                player.SetInWater(true);
+                // [수정] 물에 들어왔다고 알릴 때, '이 물의 콜라이더' 정보도 함께 전달
+                player.SetInWater(true, _waterCollider);
             }
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        // 플레이어만 감지
         if (other.CompareTag("Player"))
         {
-            // 플레이어의 PlayerMovement 스크립트를 찾음
             PlayerMovement player = other.GetComponent<PlayerMovement>();
             if (player != null)
             {
-                // 플레이어에게 물에서 나갔다고 알림
-                player.SetInWater(false);
+                // [수정] 물에서 나갈 때도 정보 전달 (null)
+                player.SetInWater(false, null);
             }
         }
     }

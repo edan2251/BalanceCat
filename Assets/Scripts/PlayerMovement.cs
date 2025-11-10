@@ -76,6 +76,23 @@ public class PlayerMovement : MonoBehaviour
 
     public bool IsControlEnabled => _controlEnabled;
 
+
+    [Header("Respawn")] // [신규] 헤더 추가
+    [Tooltip("머리 위치를 감지할 빈 오브젝트")]
+    [SerializeField] private Transform headCheckPoint;
+    [SerializeField] CanvasGroup fadePanelCanvasGroup;
+
+    [Tooltip("수위 조절이 되는 메인 물 오브젝트 (MovableWater 스크립트가 있는)")]
+    [SerializeField] private MovableWater mainWaterObject;
+
+    private Vector3 _lastSafePosition;
+    private float _safePositionTimer = 0f;
+    private bool _isRespawning = false;
+    private bool _isDrowning = false;
+
+    // [신규] 현재 플레이어가 닿아있는 물의 콜라이더
+    private Collider _currentWaterCollider;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -113,6 +130,25 @@ public class PlayerMovement : MonoBehaviour
              groundCheckMargin,
              whatIsGround
          );
+
+        if (grounded)
+        {
+            _safePositionTimer += Time.deltaTime;
+            if (_safePositionTimer > 0.5f)
+            {
+                _lastSafePosition = transform.position;
+                _safePositionTimer = 0f;
+            }
+        }
+        else
+        {
+            _safePositionTimer = 0f;
+        }
+
+        if (_isInWater && !_isRespawning)
+        {
+            CheckDrowning();
+        }
 
         GetInput();
         SpeedControl();
@@ -257,12 +293,17 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!_isInWater) return;
 
-        float bobbingFactor = Mathf.Sin(Time.time * waterBobbingSpeed) * waterBobbingAmount;
-
-        float totalUpwardForce = floatingForce + bobbingFactor;
-
-        rb.AddForce(Vector3.up * totalUpwardForce, ForceMode.Force);
-
+        if (_isDrowning)
+        {
+            rb.AddForce(Vector3.up * 9.3f, ForceMode.Force);
+        }
+        else
+        {
+            // 기존 둥실 로직: 파도 효과 + 기본 부력
+            float bobbingFactor = Mathf.Sin(Time.time * waterBobbingSpeed) * waterBobbingAmount;
+            float totalUpwardForce = floatingForce + bobbingFactor;
+            rb.AddForce(Vector3.up * totalUpwardForce, ForceMode.Force);
+        }
     }
 
     private void UpdateAnimator()
@@ -286,24 +327,22 @@ public class PlayerMovement : MonoBehaviour
         playerAnimator.SetBool("isRunning", isRunning);
     }
 
-    public void SetInWater(bool inWater)
+    public void SetInWater(bool inWater, Collider waterCollider)
     {
         _isInWater = inWater;
+        _currentWaterCollider = waterCollider; 
 
         if (_isInWater)
         {
             // 물에 들어갔을 때
-            // [삭제] rb.useGravity = false; // <-- 이 줄을 반드시 삭제하거나 주석 처리!
-            rb.drag = waterDrag;   // 물 저항 적용
-
-            // 물에 빠지는 순간 Y축 속도를 0에 가깝게 줄여서 '첨벙' 느낌을 줌 (선택 사항)
+            rb.drag = waterDrag;
             rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y * 0.1f, rb.velocity.z);
         }
         else
         {
             // 물에서 나왔을 때
-            // [삭제] rb.useGravity = true; // <-- 이 줄도 삭제!
-            rb.drag = 0f; // 기본 드래그 (Update에서 'grounded' 상태에 따라 다시 설정됨)
+            _isDrowning = false;
+            rb.drag = 0f;
         }
     }
 
@@ -354,6 +393,103 @@ public class PlayerMovement : MonoBehaviour
                 // 있으면 쓰고, 없으면 무시됨(경고가 뜨면 빼도 됨)
                 playerAnimator.SetBool("isMoving", false);
             }
+        }
+    }
+
+    private void CheckDrowning()
+    {
+        // 머리 위치 표식이 없거나, 물 콜라이더 정보가 없으면 실행 안 함
+        if (headCheckPoint == null || _currentWaterCollider == null) return;
+
+        // [수정] 물 표면 높이를 '콜라이더의 가장 높은 지점(bounds.max.y)'으로 계산
+        float waterSurfaceY = _currentWaterCollider.bounds.max.y;
+
+        // 머리 위치
+        float headY = headCheckPoint.position.y;
+
+        // 머리가 물 표면보다 낮으면 리스폰 트리거
+        if (headY < waterSurfaceY && !_isDrowning && !_isRespawning)
+        {
+            // 0.3초 뒤 리스폰을 실행하는 코루틴을 *시작만* 함
+            StartCoroutine(DrowningProcessCoroutine());
+        }
+    }
+
+    // [신규] 리스폰 트리거 함수 (DeepWaterZone이 호출)
+    public void TriggerRespawn()
+    {
+        // 리스폰 중이 아닐 때만 실행
+        if (_isRespawning) return;
+
+        StartCoroutine(RespawnCoroutine());
+    }
+
+    private IEnumerator RespawnCoroutine()
+    {
+        _isRespawning = true;
+        SetControlEnabled(false); // 플레이어 조작 비활성화
+
+        // 1. 화면 어둡게 (Fade Out)
+        float fadeDuration = 0.5f;
+        yield return StartCoroutine(FadeCanvas(3f, fadeDuration));
+
+        // --- [신규] 물 높이 리셋 ---
+        if (mainWaterObject != null)
+        {
+            mainWaterObject.ResetToDefaultHeight();
+        }
+        else
+        {
+            Debug.LogWarning("PlayerMovement: mainWaterObject가 연결되지 않아 수위를 리셋할 수 없습니다.");
+        }
+        // --- [신규] 끝 ---
+
+        // 2. 플레이어 위치 및 상태 리셋
+        transform.position = _lastSafePosition;
+        rb.velocity = Vector3.zero;
+
+        // 3. 물에서 강제로 꺼냄
+        if (_isInWater)
+        {
+            SetInWater(false, null);
+        }
+
+        // 4. 화면 밝게 (Fade In)
+        yield return StartCoroutine(FadeCanvas(0f, fadeDuration));
+
+        // 5. 조작 권한 돌려주기
+        SetControlEnabled(true);
+        _isRespawning = false;
+    }
+
+    // [신규] 캔버스 페이드 효과를 위한 코루틴
+    private IEnumerator FadeCanvas(float targetAlpha, float duration)
+    {
+        if (fadePanelCanvasGroup == null) yield break; // 패널 없으면 스킵
+
+        float startAlpha = fadePanelCanvasGroup.alpha;
+        float timer = 0f;
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            fadePanelCanvasGroup.alpha = Mathf.Lerp(startAlpha, targetAlpha, timer / duration);
+            yield return null;
+        }
+        fadePanelCanvasGroup.alpha = targetAlpha;
+    }
+
+    private IEnumerator DrowningProcessCoroutine()
+    {
+        _isDrowning = true;
+
+        // 2. 0.3초 대기 (가라앉는 연출 시간)
+        yield return new WaitForSeconds(0.4f);
+
+        if (_isDrowning)
+        {
+            // 기존 리스폰 코루틴 실행
+            StartCoroutine(RespawnCoroutine());
         }
     }
 }
