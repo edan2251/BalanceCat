@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 9bb4cc420f99277419d37810f79a5948
+guid: f5e16e203907c0b4f809110ac543ea20
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -97,12 +97,12 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ANIM_Cat_RightFall_BackLeft_0
+      name: ANIM_Cat_RightFall_FrontRight_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 49
         y: 0
-        width: 311
+        width: 292
         height: 320
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -111,19 +111,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ec4b0dc80e942ef43a71622c501eaaed
-      internalID: -1622296932
+      spriteID: 8e381b1b88fc31d469c2776771837ddb
+      internalID: -310669367
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ANIM_Cat_RightFall_BackLeft_1
+      name: ANIM_Cat_RightFall_FrontRight_1
       rect:
         serializedVersion: 2
-        x: 479
+        x: 469
         y: 0
-        width: 312
+        width: 292
         height: 320
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -132,17 +132,17 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 700f0a892fb431142af90c8788a3db17
-      internalID: 488597187
+      spriteID: 48eb8effffbcd5147b56c57da454a998
+      internalID: -1403663918
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ANIM_Cat_RightFall_BackLeft_2
+      name: ANIM_Cat_RightFall_FrontRight_2
       rect:
         serializedVersion: 2
-        x: 929
+        x: 869
         y: 0
         width: 342
         height: 320
@@ -153,38 +153,17 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6df553fd0293ab9419f2f3de9e528938
-      internalID: 1890173538
+      spriteID: 6c6761a985923414c8e3500698d6977a
+      internalID: 1083834659
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ANIM_Cat_RightFall_BackLeft_3
+      name: ANIM_Cat_RightFall_FrontRight_3
       rect:
         serializedVersion: 2
-        x: 1368
-        y: 0
-        width: 344
-        height: 320
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 0f7a1697ccacb25428a39d6735ef4b9c
-      internalID: 1206276005
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ANIM_Cat_RightFall_BackLeft_4
-      rect:
-        serializedVersion: 2
-        x: 1808
+        x: 1301
         y: 0
         width: 342
         height: 320
@@ -195,8 +174,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: df38d1c903ae58f4e8c6226b741d9df7
-      internalID: 527384920
+      spriteID: b3031d4feeb00be49954cb32c76173eb
+      internalID: -1378903032
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ANIM_Cat_RightFall_FrontRight_4
+      rect:
+        serializedVersion: 2
+        x: 1729
+        y: 0
+        width: 342
+        height: 320
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0961d89cf82122947820dd90d1698b50
+      internalID: 1520696921
       vertices: []
       indices: 
       edges: []
@@ -204,7 +204,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 0254f56b5f2ecac47b7bd398c6a94fca
     internalID: 0
     vertices: []
     indices: 
@@ -212,11 +212,11 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      ANIM_Cat_RightFall_BackLeft_0: -1622296932
-      ANIM_Cat_RightFall_BackLeft_1: 488597187
-      ANIM_Cat_RightFall_BackLeft_2: 1890173538
-      ANIM_Cat_RightFall_BackLeft_3: 1206276005
-      ANIM_Cat_RightFall_BackLeft_4: 527384920
+      ANIM_Cat_RightFall_FrontRight_0: -310669367
+      ANIM_Cat_RightFall_FrontRight_1: -1403663918
+      ANIM_Cat_RightFall_FrontRight_2: 1083834659
+      ANIM_Cat_RightFall_FrontRight_3: -1378903032
+      ANIM_Cat_RightFall_FrontRight_4: 1520696921
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

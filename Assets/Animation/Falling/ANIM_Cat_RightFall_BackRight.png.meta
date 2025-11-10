@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 835927ebc9a73fe45a66c13a6ea1b5d1
+guid: 53c66a882c9aa434ba2895e0eea63088
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -97,13 +97,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ANIM_Cat_RightFall_Front_0
+      name: ANIM_Cat_RightFall_BackRight_0
       rect:
         serializedVersion: 2
-        x: 60
+        x: 9
         y: 0
-        width: 240
-        height: 310
+        width: 322
+        height: 320
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -111,20 +111,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 38c85807551aa764c950d94a8d69b1e8
-      internalID: -2030595450
+      spriteID: bb020ef202e8d8547b914f968c796737
+      internalID: -15561764
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ANIM_Cat_RightFall_Front_1
+      name: ANIM_Cat_RightFall_BackRight_1
       rect:
         serializedVersion: 2
-        x: 420
+        x: 438
         y: 0
-        width: 240
-        height: 310
+        width: 344
+        height: 320
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -132,20 +132,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6538cc6eb42ea2e4d930a7ecfddb9c25
-      internalID: -1664016829
+      spriteID: e6e33f95510d4b346b6ead4b66cc7049
+      internalID: -1936169541
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ANIM_Cat_RightFall_Front_2
+      name: ANIM_Cat_RightFall_BackRight_2
       rect:
         serializedVersion: 2
-        x: 740
+        x: 879
         y: 0
-        width: 320
-        height: 310
+        width: 372
+        height: 320
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -153,20 +153,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3f9bdba4f953e9b4496d0b1e8e1f28d6
-      internalID: -1638908956
+      spriteID: eb4b509898377254a8a7588fcfb34dae
+      internalID: 530134569
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ANIM_Cat_RightFall_Front_3
+      name: ANIM_Cat_RightFall_BackRight_3
       rect:
         serializedVersion: 2
-        x: 1110
+        x: 1319
         y: 0
-        width: 320
-        height: 310
+        width: 372
+        height: 320
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -174,20 +174,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: aafdb2feeaf1bb247af4bbd5b57b7437
-      internalID: -2054016988
+      spriteID: 99af86bfd5ad48949a0fd29c76947aaa
+      internalID: -187304006
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ANIM_Cat_RightFall_Front_4
+      name: ANIM_Cat_RightFall_BackRight_4
       rect:
         serializedVersion: 2
-        x: 1480
+        x: 1759
         y: 0
-        width: 320
-        height: 310
+        width: 373
+        height: 320
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -195,8 +195,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 36c39acc83e2dd44f9acc823e9831511
-      internalID: 1776081698
+      spriteID: cd781f0e58c7eef449ac7eae4f7766f0
+      internalID: 956835833
       vertices: []
       indices: 
       edges: []
@@ -204,7 +204,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: c1577b5262b070742bea1ba9a8a5d270
     internalID: 0
     vertices: []
     indices: 
@@ -212,11 +212,11 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      ANIM_Cat_RightFall_Front_0: -2030595450
-      ANIM_Cat_RightFall_Front_1: -1664016829
-      ANIM_Cat_RightFall_Front_2: -1638908956
-      ANIM_Cat_RightFall_Front_3: -2054016988
-      ANIM_Cat_RightFall_Front_4: 1776081698
+      ANIM_Cat_RightFall_BackRight_0: -15561764
+      ANIM_Cat_RightFall_BackRight_1: -1936169541
+      ANIM_Cat_RightFall_BackRight_2: 530134569
+      ANIM_Cat_RightFall_BackRight_3: -187304006
+      ANIM_Cat_RightFall_BackRight_4: 956835833
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
