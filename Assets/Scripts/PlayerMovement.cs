@@ -32,12 +32,17 @@ public class PlayerMovement : MonoBehaviour
     public float floatingForce = 10.0f;
     [Tooltip("물 속에서의 저항 (움직임을 둔하게 만듦)")]
     public float waterDrag = 2.0f;
-
-    // --- [여기에 아래 2줄 추가] ---
     [Tooltip("둥실거리는 파도의 속도 (낮을수록 '두웅~')")]
     public float waterBobbingSpeed = 1.0f;
     [Tooltip("둥실거리는 파도의 높낮이 (클수록 '시일~')")]
     public float waterBobbingAmount = 0.5f;
+
+    [Header("Ice Physics")]
+    [Tooltip("얼음 위에서의 지면 저항 (거의 0)")]
+    public float iceGroundDrag = 0.1f;
+    [Tooltip("얼음 위에서의 조작 민첩성 (0~1 사이, 낮을수록 미끄러짐)")]
+    [Range(0f, 1f)]
+    public float iceControlMultiplier = 0.1f;
 
     // --- 지면 체크 설정 ---
     [Header("Ground Check")]
@@ -50,8 +55,8 @@ public class PlayerMovement : MonoBehaviour
     public LayerMask whatIsGround;
     bool grounded;
 
-    // --- 물 상태 변수 추가 ---
     private bool _isInWater = false;
+    private bool _isOnIce = false;
 
     // SpriteDirectionalController_Octo 에서 참조하는 속성
     [HideInInspector] public bool IsGrounded => grounded;
@@ -159,9 +164,20 @@ public class PlayerMovement : MonoBehaviour
         UpdateAnimator();
 
         // 지면에 있을 때만 드래그 적용
-        if (!_isInWater)
+        if (_isInWater)
         {
-            rb.drag = grounded ? groundDrag : 0f;
+            // (기존) 물 속에 있을 땐 SetInWater에서 waterDrag를 이미 적용함
+            // (rb.drag = waterDrag; 가 SetInWater에 있어야 함)
+        }
+        else if (grounded)
+        {
+            // 땅에 있을 때
+            rb.drag = _isOnIce ? iceGroundDrag : groundDrag;
+        }
+        else
+        {
+            // 공중에 있을 때
+            rb.drag = 0f;
         }
     }
 
@@ -211,6 +227,12 @@ public class PlayerMovement : MonoBehaviour
 
     public void SetSpeedControl(bool isEnabled)
     {
+        // [수정] 얼음 위에 있을 때는 속도 제한을 끄지 않도록 함
+        if (_isOnIce)
+        {
+            _speedControlEnabled = true;
+            return;
+        }
         _speedControlEnabled = isEnabled;
     }
 
@@ -221,16 +243,20 @@ public class PlayerMovement : MonoBehaviour
         Vector3 camRight = new Vector3(orientation.right.x, 0f, orientation.right.z).normalized;
         moveDirection = (camForward * verticalInput + camRight * horizontalInput).normalized;
 
+        float currentControlMultiplier = _isOnIce ? iceControlMultiplier : 1.0f;
+
         if (_isInWater)
         {
-            // 물 속에서는 airMultiplier 없이, waterMoveSpeed가 적용된 currentMoveSpeed 사용
             rb.AddForce(moveDirection * currentMoveSpeed * 10f, ForceMode.Force);
         }
         else if (grounded)
-            rb.AddForce(moveDirection * currentMoveSpeed * 10f, ForceMode.Force);
+        {
+            rb.AddForce(moveDirection * currentMoveSpeed * 10f * currentControlMultiplier, ForceMode.Force);
+        }
         else
-            // 공중에서는 airMultiplier를 곱하여 이동 제어
-            rb.AddForce(moveDirection * currentMoveSpeed * 10f * airMultiplier, ForceMode.Force);
+        {
+            rb.AddForce(moveDirection * currentMoveSpeed * 10f * airMultiplier * currentControlMultiplier, ForceMode.Force);
+        }
     }
 
     private void RotatePlayer()
@@ -336,6 +362,11 @@ public class PlayerMovement : MonoBehaviour
         playerAnimator.SetBool("isRunning", isRunning);
     }
 
+    public void SetSlippery(bool isOnIce)
+    {
+        _isOnIce = isOnIce;
+    }
+
     public void SetInWater(bool inWater, Collider waterCollider)
     {
         _isInWater = inWater;
@@ -359,7 +390,7 @@ public class PlayerMovement : MonoBehaviour
             // 물에서 나왔을 때
             _isDrowning = false;
             rb.drag = 0f;
-            SetSpeedControl(true); // [신규] 속도 제한 복구
+            if (!_isOnIce) SetSpeedControl(true);
         }
     }
 
@@ -470,6 +501,7 @@ public class PlayerMovement : MonoBehaviour
         {
             SetInWater(false, null);
         }
+        SetSlippery(false);
 
         // 4. 화면 밝게 (Fade In)
         yield return StartCoroutine(FadeCanvas(0f, fadeDuration));
