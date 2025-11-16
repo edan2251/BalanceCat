@@ -1,3 +1,4 @@
+using GLTFast.Schema;
 using UnityEngine;
 
 public class ShowCursor : MonoBehaviour
@@ -18,6 +19,10 @@ public class ShowCursor : MonoBehaviour
 
     [SerializeField]
     private CursorMode _cursorMode = CursorMode.Auto;
+
+    [SerializeField]
+    private Animator menuAnimator; 
+
 
     void Start()
     {
@@ -48,10 +53,12 @@ public class ShowCursor : MonoBehaviour
             if (IsLocked)
             {
                 UnlockCursor();
+                
             }
             else
             {
                 LockCursor();
+                
             }
         }
 
@@ -73,6 +80,10 @@ public class ShowCursor : MonoBehaviour
 
     private void LockCursor()
     {
+        if (menuAnimator != null)
+        {
+            menuAnimator.SetBool("isOpen", false);
+        }
         if (!ForceUnlocked)
         {
             Cursor.lockState = CursorLockMode.Locked;
@@ -83,6 +94,11 @@ public class ShowCursor : MonoBehaviour
 
     public void UnlockCursor()
     {
+        if (menuAnimator != null)
+        {
+            menuAnimator.SetBool("isOpen", true);
+        }
+
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         IsLocked = false;
