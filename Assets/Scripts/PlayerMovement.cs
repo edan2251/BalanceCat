@@ -73,7 +73,6 @@ public class PlayerMovement : MonoBehaviour
     [HideInInspector] public float verticalInput;
 
     [Header("Control/Links")]
-    [SerializeField] InventorySideBias sideBias;
     bool _controlEnabled = true;
     private bool _speedControlEnabled = true;
 
@@ -82,8 +81,10 @@ public class PlayerMovement : MonoBehaviour
 
     public bool IsControlEnabled => _controlEnabled;
 
+    public InventorySideBias sideBias;
 
-    [Header("Respawn")] // [신규] 헤더 추가
+
+    [Header("Respawn")]
     [Tooltip("머리 위치를 감지할 빈 오브젝트")]
     [SerializeField] private Transform headCheckPoint;
     [SerializeField] CanvasGroup fadePanelCanvasGroup;
@@ -113,12 +114,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if (!_controlEnabled)
-        {
-            sideBias?.SetCorrectionInput(0f); // 잠금 시 보정 해제
-            return;                           // 입력 처리 차단(중력/물리는 기존 FixedUpdate에 맡김)
-        }
-
         CapsuleCollider capsule = GetComponent<CapsuleCollider>();
         float capsuleRadius = capsule != null ? capsule.radius : 0.5f;
 
@@ -212,11 +207,6 @@ public class PlayerMovement : MonoBehaviour
             currentMoveSpeed = waterMoveSpeed;
         }
 
-        float corr = 0f;
-        if (Input.GetKey(KeyCode.Z)) corr -= 1f;
-        if (Input.GetKey(KeyCode.C)) corr += 1f;
-        sideBias?.SetCorrectionInput(corr);
-
         if (Input.GetKey(jumpKey) && readyToJump && grounded && !_isInWater)
         {
             readyToJump = false;
@@ -242,20 +232,36 @@ public class PlayerMovement : MonoBehaviour
         Vector3 camForward = new Vector3(orientation.forward.x, 0f, orientation.forward.z).normalized;
         Vector3 camRight = new Vector3(orientation.right.x, 0f, orientation.right.z).normalized;
         moveDirection = (camForward * verticalInput + camRight * horizontalInput).normalized;
+        Vector3 finalMoveDir = moveDirection;
 
         float currentControlMultiplier = _isOnIce ? iceControlMultiplier : 1.0f;
 
+        if (sideBias != null && finalMoveDir.sqrMagnitude > 0.001f)
+        {
+            float tilt = sideBias.tilt;
+
+            if (Mathf.Abs(tilt) > 0.001f)
+            {
+                Vector3 sideDir = Vector3.Cross(Vector3.up, finalMoveDir).normalized;
+                float driftScale = 1f;
+                Vector3 drift = sideDir * (tilt * driftScale);
+
+                finalMoveDir += drift;
+                finalMoveDir.Normalize();
+            }
+        }
+
         if (_isInWater)
         {
-            rb.AddForce(moveDirection * currentMoveSpeed * 10f, ForceMode.Force);
+            rb.AddForce(finalMoveDir * currentMoveSpeed * 10f, ForceMode.Force);
         }
         else if (grounded)
         {
-            rb.AddForce(moveDirection * currentMoveSpeed * 10f * currentControlMultiplier, ForceMode.Force);
+            rb.AddForce(finalMoveDir * currentMoveSpeed * 10f * currentControlMultiplier, ForceMode.Force);
         }
         else
         {
-            rb.AddForce(moveDirection * currentMoveSpeed * 10f * airMultiplier * currentControlMultiplier, ForceMode.Force);
+            rb.AddForce(finalMoveDir * currentMoveSpeed * 10f * airMultiplier * currentControlMultiplier, ForceMode.Force);
         }
     }
 
