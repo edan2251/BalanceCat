@@ -36,6 +36,9 @@ public class WarehouseController : MonoBehaviour
     {
         if (warehouseInventory == null) return;
 
+        warehouseInventory.EnsureReady();
+        if (warehouseInventory.leftGrid == null || warehouseInventory.rightGrid == null) return;
+
         int count = warehouseInventory.leftGrid.placements.Count + warehouseInventory.rightGrid.placements.Count;
         bool ok = count >= clearThreshold;
         Cleared = ok;

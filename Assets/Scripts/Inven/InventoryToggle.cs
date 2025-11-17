@@ -79,7 +79,7 @@ public class InventoryToggle : MonoBehaviour
         }
         if (EventSystem.current) EventSystem.current.sendNavigationEvents = open;
 
-        playerMovement?.SetControlEnabled(!open); // [ADD] ¡ç ¿ä°Ô ÇÙ½É
+        playerMovement?.SetControlEnabled(!open);
     }
 
     public void ForceClose()

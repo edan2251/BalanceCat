@@ -8,12 +8,11 @@ public class Inventory : MonoBehaviour
     public int gridWidth = 6;
     public int gridHeight = 6;
 
-    public float carryCapacity = 999f; // 무게
+    public float carryCapacity = 20f; // 무게
 
 
     public InventoryGrid leftGrid { get; private set; }
     public InventoryGrid rightGrid { get; private set; }
-
 
     public event Action OnChanged;
 
@@ -46,7 +45,7 @@ public class Inventory : MonoBehaviour
     public bool TryAddAuto(ItemInstance item, bool allowRotate = true)
     {
         if (item == null || item.data == null) return false;
-        int count = Mathf.Max(1, item.quantity);
+        int count = 1;
 
         var order = new (BagSide side, Area area)[]
         {
@@ -61,7 +60,7 @@ public class Inventory : MonoBehaviour
 
         for (int i = 0; i < count; i++)
         {
-            var unit = new ItemInstance(item.data, 1);
+            var unit = new ItemInstance(item.data);
 
             bool placed = false;
             foreach (var (side, area) in order)

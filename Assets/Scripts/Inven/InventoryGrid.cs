@@ -1,23 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public enum BagSide { Left, Right }
 public enum Area { Top, Bottom }
-
 
 public class InventoryGrid
 {
     public readonly int width;
     public readonly int height;
 
-
-    // 각 셀에 배치된 아이템 참조(없으면 null)
     private ItemPlacement[,] owner;
     public readonly List<ItemPlacement> placements = new List<ItemPlacement>();
 
 
-    public int HalfY => height / 2; // 상/하 절반 경계
+    public int HalfY => height / 2;
 
 
     public InventoryGrid(int w, int h)
@@ -77,9 +75,7 @@ public class InventoryGrid
         int yEnd = (area == Area.Top) ? (HalfY - 1) : (height - 1);
         if (HalfY == 0) { yStart = 0; yEnd = height - 1; }
 
-
-        // x 열 순회자
-        System.Func<IEnumerable<int>> XSeq = () =>
+        Func<IEnumerable<int>> XSeq = () =>
         {
             if (scanLeftToRight)
             {
@@ -96,12 +92,11 @@ public class InventoryGrid
         };
 
 
-        // 회전 후보
         IEnumerable<bool> RotOptions()
         {
             if (!allowRotate) { yield return item.rotated90; yield break; }
-            yield return false; // 0°
-            if (item.data.sizeW != item.data.sizeH) yield return true; // 90° (정사각이면 중복)
+            yield return false;
+            if (item.data.sizeW != item.data.sizeH) yield return true;
         }
 
 
