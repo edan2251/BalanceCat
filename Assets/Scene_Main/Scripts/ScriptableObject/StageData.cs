@@ -20,6 +20,14 @@ public class StageData : ScriptableObject
     [TextArea(3, 10)]
     public string synopsis = "스테이지의 간략한 배경 이야기나 목표를 설명합니다.";
 
+    [Header("로딩 화면 설정")]
+    [Tooltip("로딩 화면에 띄울 한 컷 만화 이미지")]
+    public Sprite loadingComicImage;
+
+    [TextArea(2, 5)]
+    [Tooltip("로딩 화면에 띄울 설명 텍스트")]
+    public string loadingDescription = "로딩 중에 표시할 팁이나 스토리 텍스트";
+
 
     [Header("퀘스트 할당")]
 

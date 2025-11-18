@@ -244,9 +244,11 @@ public class StageUIManager : MonoBehaviour
     private void StartStage(StageData data)
     {
         Debug.Log($"스테이지 시작: 챕터 {data.chapterName}, ID {data.stageID}. 로드할 씬: {data.targetSceneName}");
+
         if (!string.IsNullOrEmpty(data.targetSceneName))
         {
-            LoadingSceneController.LoadScene(data.targetSceneName);
+            // [수정] 문자열 대신 StageData 객체 자체를 넘깁니다.
+            LoadingSceneController.LoadScene(data);
         }
         else
         {

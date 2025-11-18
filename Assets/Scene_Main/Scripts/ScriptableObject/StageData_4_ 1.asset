@@ -21,6 +21,10 @@ MonoBehaviour:
     \uC7A0\uACA8\uBC84\uB9B0 \uD589\uC131\uC774\uC5C8\uB2E4. \uC774\uACF3\uC5D0\uC11C
     \uC6B0\uC8FC\uC120 \uC218\uB9AC\uB97C \uB9C8\uCE58\uACE0 \uC5F0\uB8CC\uB97C \uCC44\uC6B4
     \uD6C4 \uC9D1\uC73C\uB85C \uAC00\uC790."
+  loadingComicImage: {fileID: -1175189913, guid: 73fd8a8b157cad345a341c1b5ee0719b,
+    type: 3}
+  loadingDescription: "\uB85C\uB529 \uC911\uC5D0 \uD45C\uC2DC\uD560 \uD301\uC774\uB098
+    \uC2A4\uD1A0\uB9AC \uD14D\uC2A4\uD2B8"
   MainQuest: {fileID: 11400000, guid: ee0c980e1f180bf46a841d4b9a7ce20b, type: 2}
   quest2: {fileID: 11400000, guid: 22e82b33ce333274d820d5d19781ea94, type: 2}
   quest3: {fileID: 11400000, guid: f1c3fecd169dede4392f55015176d392, type: 2}
