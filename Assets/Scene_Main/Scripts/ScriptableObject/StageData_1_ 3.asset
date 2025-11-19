@@ -19,8 +19,7 @@ MonoBehaviour:
   synopsis: "\uC6B0\uC8FC\uC120 \uACE0\uC7A5\uC73C\uB85C \uC54C \uC218 \uC5C6\uB294
     \uD589\uC131\uC5D0 \uCD94\uB77D\uD574\uC11C \uBD80\uD488\uC744 \uCC3E\uACE0 \uC790\uC6D0\uC744
     \uC218\uC9D1\uD574\uC11C \uC6B0\uC8FC\uC120\uC744 \uACE0\uCCD0\uC57C \uD55C\uB2E4."
-  loadingComicImage: {fileID: -1175189913, guid: 73fd8a8b157cad345a341c1b5ee0719b,
-    type: 3}
+  loadingComicImage: {fileID: 21300000, guid: 3529ba29000780c48b2d4d4da4bcd007, type: 3}
   loadingDescription: "\uB85C\uB529 \uC911\uC5D0 \uD45C\uC2DC\uD560 \uD301\uC774\uB098
     \uC2A4\uD1A0\uB9AC \uD14D\uC2A4\uD2B8"
   MainQuest: {fileID: 11400000, guid: ee0c980e1f180bf46a841d4b9a7ce20b, type: 2}
