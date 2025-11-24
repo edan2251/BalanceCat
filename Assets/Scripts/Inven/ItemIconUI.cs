@@ -4,13 +4,13 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ItemIconUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class ItemIconUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
 {
     InventoryUI ui;
     public ItemPlacement placement;
     public BagSide side;
     Image img;          // 아이콘 이미지(고스트 스프라이트용)
-    CanvasGroup cg;     // 드래그 중 원본 희미하게 (선택)
+    CanvasGroup cg;     // 드래그 중 원본 희미하게
 
     public void Setup(InventoryUI ui, ItemPlacement p, BagSide side, Image iconImage)
     {
@@ -23,6 +23,9 @@ public class ItemIconUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     public void OnBeginDrag(PointerEventData eventData)
     {
         if (ui == null || placement == null) return;
+
+        ui.HideItemTooltip();
+
         if (!cg) cg = gameObject.AddComponent<CanvasGroup>();
         cg.alpha = 0.35f;          // 원본 반투명
         cg.blocksRaycasts = false; // 드래그 중 레이캐스트 통과
@@ -39,5 +42,17 @@ public class ItemIconUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     {
         if (cg) { cg.alpha = 1f; cg.blocksRaycasts = true; }
         ui?.EndDrag(eventData.position, cancel: false);
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (ui == null || placement == null) return;
+        ui.ShowItemTooltip(placement.item);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (ui == null) return;
+        ui.HideItemTooltip();
     }
 }

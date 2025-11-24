@@ -9,7 +9,7 @@ public class InventorySideBias : MonoBehaviour
     public float leftWeight;
     public float rightWeight;
     public float weightAmount;
-    public float maxWeight;
+    public float maxWeight = 30f;
 
     public float tilt;
 

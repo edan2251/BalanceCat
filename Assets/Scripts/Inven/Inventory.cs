@@ -8,7 +8,7 @@ public class Inventory : MonoBehaviour
     public int gridWidth = 6;
     public int gridHeight = 6;
 
-    public float carryCapacity = 20f; // 무게
+    public float carryCapacity = 50f; // 제한 무게
 
 
     public InventoryGrid leftGrid { get; private set; }
@@ -42,10 +42,17 @@ public class Inventory : MonoBehaviour
             return sum;
         }
     }
+
     public bool TryAddAuto(ItemInstance item, bool allowRotate = true)
     {
         if (item == null || item.data == null) return false;
-        int count = 1;
+
+        if (carryCapacity > 0f)
+        {
+            float newTotal = TotalWeight + (item.data != null ? item.data.weight : 0f);
+            if (newTotal > carryCapacity)
+                return false;
+        }
 
         var order = new (BagSide side, Area area)[]
         {
@@ -55,32 +62,22 @@ public class Inventory : MonoBehaviour
             (BagSide.Right, Area.Bottom),
         };
 
+        bool placed = false;
 
-        int placedCount = 0;
 
-        for (int i = 0; i < count; i++)
+        foreach (var (side, area) in order)
         {
-            var unit = new ItemInstance(item.data);
-
-            bool placed = false;
-            foreach (var (side, area) in order)
+            var g = (side == BagSide.Left) ? leftGrid : rightGrid;
+            bool ltr = (side == BagSide.Left);
+            if (g.TryPlaceInArea(item, area, ltr, allowRotate))
             {
-                var g = (side == BagSide.Left) ? leftGrid : rightGrid;
-                bool ltr = (side == BagSide.Left);
-                if (g.TryPlaceInArea(unit, area, ltr, allowRotate))
-                {
-                    placed = true;
-                    placedCount++;
-                    break;
-                }
-            }
-
-            if (!placed)
-            {
-                if (placedCount > 0) OnChanged?.Invoke();
-                return false;
+                placed = true;
+                break;
             }
         }
+
+        if (!placed)
+            return false;
 
         OnChanged?.Invoke();
         return true;

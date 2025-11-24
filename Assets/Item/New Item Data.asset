@@ -15,6 +15,7 @@ MonoBehaviour:
   id: 1
   displayName: Tree
   icon: {fileID: 568955955, guid: 4f6faee39398f024f90b51ed26675b28, type: 3}
+  description: Tree of Saivor
   sizeW: 2
   sizeH: 2
-  weight: 2
+  weight: 40

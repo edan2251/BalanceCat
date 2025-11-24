@@ -10,6 +10,9 @@ public class ItemData : ScriptableObject
 
     public Sprite icon;
 
+    [TextArea]
+    public string description;
+
     [Min(1)] public int sizeW = 1;
     [Min(1)] public int sizeH = 1;
 
