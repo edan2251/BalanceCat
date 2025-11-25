@@ -23,6 +23,8 @@ public class PlayerMovement : MonoBehaviour
     [Header("Keybinds")]
     public KeyCode jumpKey = KeyCode.Space;
     public KeyCode runKey = KeyCode.LeftShift;
+    public KeyCode balanceLeftKey = KeyCode.Z;
+    public KeyCode balanceRightKey = KeyCode.C;
 
     // --- 물 관련 설정 추가 ---
     [Header("Water Physics")]
@@ -81,6 +83,8 @@ public class PlayerMovement : MonoBehaviour
 
     public bool IsControlEnabled => _controlEnabled;
 
+    public float CurrentMoveSpeed => currentMoveSpeed;
+
     public InventorySideBias sideBias;
 
 
@@ -97,14 +101,23 @@ public class PlayerMovement : MonoBehaviour
     private bool _isRespawning = false;
     private bool _isDrowning = false;
 
-    // [신규] 현재 플레이어가 닿아있는 물의 콜라이더
     private Collider _currentWaterCollider;
+
+    public float balanceAdjustSpeed = 2.0f;
+    public float balanceReturnSpeed = 1.0f;
+    float _manualTilt = 0f;
+
+    public float GetEffectiveTilt()
+    {
+        float baseTilt = (sideBias != null) ? sideBias.tilt : 0f; // 인벤토리 쏠림
+        float result = baseTilt + _manualTilt;                    // Z/C 보정 더함
+        return Mathf.Clamp(result, -1f, 1f);
+    }
 
     private void Start()
     {
-        rb = GetComponent<Rigidbody>();
-        rb.freezeRotation = true;
         if (rb == null) rb = GetComponent<Rigidbody>();
+        rb.freezeRotation = true;
 
         if (playerAnimator == null)
         {
@@ -150,6 +163,26 @@ public class PlayerMovement : MonoBehaviour
         {
             CheckDrowning();
         }
+
+        if (BalanceMiniGame.IsRunning)
+        {
+            horizontalInput = 0f;
+            verticalInput = 0f;
+            moveDirection = Vector3.zero;
+
+            if (rb)
+                rb.velocity = new Vector3(0f, rb.velocity.y, 0f);
+
+            if (playerAnimator)
+            {
+                playerAnimator.SetBool("isRunning", false);
+                playerAnimator.SetBool("isMoving", false);
+            }
+
+            return;
+        }
+
+        UpdateBalanceControl();
 
         GetInput();
         if (_speedControlEnabled)
@@ -238,12 +271,12 @@ public class PlayerMovement : MonoBehaviour
 
         if (sideBias != null && finalMoveDir.sqrMagnitude > 0.001f)
         {
-            float tilt = sideBias.tilt;
+            float tilt = GetEffectiveTilt();
 
             if (Mathf.Abs(tilt) > 0.001f)
             {
-                Vector3 sideDir = Vector3.Cross(Vector3.up, finalMoveDir).normalized;
-                float driftScale = 1f;
+                Vector3 sideDir = new Vector3(transform.right.x, 0f, transform.right.z).normalized;
+                float driftScale = 1f;      // 0~1 편향 세기 조절
                 Vector3 drift = sideDir * (tilt * driftScale);
 
                 finalMoveDir += drift;
@@ -551,5 +584,37 @@ public class PlayerMovement : MonoBehaviour
             // 기존 리스폰 코루틴 실행
             StartCoroutine(RespawnCoroutine());
         }
+    }
+
+    void UpdateBalanceControl()
+    {
+        if (sideBias == null)
+        {
+            _manualTilt = 0f;
+            return;
+        }
+
+        float baseTilt = sideBias.tilt;
+
+        // 무게 차이가 거의 없으면 자동으로 보정값만 0으로 복귀
+        if (Mathf.Abs(baseTilt) < 0.001f)
+        {
+            _manualTilt = Mathf.MoveTowards(_manualTilt, 0f,
+                balanceReturnSpeed * Time.deltaTime);
+            return;
+        }
+
+        bool pressLeft = Input.GetKey(balanceLeftKey);
+        bool pressRight = Input.GetKey(balanceRightKey);
+
+        // 오른쪽으로 쏠리면(Z) 왼쪽으로 균형, 왼쪽으로 쏠리면(C) 오른쪽으로 균형
+        bool pressingCorrectKey =
+            (baseTilt > 0f && pressLeft) ||   // 오른쪽 무거움 → Z
+            (baseTilt < 0f && pressRight);    // 왼쪽 무거움 → C
+
+        float target = pressingCorrectKey ? -baseTilt : 0f; // 완전히 상쇄하는 방향으로
+        float speed = pressingCorrectKey ? balanceAdjustSpeed : balanceReturnSpeed;
+
+        _manualTilt = Mathf.MoveTowards(_manualTilt, target, speed * Time.deltaTime);
     }
 }

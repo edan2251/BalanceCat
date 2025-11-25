@@ -53,6 +53,8 @@ public class InventoryUI : MonoBehaviour
     public Vector2 leftPos_WithStorage;
     public Vector2 rightPos_WithStorage;
 
+    public InventoryItemTooltip itemTooltip;
+
     int Idx(int x, int y, int w) => y * w + x;
 
     void OnEnable() { StartCoroutine(InitOnce()); }
@@ -74,6 +76,8 @@ public class InventoryUI : MonoBehaviour
         if (inventory != null) inventory.OnChanged -= Refresh;
         ClearPreview();
         if (externalUI) externalUI.ClearPreviewEx();
+
+        HideItemTooltip();
     }
 
     void BuildSlots()
@@ -479,5 +483,17 @@ public class InventoryUI : MonoBehaviour
             rightRoot.anchoredPosition = withStorage ? rightPos_WithStorage : rightPos_Default;
 
         EnsurePreviewOnTop();
+    }
+
+    public void ShowItemTooltip(ItemInstance item)
+    {
+        if (itemTooltip == null) return;
+        itemTooltip.Show(item);
+    }
+
+    public void HideItemTooltip()
+    {
+        if (itemTooltip == null) return;
+        itemTooltip.Hide();
     }
 }

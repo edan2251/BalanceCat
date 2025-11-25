@@ -17,8 +17,5 @@ public class ItemInstance
         this.guid = System.Guid.NewGuid().ToString("N");
     }
 
-
-    public int Width => rotated90 ? data.sizeH : data.sizeW;
-    public int Height => rotated90 ? data.sizeW : data.sizeH;
     public float TotalWeight => (data != null ? data.weight : 0f);
 }
