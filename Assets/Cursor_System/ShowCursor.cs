@@ -52,11 +52,21 @@ public class ShowCursor : MonoBehaviour
         {
             if (IsLocked)
             {
+                if (menuAnimator != null)
+                {
+                    menuAnimator.SetBool("isOpen", true);
+                }
+
                 UnlockCursor();
                 
             }
             else
             {
+                if (menuAnimator != null)
+                {
+                    menuAnimator.SetBool("isOpen", false);
+                }
+
                 LockCursor();
                 
             }
@@ -80,10 +90,7 @@ public class ShowCursor : MonoBehaviour
 
     private void LockCursor()
     {
-        if (menuAnimator != null)
-        {
-            menuAnimator.SetBool("isOpen", false);
-        }
+        
         if (!ForceUnlocked)
         {
             Cursor.lockState = CursorLockMode.Locked;
@@ -94,10 +101,7 @@ public class ShowCursor : MonoBehaviour
 
     public void UnlockCursor()
     {
-        if (menuAnimator != null)
-        {
-            menuAnimator.SetBool("isOpen", true);
-        }
+        
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;

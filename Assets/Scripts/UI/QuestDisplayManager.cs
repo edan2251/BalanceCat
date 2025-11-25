@@ -91,7 +91,7 @@ public class QuestDisplayManager : MonoBehaviour
         // SO가 할당되어 있는지 확인
         if (currentStageData.MainQuest != null)
         {
-            questText1.text = $"{currentStageData.MainQuest.questTitle}: {currentStageData.MainQuest.questDescription}";
+            questText1.text = $"{currentStageData.MainQuest.questTitle}\n{currentStageData.MainQuest.questDescription}";
             questText1.gameObject.SetActive(true); // 텍스트 필드 활성화
         }
         else
@@ -102,7 +102,7 @@ public class QuestDisplayManager : MonoBehaviour
         // --- 퀘스트 2 (도전) ---
         if (currentStageData.quest2 != null)
         {
-            questText2.text = $"{currentStageData.quest2.questTitle}: {currentStageData.quest2.questDescription}";
+            questText2.text = $"{currentStageData.quest2.questTitle}\n{currentStageData.quest2.questDescription}";
             questText2.gameObject.SetActive(true);
         }
         else
@@ -113,7 +113,7 @@ public class QuestDisplayManager : MonoBehaviour
         // --- 퀘스트 3 (탐험) ---
         if (currentStageData.quest3 != null)
         {
-            questText3.text = $"{currentStageData.quest3.questTitle}: {currentStageData.quest3.questDescription}";
+            questText3.text = $"{currentStageData.quest3.questTitle}\n{currentStageData.quest3.questDescription}";
             questText3.gameObject.SetActive(true);
         }
         else
