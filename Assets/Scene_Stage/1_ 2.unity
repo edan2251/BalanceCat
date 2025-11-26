@@ -58154,8 +58154,11 @@ MonoBehaviour:
   horizontalInput: 0
   verticalInput: 0
   sideBias: {fileID: 0}
+  whatIsRespawn:
+    serializedVersion: 2
+    m_Bits: 0
   headCheckPoint: {fileID: 1008593666}
-  fadePanelCanvasGroup: {fileID: 0}
+  fadePanelCanvasGroup: {fileID: 251794909}
   mainWaterObject: {fileID: 0}
   balanceAdjustSpeed: 2
   balanceReturnSpeed: 1

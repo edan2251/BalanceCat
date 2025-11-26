@@ -37652,7 +37652,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   headCheckPoint: {fileID: 1053866078}
-  fadePanelCanvasGroup: {fileID: 0}
+  fadePanelCanvasGroup: {fileID: 1590009117}
   mainWaterObject: {fileID: 1224322651}
   balanceAdjustSpeed: 2
   balanceReturnSpeed: 1
