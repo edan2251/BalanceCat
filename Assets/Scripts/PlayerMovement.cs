@@ -89,6 +89,11 @@ public class PlayerMovement : MonoBehaviour
 
 
     [Header("Respawn")]
+    // --- [신규] 닿으면 즉사(리스폰)하는 레이어 설정 ---
+    [Tooltip("닿으면 리스폰되는 레이어 (예: 함정, 낙사구역)")]
+    public LayerMask whatIsRespawn;
+    // --- [신규] 끝 ---
+
     [Tooltip("머리 위치를 감지할 빈 오브젝트")]
     [SerializeField] private Transform headCheckPoint;
     [SerializeField] CanvasGroup fadePanelCanvasGroup;
@@ -195,7 +200,6 @@ public class PlayerMovement : MonoBehaviour
         if (_isInWater)
         {
             // (기존) 물 속에 있을 땐 SetInWater에서 waterDrag를 이미 적용함
-            // (rb.drag = waterDrag; 가 SetInWater에 있어야 함)
         }
         else if (grounded)
         {
@@ -409,7 +413,7 @@ public class PlayerMovement : MonoBehaviour
     public void SetInWater(bool inWater, Collider waterCollider)
     {
         _isInWater = inWater;
-        _currentWaterCollider = waterCollider; 
+        _currentWaterCollider = waterCollider;
 
         if (_isInWater)
         {
@@ -458,8 +462,8 @@ public class PlayerMovement : MonoBehaviour
         Gizmos.DrawWireCube(boxCenter + Vector3.down * groundCheckMargin, boxSize);
     }
 
-    public void SetControlEnabled(bool v) 
-    { 
+    public void SetControlEnabled(bool v)
+    {
         _controlEnabled = v;
 
         if (!v)
@@ -502,6 +506,27 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    // --- [신규] 리스폰 레이어 감지 (Trigger) ---
+    private void OnTriggerEnter(Collider other)
+    {
+        // other의 레이어가 whatIsRespawn에 포함되어 있다면
+        if (((1 << other.gameObject.layer) & whatIsRespawn) != 0)
+        {
+            TriggerRespawn();
+        }
+    }
+
+    // --- [신규] 리스폰 레이어 감지 (Collision - 물리적 바닥일 경우) ---
+    private void OnCollisionEnter(Collision collision)
+    {
+        // collision의 레이어가 whatIsRespawn에 포함되어 있다면
+        if (((1 << collision.gameObject.layer) & whatIsRespawn) != 0)
+        {
+            TriggerRespawn();
+        }
+    }
+    // --- [신규] 끝 ---
+
     // [신규] 리스폰 트리거 함수 (DeepWaterZone이 호출)
     public void TriggerRespawn()
     {
@@ -518,7 +543,7 @@ public class PlayerMovement : MonoBehaviour
 
         // 1. 화면 어둡게 (Fade Out)
         float fadeDuration = 0.5f;
-        yield return StartCoroutine(FadeCanvas(3f, fadeDuration));
+        yield return StartCoroutine(FadeCanvas(1f, fadeDuration));
 
         // --- [신규] 물 높이 리셋 ---
         if (mainWaterObject != null)
@@ -527,7 +552,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("PlayerMovement: mainWaterObject가 연결되지 않아 수위를 리셋할 수 없습니다.");
+            // Debug.LogWarning("PlayerMovement: mainWaterObject가 연결되지 않아 수위를 리셋할 수 없습니다.");
         }
         // --- [신규] 끝 ---
 
@@ -545,12 +570,8 @@ public class PlayerMovement : MonoBehaviour
         // 4. 화면 밝게 (Fade In)
         yield return StartCoroutine(FadeCanvas(0f, fadeDuration));
 
-        // 5. 조작 권한 돌려주기
-        SetControlEnabled(true);
-        _isRespawning = false;
-
-        // 4. 조작 권한 돌려주기
-        SetSpeedControl(true); // [신규] 속도 제한 복구
+        // 5. 조작 권한 돌려주기 (중복 코드 제거됨)
+        SetSpeedControl(true);
         SetControlEnabled(true);
         _isRespawning = false;
     }

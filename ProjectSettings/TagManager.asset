@@ -14,7 +14,7 @@ TagManager:
   - whatIsPlayer
   - WaterPlatform
   - Interactable
-  - 
+  - Respawn
   - whatIsGround
   - WightSensor
   - WightPlatform
