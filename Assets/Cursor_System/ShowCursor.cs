@@ -88,7 +88,7 @@ public class ShowCursor : MonoBehaviour
         }
     }
 
-    private void LockCursor()
+    public void LockCursor()
     {
         
         if (!ForceUnlocked)
