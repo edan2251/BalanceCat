@@ -85794,7 +85794,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbce7f2a7e6a75c4bbe700f846b9562f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentStageData: {fileID: 11400000, guid: ee6bdc47665d2f2479114a680b11bfef, type: 2}
+  currentStageData: {fileID: 11400000, guid: 2bbb6c5dd4d858442a4dbeb72fe509d2, type: 2}
   questText1: {fileID: 1840144606}
   questText2: {fileID: 1570670782}
   questText3: {fileID: 223566600}
