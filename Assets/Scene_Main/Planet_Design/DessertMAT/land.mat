@@ -179,8 +179,8 @@ Material:
     - roughnessFactor: 0.5
     - transmissionFactor: 0
     m_Colors:
-    - _BaseColor: {r: 0.90588236, g: 0.77254903, b: 0.6627451, a: 1}
-    - _Color: {r: 0.90588236, g: 0.77254903, b: 0.6627451, a: 1}
+    - _BaseColor: {r: 0.05866145, g: 0.2905661, b: 0.10027647, a: 1}
+    - _Color: {r: 0.058661424, g: 0.29056606, b: 0.10027643, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - baseColorFactor: {r: 0.9063317, g: 0.77081186, b: 0.6631373, a: 1}
