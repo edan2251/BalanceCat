@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetSceneName: 4_ 2
   stageID: 2
+  chapterIndex: 3
   chapterName: "\uBB3C\uC758 \uD589\uC131"
   stageTitle: "2 \uC2A4\uD14C\uC774\uC9C0"
   synopsis: "\uC5F4\uC744 \uD53C\uD574\uC11C \uB3C4\uB9DD\uCCD0\uC628 \uD589\uC131\uC740
@@ -25,6 +26,7 @@ MonoBehaviour:
     type: 3}
   loadingDescription: "\uB85C\uB529 \uC911\uC5D0 \uD45C\uC2DC\uD560 \uD301\uC774\uB098
     \uC2A4\uD1A0\uB9AC \uD14D\uC2A4\uD2B8"
-  MainQuest: {fileID: 11400000, guid: ee0c980e1f180bf46a841d4b9a7ce20b, type: 2}
-  quest2: {fileID: 11400000, guid: c78da01eb29afdb49b85af465de86d4d, type: 2}
-  quest3: {fileID: 11400000, guid: 1fe8f9b147747644180363063fa7ea2b, type: 2}
+  quests:
+  - {fileID: 11400000, guid: ee0c980e1f180bf46a841d4b9a7ce20b, type: 2}
+  - {fileID: 11400000, guid: c78da01eb29afdb49b85af465de86d4d, type: 2}
+  - {fileID: 11400000, guid: 1fe8f9b147747644180363063fa7ea2b, type: 2}

@@ -2,7 +2,7 @@
 using DG.Tweening;
 using System.Collections.Generic;
 using Cinemachine;
-using System.Linq; // LINQ를 사용하기 위해 추가 (챕터 보상 체크)
+using System.Linq;
 
 public class ChapterSelector : MonoBehaviour
 {
@@ -86,15 +86,8 @@ public class ChapterSelector : MonoBehaviour
         isChapterSelectionActive = false;
         UpdatePlanetSelection(0);
 
-        if (uiManager != null)
-        {
-            uiManager.HideUI();
-        }
-
-        if (mainUIManager != null)
-        {
-            mainUIManager.ShowUI();
-        }
+        if (uiManager != null) uiManager.HideUI();
+        if (mainUIManager != null) mainUIManager.ShowUI();
     }
 
     void Update()
@@ -107,10 +100,10 @@ public class ChapterSelector : MonoBehaviour
 
             if (isChapterSelectionActive)
             {
-                UpdatePlanetMaterials(); // 행성 머티리얼 갱신
+                UpdatePlanetMaterials();
                 if (currentStageSelector != null)
                 {
-                    currentStageSelector.UpdateAllStageMaterials(); // 스테이지 머티리얼 갱신
+                    currentStageSelector.UpdateAllStageMaterials();
                 }
 
                 if (currentStageSelector != null && uiManager != null)
@@ -146,16 +139,10 @@ public class ChapterSelector : MonoBehaviour
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            ChangeChapter(1);
-        }
-        else if (Input.GetKeyDown(KeyCode.S))
-        {
-            ChangeChapter(-1);
-        }
+        if (Input.GetKeyDown(KeyCode.W)) ChangeChapter(1);
+        else if (Input.GetKeyDown(KeyCode.S)) ChangeChapter(-1);
 
-        // --- CHANGED: 'P' 'K' 'L' 키로 퀘스트 완료 테스트 ---
+        // --- 테스트 키 입력 ---
         if (currentStageSelector != null)
         {
             StageData currentStage = currentStageSelector.GetCurrentSelectedStageData();
@@ -164,42 +151,36 @@ public class ChapterSelector : MonoBehaviour
             int chapterIdx = currentStageSelector.chapterIndex;
             int stageID = currentStage.stageID;
 
-            // 'P' 키: 퀘스트 1 (메인) 완료 + 스테이지 잠금 해제
+            // 'P' 키: 퀘스트 1 완료 + 스테이지 잠금 해제
             if (Input.GetKeyDown(KeyCode.P))
             {
-                GameProgressManager.ClearStage(chapterIdx, stageID);       // 잠금 해제
-                GameProgressManager.CompleteQuest(chapterIdx, stageID, 1); // 별 1 획득
-
+                GameProgressManager.ClearStage(chapterIdx, stageID);
+                GameProgressManager.CompleteQuest(chapterIdx, stageID, 1);
                 Debug.Log($"테스트: {chapterIdx}-{stageID} 퀘스트 1 (메인) 완료");
                 RefreshCurrentUIAndCheckRewards(chapterIdx);
             }
             // 'K' 키: 퀘스트 2 완료
             else if (Input.GetKeyDown(KeyCode.K))
             {
-                GameProgressManager.CompleteQuest(chapterIdx, stageID, 2); // 별 2 획득
+                GameProgressManager.CompleteQuest(chapterIdx, stageID, 2);
                 Debug.Log($"테스트: {chapterIdx}-{stageID} 퀘스트 2 완료");
                 RefreshCurrentUIAndCheckRewards(chapterIdx);
             }
             // 'L' 키: 퀘스트 3 완료
             else if (Input.GetKeyDown(KeyCode.L))
             {
-                GameProgressManager.CompleteQuest(chapterIdx, stageID, 3); // 별 3 획득
+                GameProgressManager.CompleteQuest(chapterIdx, stageID, 3);
                 Debug.Log($"테스트: {chapterIdx}-{stageID} 퀘스트 3 완료");
                 RefreshCurrentUIAndCheckRewards(chapterIdx);
             }
         }
     }
 
-    // --- NEW: 테스트 키 입력 시 UI 갱신 및 보상 체크를 위한 함수 ---
     private void RefreshCurrentUIAndCheckRewards(int chapterIdx)
     {
-        // 1. 스테이지 머티리얼 갱신 (잠김 -> 해제)
         currentStageSelector.UpdateAllStageMaterials();
-
-        // 2. 챕터 머티리얼 갱신 (잠김 -> 해제)
         UpdatePlanetMaterials();
 
-        // 3. 현재 UI 갱신 (별, 버튼 상태 등)
         if (uiManager != null)
         {
             StageData data = currentStageSelector.GetCurrentSelectedStageData();
@@ -207,17 +188,15 @@ public class ChapterSelector : MonoBehaviour
             uiManager.UpdateStageInfo(data, isPlayable);
         }
 
-        // 4. 챕터 보상 체크
         CheckAndLogChapterReward(chapterIdx);
     }
 
-    // --- NEW: StageUIManager가 챕터 인덱스를 가져갈 수 있도록 public 함수 추가 ---
     public StageSelector GetCurrentStageSelector()
     {
         return currentStageSelector;
     }
 
-    // --- NEW: 챕터의 모든 별을 획득했는지 확인하는 함수 ---
+    // --- [수정됨] 퀘스트 리스트를 순회하며 완료 여부 체크 ---
     private void CheckAndLogChapterReward(int chapterIndex)
     {
         ChapterData chapterData = GetChapterData(chapterIndex);
@@ -226,29 +205,29 @@ public class ChapterSelector : MonoBehaviour
         // 1. 이 챕터의 모든 스테이지를 순회
         foreach (var stageData in chapterData.stages)
         {
-            // 2. 퀘스트 1, 2, 3을 모두 확인
-            for (int questIdx = 1; questIdx <= 3; questIdx++)
-            {
-                // 3. 퀘스트가 비어있지 않은지 확인 (SO가 할당된 퀘스트만)
-                QuestData targetQuest = null;
-                if (questIdx == 1) targetQuest = stageData.MainQuest;
-                else if (questIdx == 2) targetQuest = stageData.quest2;
-                else if (questIdx == 3) targetQuest = stageData.quest3;
+            // 2. 해당 스테이지에 할당된 퀘스트 리스트 확인
+            if (stageData.quests == null) continue;
 
-                // 4. SO가 할당된 퀘스트 중 하나라도 완료되지 않았다면, 즉시 함수 종료
-                if (targetQuest != null && !GameProgressManager.IsQuestCompleted(chapterIndex, stageData.stageID, questIdx))
+            for (int i = 0; i < stageData.quests.Count; i++)
+            {
+                // 3. 퀘스트 데이터가 있는지 확인
+                if (stageData.quests[i] != null)
                 {
-                    // 아직 모든 별을 모으지 못함
-                    return;
+                    // 저장된 키값은 1부터 시작하므로 (인덱스 + 1) 사용
+                    int questKeyIndex = i + 1;
+
+                    if (!GameProgressManager.IsQuestCompleted(chapterIndex, stageData.stageID, questKeyIndex))
+                    {
+                        // 하나라도 안 깬 게 있으면 보상 없음 (함수 종료)
+                        return;
+                    }
                 }
             }
         }
 
-        // 5. (Loop가 모두 통과됨) 이 챕터의 모든 (할당된) 퀘스트가 완료됨
+        // 5. (모든 반복문 통과) 이 챕터의 할당된 모든 퀘스트 완료
         Debug.LogWarning($"--- 🏆 챕터 {chapterIndex} 모든 별 획득! 🏆 ---");
-        Debug.LogWarning($"--- 보상 지급 로직을 여기에 추가하세요! (예: {chapterData.chapterName} 보상) ---");
-
-        // 여기에 보상 지급 팝업을 띄우거나, PlayerPrefs에 "ChapterReward_X"를 저장하는 로직 추가
+        Debug.LogWarning($"--- 보상 지급 로직을 여기에 추가하세요! ---");
     }
 
 
@@ -261,10 +240,7 @@ public class ChapterSelector : MonoBehaviour
     {
         if (isChapterSelectionActive || isAnimating) return;
 
-        if (mainUIManager != null)
-        {
-            mainUIManager.HideUI();
-        }
+        if (mainUIManager != null) mainUIManager.HideUI();
 
         int chapterToSelect = isFirstEntry ? 0 : lastSelectedChapterIndex;
         currentChapterIndex = chapterToSelect;
@@ -281,15 +257,9 @@ public class ChapterSelector : MonoBehaviour
 
     ChapterData GetChapterData(int index)
     {
-        if (index < 0 || index >= planets.Count || planets[index] == null)
-        {
-            return null;
-        }
+        if (index < 0 || index >= planets.Count || planets[index] == null) return null;
         StageSelector selector = planets[index].GetComponent<StageSelector>();
-        if (selector == null)
-        {
-            return null;
-        }
+        if (selector == null) return null;
         return selector.chapterData;
     }
 
@@ -301,7 +271,7 @@ public class ChapterSelector : MonoBehaviour
 
         if (prevChapterData == null || prevChapterData.stages.Count == 0)
         {
-            Debug.LogWarning($"[ChapterLock] 챕터 {chapterIndex}의 잠금 상태 확인 실패: 이전 챕터({chapterIndex - 1}) 데이터를 찾을 수 없음.");
+            Debug.LogWarning($"[ChapterLock] 챕터 {chapterIndex} 잠금 확인 실패: 이전 챕터 데이터 없음.");
             return false;
         }
 
@@ -392,14 +362,8 @@ public class ChapterSelector : MonoBehaviour
         isChapterSelectionActive = false;
         isAnimating = false;
 
-        if (uiManager != null)
-        {
-            uiManager.HideUI();
-        }
-        if (mainUIManager != null)
-        {
-            mainUIManager.ShowUI();
-        }
+        if (uiManager != null) uiManager.HideUI();
+        if (mainUIManager != null) mainUIManager.ShowUI();
 
         if (currentStageSelector != null)
         {

@@ -203,14 +203,22 @@ public class StageUIManager : MonoBehaviour
         quest3Text?.gameObject.SetActive(show);
         quest3Star?.gameObject.SetActive(show);
 
-        if (show && data != null && starFilledSprite != null && starEmptySprite != null)
+        if (show && data != null)
         {
-            UpdateQuestSlot(quest1Text, quest1Star, data.MainQuest,
-                GameProgressManager.IsQuestCompleted(chapterIndex, stageID, 1));
-            UpdateQuestSlot(quest2Text, quest2Star, data.quest2,
-                GameProgressManager.IsQuestCompleted(chapterIndex, stageID, 2));
-            UpdateQuestSlot(quest3Text, quest3Star, data.quest3,
-                GameProgressManager.IsQuestCompleted(chapterIndex, stageID, 3));
+            // Äù½ºÆ® 1 (Main)
+            if (data.quests.Count > 0)
+                UpdateQuestSlot(quest1Text, quest1Star, data.quests[0],
+                    GameProgressManager.IsQuestCompleted(chapterIndex, stageID, 1));
+
+            // Äù½ºÆ® 2
+            if (data.quests.Count > 1)
+                UpdateQuestSlot(quest2Text, quest2Star, data.quests[1],
+                    GameProgressManager.IsQuestCompleted(chapterIndex, stageID, 2));
+
+            // Äù½ºÆ® 3
+            if (data.quests.Count > 2)
+                UpdateQuestSlot(quest3Text, quest3Star, data.quests[2],
+                    GameProgressManager.IsQuestCompleted(chapterIndex, stageID, 3));
         }
     }
 

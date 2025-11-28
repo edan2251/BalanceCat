@@ -10,13 +10,13 @@ public class QuestDisplayManager : MonoBehaviour
 
     [Header("2. UI 연결")]
     [Tooltip("퀘스트 1 (메인) 텍스트 필드")]
-    public TextMeshProUGUI questText1; // 일반 Text는 public Text questText1;
+    public TextMeshProUGUI questText1;
 
     [Tooltip("퀘스트 2 (도전) 텍스트 필드")]
-    public TextMeshProUGUI questText2; // 일반 Text는 public Text questText2;
+    public TextMeshProUGUI questText2;
 
     [Tooltip("퀘스트 3 (탐험) 텍스트 필드")]
-    public TextMeshProUGUI questText3; // 일반 Text는 public Text questText3;
+    public TextMeshProUGUI questText3;
 
     [Header("3. 애니메이션")]
     [Tooltip("QuestPanel에 붙어있는 Animator")]
@@ -37,11 +37,11 @@ public class QuestDisplayManager : MonoBehaviour
         // 1. 퀘스트 데이터부터 로드
         LoadQuestData();
 
-        // 2. [수정] 시작 상태를 '열림'으로 설정
+        // 2. 시작 상태를 '열림'으로 설정
         isPanelOpen = true;
-        panelAnimator.SetBool("isOpen", true); // 애니메이터 상태도 동기화
+        panelAnimator.SetBool("isOpen", true);
 
-        // 3. [추가] n초 후에 자동으로 닫는 코루틴 시작
+        // 3. n초 후에 자동으로 닫는 코루틴 시작
         StartCoroutine(AutoCloseAfterDelay(autoCloseDelay));
     }
 
@@ -56,20 +56,14 @@ public class QuestDisplayManager : MonoBehaviour
 
     private IEnumerator AutoCloseAfterDelay(float delay)
     {
-        // 1. 지정된 시간만큼 대기
         yield return new WaitForSeconds(delay);
 
-        // 2. (중요) 3초가 지났는데 유저가 M키를 눌러서
-        //    이미 닫지 않은 경우에만 닫습니다.
         if (isPanelOpen)
         {
             TogglePanel(); // 닫기 실행
         }
     }
 
-    /// <summary>
-    /// 퀘스트 패널을 열거나 닫습니다.
-    /// </summary>
     public void TogglePanel()
     {
         isPanelOpen = !isPanelOpen;
@@ -77,7 +71,7 @@ public class QuestDisplayManager : MonoBehaviour
     }
 
     /// <summary>
-    /// StageData에서 퀘스트 정보를 가져와 UI 텍스트에 채웁니다.
+    /// StageData에서 퀘스트 정보를 가져와 UI 텍스트에 채웁니다. (리스트 방식 수정됨)
     /// </summary>
     public void LoadQuestData()
     {
@@ -87,22 +81,24 @@ public class QuestDisplayManager : MonoBehaviour
             return;
         }
 
-        // --- 퀘스트 1 (메인) ---
-        // SO가 할당되어 있는지 확인
-        if (currentStageData.MainQuest != null)
+        // --- 퀘스트 1 (메인) : 리스트 인덱스 0 ---
+        // 리스트가 존재하고, 0번 요소가 있는지 확인
+        if (currentStageData.quests != null && currentStageData.quests.Count > 0 && currentStageData.quests[0] != null)
         {
-            questText1.text = $"{currentStageData.MainQuest.questTitle}\n{currentStageData.MainQuest.questDescription}";
-            questText1.gameObject.SetActive(true); // 텍스트 필드 활성화
+            QuestData q1 = currentStageData.quests[0];
+            questText1.text = $"{q1.questTitle}\n{q1.questDescription}";
+            questText1.gameObject.SetActive(true);
         }
         else
         {
-            questText1.gameObject.SetActive(false); // SO가 없으면 비활성화
+            questText1.gameObject.SetActive(false);
         }
 
-        // --- 퀘스트 2 (도전) ---
-        if (currentStageData.quest2 != null)
+        // --- 퀘스트 2 (도전) : 리스트 인덱스 1 ---
+        if (currentStageData.quests != null && currentStageData.quests.Count > 1 && currentStageData.quests[1] != null)
         {
-            questText2.text = $"{currentStageData.quest2.questTitle}\n{currentStageData.quest2.questDescription}";
+            QuestData q2 = currentStageData.quests[1];
+            questText2.text = $"{q2.questTitle}\n{q2.questDescription}";
             questText2.gameObject.SetActive(true);
         }
         else
@@ -110,10 +106,11 @@ public class QuestDisplayManager : MonoBehaviour
             questText2.gameObject.SetActive(false);
         }
 
-        // --- 퀘스트 3 (탐험) ---
-        if (currentStageData.quest3 != null)
+        // --- 퀘스트 3 (탐험) : 리스트 인덱스 2 ---
+        if (currentStageData.quests != null && currentStageData.quests.Count > 2 && currentStageData.quests[2] != null)
         {
-            questText3.text = $"{currentStageData.quest3.questTitle}\n{currentStageData.quest3.questDescription}";
+            QuestData q3 = currentStageData.quests[2];
+            questText3.text = $"{q3.questTitle}\n{q3.questDescription}";
             questText3.gameObject.SetActive(true);
         }
         else

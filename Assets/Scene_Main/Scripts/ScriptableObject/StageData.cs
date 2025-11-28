@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 // StagePoint 스크립트와 일치시키기 위해 stageID를 포함합니다.
 
@@ -11,6 +12,7 @@ public class StageData : ScriptableObject
     // === 스테이지 식별 정보 ===
     [Tooltip("StagePoint 스크립트의 Stage ID와 일치해야 합니다 (1부터 시작).")]
     public int stageID = 1;
+    public int chapterIndex = 0;
 
     // === UI 표시 정보 ===
     [Header("UI 표시 정보")]
@@ -30,14 +32,6 @@ public class StageData : ScriptableObject
 
 
     [Header("퀘스트 할당")]
-
-    [Tooltip("퀘스트 1: 스테이지 클리어 (기본 제공)")]
-    public QuestData MainQuest;
-
-    [Tooltip("퀘스트 2: 도전 퀘스트 (SO 할당)")]
-    public QuestData quest2;
-
-    [Tooltip("퀘스트 3: 탐험 퀘스트 (SO 할당)")]
-    public QuestData quest3;
+    public List<QuestData> quests = new List<QuestData>();
 
 }

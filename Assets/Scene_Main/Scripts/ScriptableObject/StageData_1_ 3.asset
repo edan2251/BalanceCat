@@ -22,6 +22,7 @@ MonoBehaviour:
   loadingComicImage: {fileID: 21300000, guid: 3529ba29000780c48b2d4d4da4bcd007, type: 3}
   loadingDescription: "\uB85C\uB529 \uC911\uC5D0 \uD45C\uC2DC\uD560 \uD301\uC774\uB098
     \uC2A4\uD1A0\uB9AC \uD14D\uC2A4\uD2B8"
-  MainQuest: {fileID: 11400000, guid: ee0c980e1f180bf46a841d4b9a7ce20b, type: 2}
-  quest2: {fileID: 11400000, guid: 32ac8458346f9274db40766b9e69cb4b, type: 2}
-  quest3: {fileID: 11400000, guid: 5a226f05bd029784cae426a39913dbff, type: 2}
+  quests:
+  - {fileID: 11400000, guid: ee0c980e1f180bf46a841d4b9a7ce20b, type: 2}
+  - {fileID: 11400000, guid: 32ac8458346f9274db40766b9e69cb4b, type: 2}
+  - {fileID: 11400000, guid: 5a226f05bd029784cae426a39913dbff, type: 2}

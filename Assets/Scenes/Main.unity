@@ -2447,12 +2447,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: a6d8d0c888b7966429008fd2b5e6d103, type: 2}
   lockedStageMaterial: {fileID: 2100000, guid: 04f3a295fceac9b43b3633ff5ccc1053, type: 2}
   materialTargets:
-  - {fileID: 393812331}
-  - {fileID: 1410275778}
-  - {fileID: 2072610277}
-  - {fileID: 1691181254}
-  - {fileID: 193529753}
-  - {fileID: 1551788794}
+  - {fileID: 1407443018}
 --- !u!114 &513175909
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2856,7 +2851,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: a6d8d0c888b7966429008fd2b5e6d103, type: 2}
   lockedStageMaterial: {fileID: 2100000, guid: 04f3a295fceac9b43b3633ff5ccc1053, type: 2}
   materialTargets:
-  - {fileID: 1407443018}
+  - {fileID: 63010121}
 --- !u!114 &513426378
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4630,7 +4625,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1005250538
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7503,7 +7498,8 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: a6d8d0c888b7966429008fd2b5e6d103, type: 2}
   lockedStageMaterial: {fileID: 2100000, guid: 04f3a295fceac9b43b3633ff5ccc1053, type: 2}
   materialTargets:
-  - {fileID: 63010121}
+  - {fileID: 1656797721}
+  - {fileID: 686108690}
 --- !u!114 &1647561927
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9591,8 +9587,12 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: a6d8d0c888b7966429008fd2b5e6d103, type: 2}
   lockedStageMaterial: {fileID: 2100000, guid: 04f3a295fceac9b43b3633ff5ccc1053, type: 2}
   materialTargets:
-  - {fileID: 1656797721}
-  - {fileID: 686108690}
+  - {fileID: 393812331}
+  - {fileID: 1410275778}
+  - {fileID: 2072610277}
+  - {fileID: 1691181254}
+  - {fileID: 193529753}
+  - {fileID: 1551788794}
 --- !u!114 &2056254077
 MonoBehaviour:
   m_ObjectHideFlags: 0
