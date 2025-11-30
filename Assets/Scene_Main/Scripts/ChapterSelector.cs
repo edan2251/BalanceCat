@@ -350,7 +350,8 @@ public class ChapterSelector : MonoBehaviour
 
         activationSequence.OnComplete(() =>
         {
-            UpdatePlanetSelection(currentChapterIndex);
+            // 처음 켜질 때는 무조건 1스테이지부터 시작하므로 false (또는 생략 가능)
+            UpdatePlanetSelection(currentChapterIndex, false);
             HighlightPlanet(planets[currentChapterIndex]);
             isAnimating = false;
         });
@@ -377,7 +378,7 @@ public class ChapterSelector : MonoBehaviour
         UpdatePlanetSelection(currentChapterIndex);
     }
 
-    void ChangeChapter(int direction)
+    public void ChangeChapter(int direction)
     {
         if (isAnimating) return;
         isAnimating = true;
@@ -399,7 +400,8 @@ public class ChapterSelector : MonoBehaviour
             currentChapterIndex = nextIndex;
             currentTargetRotation = targetYRotation;
 
-            UpdatePlanetSelection(currentChapterIndex);
+            bool isMovingBack = direction < 0;
+            UpdatePlanetSelection(currentChapterIndex, isMovingBack);
             isAnimating = false;
             HighlightPlanet(planets[currentChapterIndex]);
         });
@@ -417,7 +419,7 @@ public class ChapterSelector : MonoBehaviour
         selectedPlanet.transform.DOScale(Vector3.one * 1.5f, 0.3f).SetEase(Ease.OutQuad);
     }
 
-    void UpdatePlanetSelection(int newIndex)
+    void UpdatePlanetSelection(int newIndex, bool selectLastStage = false)
     {
         UpdatePlanetMaterials();
 
@@ -446,7 +448,8 @@ public class ChapterSelector : MonoBehaviour
                         {
                             uiManager.mainUIPanel.SetActive(true);
                         }
-                        selector.InitializeSelection();
+                        // [수정] 여기서 true/false를 전달합니다!
+                        selector.InitializeSelection(selectLastStage);
                     }
                     else
                     {

@@ -128,15 +128,18 @@ public class StageSelector : MonoBehaviour
         transform.localEulerAngles = new Vector3(0, 0, 0);
     }
 
-    public void InitializeSelection()
+    public void InitializeSelection(bool selectLastStage = false)
     {
         if (totalStages == 0) return;
 
-        // --- NEW: 스테이지 머티리얼 상태부터 갱신 ---
         UpdateAllStageMaterials();
-        // --- END NEW ---
 
-        currentStageIndex = 0;
+        // [핵심 로직]
+        // 뒤로 돌아왔으면(true) -> 마지막 인덱스(totalStages - 1)
+        // 앞으로 왔거나 처음이면(false) -> 0번 인덱스
+        currentStageIndex = selectLastStage ? totalStages - 1 : 0;
+
+        // 변경된 인덱스에 맞춰 화면(회전) 갱신
         ChangeStage(0);
     }
 
@@ -217,6 +220,33 @@ public class StageSelector : MonoBehaviour
 
     void ChangeStage(int direction)
     {
+        // 단순히 인덱스를 더해봄 (범위 체크용)
+        int targetIndex = currentStageIndex + direction;
+
+        // 1. [다음 챕터로 이동] 마지막 스테이지에서 오른쪽(D)을 눌렀을 때
+        if (direction > 0 && targetIndex >= totalStages)
+        {
+            Debug.Log("마지막 스테이지입니다. 다음 챕터로 이동합니다.");
+            if (chapterController != null)
+            {
+                // 다음 챕터로 이동 (ChapterSelector가 알아서 1번 스테이지로 초기화해줌)
+                chapterController.ChangeChapter(1);
+            }
+            return; // 스테이지 회전 로직 실행 안 하고 종료
+        }
+
+        // 2. [이전 챕터로 이동] 첫 스테이지에서 왼쪽(A)을 눌렀을 때 (선택사항: 원치 않으면 이 if문 삭제)
+        if (direction < 0 && targetIndex < 0)
+        {
+            Debug.Log("첫 스테이지입니다. 이전 챕터로 이동합니다.");
+            if (chapterController != null)
+            {
+                chapterController.ChangeChapter(-1);
+            }
+            return;
+        }
+
+        // 3. [기존 로직] 같은 챕터 내에서 스테이지 이동
         int nextIndex = (currentStageIndex + direction + totalStages) % totalStages;
         if (direction != 0 && nextIndex == currentStageIndex) return;
 
@@ -237,18 +267,13 @@ public class StageSelector : MonoBehaviour
         {
             currentStageIndex = nextIndex;
 
-            // --- CHANGED: isPlayable을 먼저 계산 ---
             bool isPlayable = IsStagePlayable(currentStageIndex);
-            // --- END CHANGED ---
 
-            // 1. 하이라이트 적용 (isPlayable 값 전달)
             HighlightStage(stagePoints[currentStageIndex], isPlayable);
 
-            // 2. UI 매니저에 현재 데이터 전달
             if (uiManager != null)
             {
                 StageData currentData = GetCurrentSelectedStageData();
-                // isPlayable은 이미 위에서 계산됨
                 uiManager.UpdateStageInfo(currentData, isPlayable);
             }
         });
