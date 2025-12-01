@@ -14,6 +14,8 @@ public class BalanceMiniGame : MonoBehaviour
     [SerializeField] Animator animator;          // isStaggering / isFalling 파라미터 사용
     [SerializeField] Transform panel;            // 키 프리팹을 붙일 UI 패널(자식으로 생성)
 
+    [SerializeField] InventorySlotBreaker slotBreaker;
+
     [Header("Key Prefabs (Q W E A S D)")]
     [SerializeField] GameObject prefabQ;
     [SerializeField] GameObject prefabW;
@@ -48,6 +50,8 @@ public class BalanceMiniGame : MonoBehaviour
             else animator = GetComponentInChildren<Animator>();
         }
 
+        if (!slotBreaker) slotBreaker = FindObjectOfType<InventorySlotBreaker>();
+
         // 프리팹 매핑
         _prefabs = new Dictionary<char, GameObject>
         {
@@ -75,8 +79,6 @@ public class BalanceMiniGame : MonoBehaviour
         if (_running || !panel) return;
 
         IsRunning = true;
-        var inv = FindObjectOfType<InventoryToggle>();
-        inv?.ForceClose();
 
         panel.gameObject.SetActive(true);
         StartCoroutine(Co_StaggerAndMiniGame());
@@ -115,6 +117,12 @@ public class BalanceMiniGame : MonoBehaviour
                     if (panel) panel.gameObject.SetActive(false);
                     SafeSetBool("isStaggering", false);
                     SafeSetBool("isFalling", true);
+
+                    if (slotBreaker != null)
+                    {
+                        slotBreaker.BreakRandomSlotAndDrop();
+                    }
+
                     yield return new WaitForSeconds(failDownDuration);
                     SafeSetBool("isFalling", false);
                     movement?.SetControlEnabled(true);
@@ -216,7 +224,6 @@ public class BalanceMiniGame : MonoBehaviour
         var g = _spawned[i].GetComponentInChildren<Graphic>();
         if (g)
         {
-            // [MOD] 원래색의 알파만 낮춰 흐리게
             Color baseCol = (_origColors.Count > i) ? _origColors[i] : g.color;
             g.color = new Color(baseCol.r, baseCol.g, baseCol.b, 0.35f);
         }

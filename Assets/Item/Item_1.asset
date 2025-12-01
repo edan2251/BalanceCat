@@ -16,6 +16,9 @@ MonoBehaviour:
   displayName: Cogwheel
   icon: {fileID: 21300000, guid: 2f5bb1078ea79044cb37b885b64155a3, type: 3}
   description: "\uB108\uBB34 \uBB34\uAC70\uC6B4 \uD1B1\uB2C8\uBC14\uD034"
-  sizeW: 2
-  sizeH: 2
-  weight: 40
+  worldPrefab: {fileID: 8338897613701675672, guid: c1314573e9a32f2448abccbdb58d95d4,
+    type: 3}
+  sizeW: 1
+  sizeH: 1
+  weight: 10
+  score: 1

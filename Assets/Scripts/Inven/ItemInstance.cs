@@ -10,7 +10,6 @@ public class ItemInstance
     public bool rotated90 = false;
     public string guid;
 
-
     public ItemInstance(ItemData data)
     {
         this.data = data;
@@ -18,4 +17,5 @@ public class ItemInstance
     }
 
     public float TotalWeight => (data != null ? data.weight : 0f);
+    public int Score => (data != null ? data.score : 0);
 }

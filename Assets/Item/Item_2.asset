@@ -16,6 +16,7 @@ MonoBehaviour:
   displayName: MSpanner
   icon: {fileID: 21300000, guid: a4c0fee86dfe69642aa7b4a25168d715, type: 3}
   description: "\uC6D0\uC22D\uC774\uD55C\uD14C \uD6D4\uCCD0\uC628 \uBABD\uD0A4\uC2A4\uD328\uB108"
+  worldPrefab: {fileID: 0}
   sizeW: 2
   sizeH: 1
-  weight: 20
+  weight: 10

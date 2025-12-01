@@ -1,58 +1,82 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 public enum BagSide { Left, Right }
 public enum Area { Top, Bottom }
+
 
 public class InventoryGrid
 {
     public readonly int width;
     public readonly int height;
 
+    // 각 셀에 배치된 아이템 참조(없으면 null)
     private ItemPlacement[,] owner;
+
+    private bool[,] blocked;
+
     public readonly List<ItemPlacement> placements = new List<ItemPlacement>();
 
-
+    // 상/하 절반 경계
     public int HalfY => height / 2;
-
 
     public InventoryGrid(int w, int h)
     {
         width = Mathf.Max(1, w);
         height = Mathf.Max(1, h);
         owner = new ItemPlacement[width, height];
+        blocked = new bool[width, height];
     }
-
 
     public bool InBounds(int x, int y) => (x >= 0 && y >= 0 && x < width && y < height);
 
+    public void BlockCell(int x, int y)
+    {
+        if (!InBounds(x, y)) return;
+        blocked[x, y] = true;
+    }
+
+    public bool IsCellBlocked(int x, int y)
+    {
+        if (!InBounds(x, y)) return true; // 범위 밖은 사용 불가 취급
+        return blocked[x, y];
+    }
 
     public bool CanPlace(int x, int y, int w, int h)
     {
         if (x < 0 || y < 0 || (x + w) > width || (y + h) > height) return false;
         for (int yy = y; yy < y + h; yy++)
+        {
             for (int xx = x; xx < x + w; xx++)
+            {
+                if (blocked[xx, yy]) return false;
+
                 if (owner[xx, yy] != null) return false;
+            }
+        }
         return true;
     }
+
     public bool Place(ItemInstance item, int x, int y, bool rotated)
     {
         int w = rotated ? item.data.sizeH : item.data.sizeW;
         int h = rotated ? item.data.sizeW : item.data.sizeH;
         if (!CanPlace(x, y, w, h)) return false;
 
-
         item.rotated90 = rotated;
         var p = new ItemPlacement(item, x, y, w, h);
         placements.Add(p);
+
         for (int yy = y; yy < y + h; yy++)
+        {
             for (int xx = x; xx < x + w; xx++)
+            {
                 owner[xx, yy] = p;
+            }
+        }
         return true;
     }
-
 
     public ItemPlacement GetPlacementAt(int x, int y)
     {
@@ -60,22 +84,32 @@ public class InventoryGrid
         return owner[x, y];
     }
 
-
     public void Remove(ItemPlacement p)
     {
         if (p == null) return;
         for (int yy = p.y; yy < p.y + p.h; yy++)
+        {
             for (int xx = p.x; xx < p.x + p.w; xx++)
-                if (InBounds(xx, yy) && owner[xx, yy] == p) owner[xx, yy] = null;
+            {
+                if (InBounds(xx, yy) && owner[xx, yy] == p)
+                    owner[xx, yy] = null;
+            }
+        }
         placements.Remove(p);
     }
+
     public bool TryPlaceInArea(ItemInstance item, Area area, bool scanLeftToRight, bool allowRotate)
     {
         int yStart = (area == Area.Top) ? 0 : HalfY;
         int yEnd = (area == Area.Top) ? (HalfY - 1) : (height - 1);
-        if (HalfY == 0) { yStart = 0; yEnd = height - 1; }
+        if (HalfY == 0)
+        {
+            yStart = 0;
+            yEnd = height - 1;
+        }
 
-        Func<IEnumerable<int>> XSeq = () =>
+        // x 열 순회자
+        System.Func<IEnumerable<int>> XSeq = () =>
         {
             if (scanLeftToRight)
             {
@@ -91,20 +125,12 @@ public class InventoryGrid
             }
         };
 
+        bool[] rots = allowRotate ? new[] { false, true } : new[] { false };
 
-        IEnumerable<bool> RotOptions()
-        {
-            if (!allowRotate) { yield return item.rotated90; yield break; }
-            yield return false;
-            if (item.data.sizeW != item.data.sizeH) yield return true;
-        }
-
-
-        foreach (var rot in RotOptions())
+        foreach (bool rot in rots)
         {
             int w = rot ? item.data.sizeH : item.data.sizeW;
             int h = rot ? item.data.sizeW : item.data.sizeH;
-
 
             for (int y = yStart; y <= yEnd; y++)
             {
@@ -121,9 +147,17 @@ public class InventoryGrid
     public bool CanPlaceIgnoring(int x, int y, int w, int h, ItemPlacement ignore)
     {
         if (x < 0 || y < 0 || (x + w) > width || (y + h) > height) return false;
+
         for (int yy = y; yy < y + h; yy++)
+        {
             for (int xx = x; xx < x + w; xx++)
-                if (owner[xx, yy] != null && owner[xx, yy] != ignore) return false; // 자기 자신은 통과
+            {
+                if (blocked[xx, yy]) return false;
+
+                if (owner[xx, yy] != null && owner[xx, yy] != ignore)
+                    return false;
+            }
+        }
         return true;
     }
 }

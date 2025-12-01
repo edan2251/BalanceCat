@@ -14,7 +14,14 @@ public class Inventory : MonoBehaviour
     public InventoryGrid leftGrid { get; private set; }
     public InventoryGrid rightGrid { get; private set; }
 
+    float _totalWeight = 0f;
+    int _totalScore = 0;
+
     public event Action OnChanged;
+
+    List<BagSide> _slotSides = new List<BagSide>();
+    List<int> _slotXs = new List<int>();
+    List<int> _slotYs = new List<int>();
 
 
     void Awake()
@@ -29,18 +36,24 @@ public class Inventory : MonoBehaviour
         if (rightGrid == null) rightGrid = new InventoryGrid(gridWidth, gridHeight);
     }
 
+    public float TotalWeight => _totalWeight;
+    public int TotalScore => _totalScore;
 
-    public float TotalWeight
+    void AddItemToTotals(ItemInstance item)
     {
-        get
-        {
-            float sum = 0f;
-            foreach (var p in leftGrid.placements)
-                sum += p.item.TotalWeight;
-            foreach (var p in rightGrid.placements)
-                sum += p.item.TotalWeight;
-            return sum;
-        }
+        if (item == null) return;
+        _totalWeight += item.TotalWeight;
+        _totalScore += item.Score;
+    }
+
+    void RemoveItemFromTotals(ItemInstance item)
+    {
+        if (item == null) return;
+        _totalWeight -= item.TotalWeight;
+        _totalScore -= item.Score;
+
+        if (_totalWeight < 0f) _totalWeight = 0f;
+        if (_totalScore < 0) _totalScore = 0;
     }
 
     public bool TryAddAuto(ItemInstance item, bool allowRotate = true)
@@ -63,7 +76,6 @@ public class Inventory : MonoBehaviour
         };
 
         bool placed = false;
-
 
         foreach (var (side, area) in order)
         {
@@ -158,6 +170,90 @@ public class Inventory : MonoBehaviour
         // 양쪽 UI 갱신
         OnChanged?.Invoke();
         other.OnChanged?.Invoke();
+        return true;
+    }
+
+    public bool RemovePlacement(ItemPlacement p, BagSide side)
+    {
+        EnsureReady();
+        InventoryGrid grid = (side == BagSide.Left) ? leftGrid : rightGrid;
+        if (p == null || grid == null) return false;
+
+        grid.Remove(p);
+        OnChanged?.Invoke();
+        return true;
+    }
+
+    public bool TryRemoveRandomSlot(out ItemInstance removedItem, out BagSide removedFromSide)
+    {
+        EnsureReady();
+
+        removedItem = null;
+        removedFromSide = BagSide.Left;
+
+        _slotSides.Clear();
+        _slotXs.Clear();
+        _slotYs.Clear();
+
+        // 왼쪽 그리드 후보 슬롯 수집
+        if (leftGrid != null)
+        {
+            for (int y = 0; y < leftGrid.height; y++)
+            {
+                for (int x = 0; x < leftGrid.width; x++)
+                {
+                    if (leftGrid.IsCellBlocked(x, y)) continue; // 이미 부서진 슬롯 제외
+                    _slotSides.Add(BagSide.Left);
+                    _slotXs.Add(x);
+                    _slotYs.Add(y);
+                }
+            }
+        }
+
+        // 오른쪽 그리드 후보 슬롯 수집
+        if (rightGrid != null)
+        {
+            for (int y = 0; y < rightGrid.height; y++)
+            {
+                for (int x = 0; x < rightGrid.width; x++)
+                {
+                    if (rightGrid.IsCellBlocked(x, y)) continue;
+                    _slotSides.Add(BagSide.Right);
+                    _slotXs.Add(x);
+                    _slotYs.Add(y);
+                }
+            }
+        }
+
+        // 부술 수 있는 슬롯이 없으면 실패
+        if (_slotSides.Count == 0)
+            return false;
+
+        int idx = UnityEngine.Random.Range(0, _slotSides.Count);
+        BagSide side = _slotSides[idx];
+        int cx = _slotXs[idx];
+        int cy = _slotYs[idx];
+
+        InventoryGrid grid = (side == BagSide.Left) ? leftGrid : rightGrid;
+
+        // 슬롯에 아이템이 있으면 그 아이템 전체 제거
+        ItemPlacement p = grid.GetPlacementAt(cx, cy);
+        if (p != null && p.item != null)
+        {
+            removedItem = p.item;
+            removedFromSide = side;
+            grid.Remove(p);
+        }
+        else
+        {
+            removedItem = null;
+            removedFromSide = side;
+        }
+
+        // 슬롯 파괴
+        grid.BlockCell(cx, cy);
+
+        OnChanged?.Invoke();
         return true;
     }
 }

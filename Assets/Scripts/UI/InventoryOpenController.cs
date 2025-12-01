@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,17 +6,46 @@ using UnityEngine;
 public class InventoryOpenController : MonoBehaviour
 {
     public GameObject inventoryPanel;
+    public GameObject storagePanel;
+    public StorageZone storageZone;
 
     private Animator _animator;
     private bool _isOpen = false;
 
     public ShowCursor showCursor;
+    public PlayerMovement playerMovement;
+    public ThirdPersonCam cameraController;
+    public CinemachineBrain cineBrain;
 
     void Start()
     {
         if (inventoryPanel != null)
         {
             _animator = inventoryPanel.GetComponent<Animator>();
+        }
+
+        if (storagePanel != null)
+        {
+            storagePanel.SetActive(false);
+        }
+
+        if (playerMovement == null)
+        {
+            playerMovement = FindObjectOfType<PlayerMovement>();
+        }
+
+        if (cameraController == null)
+        {
+            cameraController = FindObjectOfType<ThirdPersonCam>();
+        }
+
+        if (cineBrain == null)
+        {
+            var cam = Camera.main;
+            if (cam != null)
+            {
+                cineBrain = cam.GetComponent<CinemachineBrain>();
+            }
         }
 
         _isOpen = false;
@@ -39,6 +69,21 @@ public class InventoryOpenController : MonoBehaviour
             _animator.SetBool("isOpen", _isOpen);
         }
 
+        if (_isOpen)
+        {
+            if (storageZone != null && storageZone.IsPlayerInside && storagePanel != null)
+            {
+                storagePanel.SetActive(true);
+            }
+        }
+        else
+        {
+            if (storagePanel != null)
+            {
+                storagePanel.SetActive(false);
+            }
+        }
+
         if (showCursor != null)
         {
             if (_isOpen)
@@ -53,6 +98,21 @@ public class InventoryOpenController : MonoBehaviour
         else
         {
             Debug.LogWarning("ShowCursor인벤토리에연결필요");
+        }
+
+        if (playerMovement != null)
+        {
+            playerMovement.enabled = !_isOpen;
+        }
+
+        if (cameraController != null)
+        {
+            cameraController.enabled = !_isOpen;
+        }
+
+        if (cineBrain != null)
+        {
+            cineBrain.enabled = !_isOpen;
         }
     }
 }

@@ -125,7 +125,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8338897613701675672}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 161.43, y: 7.74, z: 122.39}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -152,7 +152,6 @@ MonoBehaviour:
   highlightIntensity: 1.5
   objectRenderer: {fileID: 2288320767990680890}
   itemData: {fileID: 11400000, guid: 6306ac9de29f46a41bf8ecb20cba8a7d, type: 2}
-  quantity: 1
 --- !u!136 &858106324034286284
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -168,7 +167,7 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2

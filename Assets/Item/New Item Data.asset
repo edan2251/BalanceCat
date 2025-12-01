@@ -16,6 +16,9 @@ MonoBehaviour:
   displayName: Tree
   icon: {fileID: 568955955, guid: 4f6faee39398f024f90b51ed26675b28, type: 3}
   description: Tree of Saivor
+  worldPrefab: {fileID: 2350875937245758781, guid: 0dca17492e408f1409ae1b1611650f22,
+    type: 3}
   sizeW: 2
   sizeH: 2
-  weight: 40
+  weight: 10
+  score: 1

@@ -13,8 +13,12 @@ public class ItemData : ScriptableObject
     [TextArea]
     public string description;
 
+    public GameObject worldPrefab;
+
     [Min(1)] public int sizeW = 1;
     [Min(1)] public int sizeH = 1;
 
     public float weight = 0.5f;
+
+    public int score = 0;
 }
