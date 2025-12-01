@@ -993,12 +993,8 @@ MonoBehaviour:
   previewOK: {r: 0, g: 1, b: 0, a: 0.25}
   previewBad: {r: 1, g: 0, b: 0, a: 0.35}
   singleSide: 1
-  enableDynamicLayout: 0
-  leftPos_Default: {x: 0, y: 0}
-  rightPos_Default: {x: 0, y: 0}
-  leftPos_WithStorage: {x: 0, y: 0}
-  rightPos_WithStorage: {x: 0, y: 0}
   itemTooltip: {fileID: 0}
+  dropController: {fileID: 0}
 --- !u!225 &82046712
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2824,12 +2820,8 @@ MonoBehaviour:
   previewOK: {r: 0, g: 1, b: 0, a: 0.25}
   previewBad: {r: 1, g: 0, b: 0, a: 0.35}
   singleSide: 0
-  enableDynamicLayout: 1
-  leftPos_Default: {x: 560, y: -140}
-  rightPos_Default: {x: 960, y: -140}
-  leftPos_WithStorage: {x: 160, y: -140}
-  rightPos_WithStorage: {x: 560, y: -140}
   itemTooltip: {fileID: 0}
+  dropController: {fileID: 0}
 --- !u!225 &538561549
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -13419,7 +13411,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentStageData: {fileID: 11400000, guid: 3f3762e28ffe1be4e8236e386c8de4ce, type: 2}
-  nextSceneName: 2_ 2
+  nextStageData: {fileID: 11400000, guid: 2bbb6c5dd4d858442a4dbeb72fe509d2, type: 2}
   cursorController: {fileID: 937950424}
   hudStarImages:
   - {fileID: 1715263282}
@@ -13503,6 +13495,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftFillImage: {fileID: 1587264023}
   rightFillImage: {fileID: 983778841}
+  sideBias: {fileID: 0}
+  inventory: {fileID: 0}
   leftWeight: 0
   rightWeight: 0
   maxWeight: 100
@@ -14659,7 +14653,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1699669443}
   - component: {fileID: 1699669441}
-  - component: {fileID: 1699669442}
   m_Layer: 0
   m_Name: InventoryManager
   m_TagString: Untagged
@@ -14682,32 +14675,6 @@ MonoBehaviour:
   gridWidth: 2
   gridHeight: 4
   carryCapacity: 1
---- !u!114 &1699669442
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1699669440}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0a3aab71cb9d844685653002750b00d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inventoryPanel: {fileID: 0}
-  toggleKey: 9
-  startHidden: 1
-  showCursorWhenOpen: 1
-  disableWhileOpen:
-  - {fileID: 1996952455}
-  - {fileID: 1176377249}
-  blockDuringMiniGame: 1
-  storagePanel: {fileID: 0}
-  storageZone: {fileID: 0}
-  openBothWhenNear: 1
-  playerInventoryUI: {fileID: 0}
-  storageInventoryUI: {fileID: 0}
-  playerMovement: {fileID: 0}
 --- !u!4 &1699669443
 Transform:
   m_ObjectHideFlags: 0
@@ -15924,6 +15891,7 @@ MonoBehaviour:
   movement: {fileID: 1176377249}
   animator: {fileID: 1946845847}
   panel: {fileID: 0}
+  slotBreaker: {fileID: 0}
   prefabQ: {fileID: 8172400142041372761, guid: d3b57faff603baf4b8997c808090120d, type: 3}
   prefabW: {fileID: 698275105033385832, guid: 0c53d85cc06063b4792908f6c4a30d3e, type: 3}
   prefabE: {fileID: 3550428868698952758, guid: e6e9ff0228c523f47bd6c3bec35296ea, type: 3}

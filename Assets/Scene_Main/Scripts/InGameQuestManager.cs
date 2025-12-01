@@ -12,7 +12,9 @@ public class InGameQuestManager : MonoBehaviour
 
     [Header("--- 데이터 ---")]
     public StageData currentStageData;
-    public string nextSceneName;
+
+    [Tooltip("다음 스테이지의 데이터 SO를 여기에 넣어주세요!")]
+    public StageData nextStageData;
 
     [Header("--- 커서 제어 ---")]
     public ShowCursor cursorController; // 인스펙터 연결 필수
@@ -182,13 +184,16 @@ public class InGameQuestManager : MonoBehaviour
     void OnNextClicked()
     {
         Time.timeScale = 1f; // [필수] 시간 복구
-        if (!string.IsNullOrEmpty(nextSceneName))
+
+        if (nextStageData != null)
         {
-            SceneManager.LoadScene(nextSceneName);
+            // [핵심] 로딩 씬 컨트롤러에게 다음 스테이지 데이터를 넘기면서 로딩 시작!
+            LoadingSceneController.LoadScene(nextStageData);
         }
         else
         {
-            SceneManager.LoadScene("Main");
+            Debug.LogWarning("다음 스테이지 데이터(nextStageData)가 연결되지 않았습니다! 메인으로 이동합니다.");
+            SceneManager.LoadScene("Main"); // 데이터 없으면 안전하게 메인으로
         }
     }
 }
