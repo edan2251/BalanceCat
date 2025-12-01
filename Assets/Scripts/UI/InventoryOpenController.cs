@@ -54,7 +54,7 @@ public class InventoryOpenController : MonoBehaviour
     void Update()
     {
         //  I 키 입력 감지 -> 이거 Tab키로 연동 필요
-        if (Input.GetKeyDown(KeyCode.I))
+        if (Input.GetKeyDown(KeyCode.Tab))
         {
             ToggleInventory();
         }
