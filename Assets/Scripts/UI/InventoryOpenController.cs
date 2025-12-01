@@ -102,6 +102,26 @@ public class InventoryOpenController : MonoBehaviour
 
         if (playerMovement != null)
         {
+            Rigidbody rb = playerMovement.rb != null
+                ? playerMovement.rb : playerMovement.GetComponent<Rigidbody>();
+
+            if (_isOpen)
+            {
+                if (rb != null)
+                {
+                    rb.velocity = Vector3.zero;
+                    rb.angularVelocity = Vector3.zero;
+                    rb.isKinematic = true;
+                }
+            }
+            else
+            {
+                if (rb != null)
+                {
+                    rb.isKinematic = false;
+                }
+            }
+
             playerMovement.enabled = !_isOpen;
         }
 

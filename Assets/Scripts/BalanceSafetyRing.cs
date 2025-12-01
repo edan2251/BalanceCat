@@ -112,6 +112,15 @@ public class BalanceSafetyRing : MonoBehaviour
         if (!movement && player) movement = player.GetComponent<PlayerMovement>();
         if (!sideBias && movement) sideBias = movement.sideBias;
 
+        if (movement != null && !movement.enabled)
+        {
+            _localOffset = Vector3.zero;
+            ringCenter.localPosition = Vector3.zero;
+            _triggered = false;
+            line.enabled = false;
+            return;
+        }
+
         UpdateRingOffsetLocal();
 
         // 로컬 XZ 거리 기준으로 미니게임/아크 처리
