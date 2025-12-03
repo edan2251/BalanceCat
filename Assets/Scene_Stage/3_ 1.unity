@@ -5415,7 +5415,7 @@ GameObject:
   - component: {fileID: 1092247130}
   - component: {fileID: 1092247129}
   - component: {fileID: 1092247128}
-  - component: {fileID: 1092247127}
+  - component: {fileID: 1092247132}
   m_Layer: 4
   m_Name: LAVA
   m_TagString: Untagged
@@ -5423,20 +5423,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1092247127
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1092247126}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9a26c44f285b5048b88dd2b0b351a0d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 1
-  defaultWaterHeight: 49.21
 --- !u!65 &1092247128
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5452,7 +5438,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -5520,10 +5506,21 @@ Transform:
   m_LocalPosition: {x: 75.3, y: 49.21, z: 74.5}
   m_LocalScale: {x: 30, y: 30, z: 30}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1553313770}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1092247132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1092247126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88f5b4333470de140beca0d17af1538c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1102091290
 GameObject:
   m_ObjectHideFlags: 0
@@ -6985,6 +6982,7 @@ MonoBehaviour:
   waterBobbingAmount: 1.5
   iceGroundDrag: -2.4
   iceControlMultiplier: 0.4
+  inventorySlotBreaker: {fileID: 0}
   playerHeight: 0.57
   groundCheckExtent: 0.12
   groundCheckMargin: 0.18
@@ -7002,7 +7000,7 @@ MonoBehaviour:
     m_Bits: 0
   headCheckPoint: {fileID: 1835582307}
   fadePanelCanvasGroup: {fileID: 13404703}
-  mainWaterObject: {fileID: 1092247127}
+  mainWaterObject: {fileID: 0}
   balanceAdjustSpeed: 2
   balanceReturnSpeed: 1
 --- !u!114 &1348712745
@@ -7877,72 +7875,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1553313769
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1553313770}
-  - component: {fileID: 1553313772}
-  - component: {fileID: 1553313771}
-  m_Layer: 7
-  m_Name: WaterGround
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1553313770
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1553313769}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.007999992, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1092247131}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1553313771
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1553313769}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 10, y: 1, z: 10}
-  m_Center: {x: 0, y: -0.5, z: 0}
---- !u!114 &1553313772
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1553313769}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 698e2878750c1b74a8da1451efa07c9b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1563860878
 GameObject:
   m_ObjectHideFlags: 3
@@ -8711,6 +8643,8 @@ MonoBehaviour:
   - {fileID: 1457847270}
   - {fileID: 1488669292}
   - {fileID: 1567650519}
+  resultBgImage: {fileID: 0}
+  resultTitleText: {fileID: 0}
   restartBtn: {fileID: 2126889519}
   mainBtn: {fileID: 964740907}
   nextBtn: {fileID: 270469982}
