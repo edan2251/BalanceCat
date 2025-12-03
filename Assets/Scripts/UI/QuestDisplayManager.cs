@@ -5,49 +5,52 @@ using System.Collections;
 public class QuestDisplayManager : MonoBehaviour
 {
     [Header("1. 스테이지 데이터")]
-    [Tooltip("표시할 퀘스트 정보가 담긴 StageData SO")]
     public StageData currentStageData;
 
     [Header("2. UI 연결")]
-    [Tooltip("퀘스트 1 (메인) 텍스트 필드")]
     public TextMeshProUGUI questText1;
-
-    [Tooltip("퀘스트 2 (도전) 텍스트 필드")]
     public TextMeshProUGUI questText2;
-
-    [Tooltip("퀘스트 3 (탐험) 텍스트 필드")]
     public TextMeshProUGUI questText3;
 
     [Header("3. 애니메이션")]
-    [Tooltip("QuestPanel에 붙어있는 Animator")]
     public Animator panelAnimator;
 
-    // 패널의 현재 열림/닫힘 상태
-    private bool isPanelOpen = false;
+    [Header("4. 튜토리얼 가이드")]
+    // [수정] GameObject 대신 CanvasGroup을 사용하여 투명도 조절
+    [Tooltip("'M 키를 누르세요' 오브젝트에 CanvasGroup 컴포넌트를 붙이고 여기에 연결하세요")]
+    public CanvasGroup promptCanvasGroup;
 
+    [Tooltip("안내 문구가 페이드되는 시간")]
+    public float promptFadeDuration = 0.5f;
+
+    private bool isPanelOpen = false;
     public float autoCloseDelay = 3.0f;
+
+    // 페이드 코루틴 충돌 방지용 변수
+    private Coroutine _fadeCoroutine;
 
     void Start()
     {
-        if (panelAnimator == null)
-        {
-            panelAnimator = GetComponent<Animator>();
-        }
+        if (panelAnimator == null) panelAnimator = GetComponent<Animator>();
 
-        // 1. 퀘스트 데이터부터 로드
         LoadQuestData();
 
-        // 2. 시작 상태를 '열림'으로 설정
         isPanelOpen = true;
         panelAnimator.SetBool("isOpen", true);
 
-        // 3. n초 후에 자동으로 닫는 코루틴 시작
+        // [수정] 시작할 땐 패널이 열려있으므로 안내 문구 투명하게(0) 설정
+        if (promptCanvasGroup != null)
+        {
+            promptCanvasGroup.alpha = 0f;
+            // 상호작용 차단 (클릭 방지 등)
+            promptCanvasGroup.blocksRaycasts = false;
+        }
+
         StartCoroutine(AutoCloseAfterDelay(autoCloseDelay));
     }
 
     void Update()
     {
-        // M 키를 눌렀을 때
         if (Input.GetKeyDown(KeyCode.M))
         {
             TogglePanel();
@@ -60,7 +63,7 @@ public class QuestDisplayManager : MonoBehaviour
 
         if (isPanelOpen)
         {
-            TogglePanel(); // 닫기 실행
+            TogglePanel();
         }
     }
 
@@ -68,54 +71,62 @@ public class QuestDisplayManager : MonoBehaviour
     {
         isPanelOpen = !isPanelOpen;
         panelAnimator.SetBool("isOpen", isPanelOpen);
+
+        // [수정] 패널 상태에 따라 페이드 효과 실행
+        // 패널이 열리면(true) -> 문구 사라짐(Target Alpha 0)
+        // 패널이 닫히면(false) -> 문구 나타남(Target Alpha 1)
+        float targetAlpha = isPanelOpen ? 0f : 1f;
+
+        if (promptCanvasGroup != null)
+        {
+            if (_fadeCoroutine != null) StopCoroutine(_fadeCoroutine);
+            _fadeCoroutine = StartCoroutine(FadePrompt(targetAlpha));
+        }
     }
 
-    /// <summary>
-    /// StageData에서 퀘스트 정보를 가져와 UI 텍스트에 채웁니다. (리스트 방식 수정됨)
-    /// </summary>
+    // [신규] 안내 문구 페이드 코루틴
+    private IEnumerator FadePrompt(float targetAlpha)
+    {
+        float startAlpha = promptCanvasGroup.alpha;
+        float timer = 0f;
+
+        while (timer < promptFadeDuration)
+        {
+            timer += Time.deltaTime;
+            promptCanvasGroup.alpha = Mathf.Lerp(startAlpha, targetAlpha, timer / promptFadeDuration);
+            yield return null;
+        }
+
+        promptCanvasGroup.alpha = targetAlpha;
+
+        // 완전히 꺼졌을 때는 레이캐스트 차단 (선택 사항)
+        // promptCanvasGroup.blocksRaycasts = (targetAlpha > 0.9f);
+    }
+
     public void LoadQuestData()
     {
-        if (currentStageData == null)
-        {
-            Debug.LogError("표시할 StageData가 할당되지 않았습니다!");
-            return;
-        }
+        // (기존 코드와 동일하여 생략)
+        if (currentStageData == null) { Debug.LogError("No StageData!"); return; }
 
-        // --- 퀘스트 1 (메인) : 리스트 인덱스 0 ---
-        // 리스트가 존재하고, 0번 요소가 있는지 확인
-        if (currentStageData.quests != null && currentStageData.quests.Count > 0 && currentStageData.quests[0] != null)
+        if (currentStageData.quests != null && currentStageData.quests.Count > 0)
         {
-            QuestData q1 = currentStageData.quests[0];
-            questText1.text = $"{q1.questTitle}\n{q1.questDescription}";
+            questText1.text = $"{currentStageData.quests[0].questTitle}\n{currentStageData.quests[0].questDescription}";
             questText1.gameObject.SetActive(true);
         }
-        else
-        {
-            questText1.gameObject.SetActive(false);
-        }
+        else questText1.gameObject.SetActive(false);
 
-        // --- 퀘스트 2 (도전) : 리스트 인덱스 1 ---
-        if (currentStageData.quests != null && currentStageData.quests.Count > 1 && currentStageData.quests[1] != null)
+        if (currentStageData.quests != null && currentStageData.quests.Count > 1)
         {
-            QuestData q2 = currentStageData.quests[1];
-            questText2.text = $"{q2.questTitle}\n{q2.questDescription}";
+            questText2.text = $"{currentStageData.quests[1].questTitle}\n{currentStageData.quests[1].questDescription}";
             questText2.gameObject.SetActive(true);
         }
-        else
-        {
-            questText2.gameObject.SetActive(false);
-        }
+        else questText2.gameObject.SetActive(false);
 
-        // --- 퀘스트 3 (탐험) : 리스트 인덱스 2 ---
-        if (currentStageData.quests != null && currentStageData.quests.Count > 2 && currentStageData.quests[2] != null)
+        if (currentStageData.quests != null && currentStageData.quests.Count > 2)
         {
-            QuestData q3 = currentStageData.quests[2];
-            questText3.text = $"{q3.questTitle}\n{q3.questDescription}";
+            questText3.text = $"{currentStageData.quests[2].questTitle}\n{currentStageData.quests[2].questDescription}";
             questText3.gameObject.SetActive(true);
         }
-        else
-        {
-            questText3.gameObject.SetActive(false);
-        }
+        else questText3.gameObject.SetActive(false);
     }
 }

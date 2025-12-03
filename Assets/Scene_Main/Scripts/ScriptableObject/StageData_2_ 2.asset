@@ -17,13 +17,10 @@ MonoBehaviour:
   chapterIndex: 1
   chapterName: "\uC911\uB825 \uD589\uC131"
   stageTitle: "2 \uC2A4\uD14C\uC774\uC9C0"
-  synopsis: "\uC6B0\uC8FC\uC120\uC758 \uD544\uC218 \uC694\uC18C\uC778 \uC911\uB825
-    \uC870\uC808\uAE30 \uBD80\uD488\uC744 \uCC3E\uAE30 \uC704\uD574 \uC911\uB825
-    \uD589\uC131\uC73C\uB85C \uB35C \uACE0\uCCD0\uC9C4 \uC6B0\uC8FC\uC120\uC744 \uC774\uB04C\uACE0
-    \uC774\uB3D9\uD55C\uB2E4."
+  synopsis: "\uC774 \uD589\uC131\uC740 \uB108\uBB34 \uBD88\uADDC\uCE59\uC801\uC778
+    \uD658\uACBD\uC744\n\uAC00\uC9C0\uACE0 \uC788\uB294 \uAC83 \uAC19\uB2E4."
   loadingComicImage: {fileID: 21300000, guid: 51bbe2502008fa84fbdb66ba61a72567, type: 3}
-  loadingDescription: "\uB85C\uB529 \uC911\uC5D0 \uD45C\uC2DC\uD560 \uD301\uC774\uB098
-    \uC2A4\uD1A0\uB9AC \uD14D\uC2A4\uD2B8"
+  loadingDescription: "[2 - 2]\n\uBC1C\uBC11\uC744 \uC870\uC2EC\uD558\uC138\uC694!"
   quests:
   - {fileID: 11400000, guid: ee0c980e1f180bf46a841d4b9a7ce20b, type: 2}
   - {fileID: 11400000, guid: 3e4dff98c3340ce44ac2da46c5408253, type: 2}

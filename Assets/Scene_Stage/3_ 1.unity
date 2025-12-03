@@ -8622,8 +8622,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f738053de69fa44eab16acf7a93b07e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentStageData: {fileID: 11400000, guid: ac9c236223f706240afc06d08f5622af, type: 2}
-  nextStageData: {fileID: 11400000, guid: 3f3762e28ffe1be4e8236e386c8de4ce, type: 2}
+  currentStageData: {fileID: 11400000, guid: ae24e55ab95fd08459380e17c7616ab1, type: 2}
+  nextStageData: {fileID: 11400000, guid: 95a7e0308f4c7d341aa6b2505fe0af54, type: 2}
   cursorController: {fileID: 1219540384}
   hudStarImages:
   - {fileID: 2049733359}
