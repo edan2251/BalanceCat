@@ -120,12 +120,14 @@ public class InGameQuestManager : MonoBehaviour
 
     void ShowResultUI()
     {
-        // [추가] 1. 게임 시간 정지! (물리, 애니메이션, Update 멈춤)
+        // 1. 게임 시간 정지
         Time.timeScale = 0f;
 
+        // 2. 패널 활성화 및 초기 세팅 (크기를 0으로)
         resultPanel.SetActive(true);
+        resultPanel.transform.localScale = Vector3.zero;
 
-        // 커서 풀기
+        // 3. 커서 풀기
         if (cursorController != null)
         {
             cursorController.UnlockCursor();
@@ -137,16 +139,25 @@ public class InGameQuestManager : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
         }
 
+        // 4. 시간 텍스트 갱신
         int minutes = Mathf.FloorToInt(playTime / 60F);
         int seconds = Mathf.FloorToInt(playTime % 60F);
         timeText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
 
-        // [중요] DOTween 시퀀스 생성
-        Sequence starSequence = DOTween.Sequence();
+        // =============================================
+        // [연출 시작] DOTween 시퀀스 하나로 통합 관리
+        // =============================================
+        Sequence resultSequence = DOTween.Sequence();
+        resultSequence.SetUpdate(true); // 시간 정지 상태에서도 작동하게 설정
 
-        // [핵심] 이 시퀀스는 timeScale이 0이어도 돌아가게 설정!! (SetUpdate(true))
-        starSequence.SetUpdate(true);
+        // [연출 1] 패널이 "띠용~" 하고 나타나기 (0.5초 동안)
+        // Ease.OutBack을 쓰면 크기가 1.0을 살짝 넘었다가 돌아오는 탄력 효과가 생깁니다.
+        resultSequence.Append(resultPanel.transform.DOScale(1f, 0.5f).SetEase(Ease.OutBack));
 
+        // [연출 2] 별들이 나오기 전 잠깐 뜸 들이기 (0.2초)
+        resultSequence.AppendInterval(0.2f);
+
+        // [연출 3] 별 채우기 애니메이션
         for (int i = 0; i < 3; i++)
         {
             if (tempQuestCleared[i])
@@ -154,15 +165,21 @@ public class InGameQuestManager : MonoBehaviour
                 int index = i;
                 Image targetStar = resultStarFills[index];
 
-                starSequence.AppendCallback(() =>
+                // 별 등장 시작 시점에 할 일 (켜고, 크기 0으로)
+                resultSequence.AppendCallback(() =>
                 {
                     targetStar.gameObject.SetActive(true);
                     targetStar.transform.localScale = Vector3.zero;
+
+                    // (추천) 여기에 별 획득 효과음 재생 코드 넣으면 딱 맞습니다!
+                    // AudioSource.PlayClipAtPoint(starSound, Camera.main.transform.position);
                 });
 
-                // 별 커지는 애니메이션
-                starSequence.Append(targetStar.transform.DOScale(1f, 0.4f).SetEase(Ease.OutBack));
-                starSequence.AppendInterval(0.2f);
+                // 별이 쾅! 하고 커짐
+                resultSequence.Append(targetStar.transform.DOScale(1f, 0.4f).SetEase(Ease.OutBack));
+
+                // 다음 별 나오기 전 딜레이
+                resultSequence.AppendInterval(0.15f);
             }
         }
     }
