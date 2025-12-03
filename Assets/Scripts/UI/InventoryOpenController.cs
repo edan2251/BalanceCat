@@ -100,39 +100,39 @@ public class InventoryOpenController : MonoBehaviour
             Debug.LogWarning("ShowCursor인벤토리에연결필요");
         }
 
-        if (playerMovement != null)
-        {
-            Rigidbody rb = playerMovement.rb != null
-                ? playerMovement.rb : playerMovement.GetComponent<Rigidbody>();
+        //if (playerMovement != null)
+        //{
+        //    Rigidbody rb = playerMovement.rb != null
+        //        ? playerMovement.rb : playerMovement.GetComponent<Rigidbody>();
 
-            if (_isOpen)
-            {
-                if (rb != null)
-                {
-                    rb.velocity = Vector3.zero;
-                    rb.angularVelocity = Vector3.zero;
-                    rb.isKinematic = true;
-                }
-            }
-            else
-            {
-                if (rb != null)
-                {
-                    rb.isKinematic = false;
-                }
-            }
+        //    if (_isOpen)
+        //    {
+        //        if (rb != null)
+        //        {
+        //            rb.velocity = Vector3.zero;
+        //            rb.angularVelocity = Vector3.zero;
+        //            rb.isKinematic = true;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        if (rb != null)
+        //        {
+        //            rb.isKinematic = false;
+        //        }
+        //    }
 
-            playerMovement.enabled = !_isOpen;
-        }
+        //    playerMovement.enabled = !_isOpen;
+        //}
 
-        if (cameraController != null)
-        {
-            cameraController.enabled = !_isOpen;
-        }
+        //if (cameraController != null)
+        //{
+        //    cameraController.enabled = !_isOpen;
+        //}
 
-        if (cineBrain != null)
-        {
-            cineBrain.enabled = !_isOpen;
-        }
+        //if (cineBrain != null)
+        //{
+        //    cineBrain.enabled = !_isOpen;
+        //}
     }
 }
