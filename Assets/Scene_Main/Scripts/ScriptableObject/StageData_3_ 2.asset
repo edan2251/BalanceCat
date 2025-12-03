@@ -21,8 +21,7 @@ MonoBehaviour:
     \uB3C4\uC911 \uB9C8\uC8FC\uCE5C \uC5C4\uCCAD\uB098\uAC8C \uB728\uAC70\uC6B4 \uD589\uC131.
     \uC6B0\uC8FC\uC120\uC758 \uB0A0\uAC1C\uAC00 \uB179\uC544\uC11C \uB610\uB2E4\uC2DC
     \uCD94\uB77D\uD558\uAC8C \uB41C\uB2E4."
-  loadingComicImage: {fileID: -1175189913, guid: 73fd8a8b157cad345a341c1b5ee0719b,
-    type: 3}
+  loadingComicImage: {fileID: 21300000, guid: 27251cce555ea4e449f72c59aa8f6c85, type: 3}
   loadingDescription: "\uB85C\uB529 \uC911\uC5D0 \uD45C\uC2DC\uD560 \uD301\uC774\uB098
     \uC2A4\uD1A0\uB9AC \uD14D\uC2A4\uD2B8"
   quests:
