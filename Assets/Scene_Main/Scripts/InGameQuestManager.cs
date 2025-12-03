@@ -126,33 +126,27 @@ public class InGameQuestManager : MonoBehaviour
 
     void ShowResultUI()
     {
-        // 1. 시간 정지
         Time.timeScale = 0f;
 
-        // 2. 초기화 (패널 켜고, 크기 0, 배경 투명하게)
-        resultPanel.SetActive(true);
-        resultPanel.transform.localScale = Vector3.zero;
-
-        // [A] 배경 이미지 초기화 (완전 투명)
         if (resultBgImage != null)
         {
+            resultBgImage.gameObject.SetActive(true);
             Color c = resultBgImage.color;
             c.a = 0f;
             resultBgImage.color = c;
         }
 
-        // [B] 타이틀 텍스트 초기화 (안보이게)
+        resultPanel.SetActive(true);
+        resultPanel.transform.localScale = Vector3.zero;
+
         if (resultTitleText != null)
         {
             resultTitleText.alpha = 0f;
-            resultTitleText.transform.localScale = Vector3.one * 3f; // 엄청 크게 시작
+            resultTitleText.transform.localScale = Vector3.one * 1.5f;
         }
 
-        // [D] 시간 텍스트 초기화 (00:00 부터 시작)
         timeText.text = "00:00";
 
-
-        // 3. 커서 풀기
         if (cursorController != null)
         {
             cursorController.UnlockCursor();
@@ -164,49 +158,41 @@ public class InGameQuestManager : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
         }
 
-
-        // 4. DOTween 시퀀스 시작
         Sequence resultSequence = DOTween.Sequence();
-        resultSequence.SetUpdate(true); // TimeScale 0이어도 작동
+        resultSequence.SetUpdate(true);
 
-        // --- Step 1: 배경이 어두워지면서 패널 팝업 ---
-
-        // [A] 배경 페이드 인 (투명도 0 -> 0.7)
         if (resultBgImage != null)
             resultSequence.Append(resultBgImage.DOFade(0.8f, 0.5f));
 
-        // 패널 팝업 (배경 페이드와 동시에 시작하려면 Join 사용)
-        // 여기선 배경이 살짝 깔리고 패널이 나오게 Append 대신 Join을 쓰되 delay를 줌
         resultSequence.Join(resultPanel.transform.DOScale(1f, 0.5f).SetEase(Ease.OutBack));
 
-
-        // --- Step 2: 타이틀 도장 찍기 ("쿵!") ---
-
-        // [B] 타이틀 텍스트 연출
         if (resultTitleText != null)
         {
-            // 투명도 1로, 크기는 3에서 1로 줄어들면서 쿵!
-            resultSequence.Insert(0.3f, resultTitleText.DOFade(1f, 0.3f));
-            resultSequence.Insert(0.3f, resultTitleText.transform.DOScale(1f, 0.4f).SetEase(Ease.OutBounce));
+            resultSequence.Insert(0.2f, resultTitleText.DOFade(1f, 0.2f));
+            resultSequence.Insert(0.2f, resultTitleText.transform.DOScale(1f, 0.3f).SetEase(Ease.OutBounce));
         }
 
 
-        // --- Step 3: 플레이 타임 롤링 (00:00 -> 실제 시간) ---
-
-        // [D] 숫자 카운팅 연출
-        float tempTime = 0f; // 0초부터 시작
-        // DOTween.To를 사용하여 0부터 playTime까지 값을 변화시킴
-        resultSequence.Append(DOTween.To(() => tempTime, x => tempTime = x, playTime, 1.0f)
+        float tempTime = 0f;
+        resultSequence.Insert(0.4f, DOTween.To(() => tempTime, x => tempTime = x, playTime, 0.5f)
             .OnUpdate(() =>
             {
-                // 매 프레임마다 텍스트 갱신
                 int m = Mathf.FloorToInt(tempTime / 60F);
                 int s = Mathf.FloorToInt(tempTime % 60F);
                 timeText.text = string.Format("{0:00}:{1:00}", m, s);
             }).SetEase(Ease.OutCubic));
 
 
-        // --- Step 4: 별 채우기 ---
+        // --- Step 4: 별 채우기 (타이밍 조절 핵심!) ---
+
+        //  [조절 1] 별 시작 시간: 0.8초
+        // 숫자가 거의 다 올라갈 때쯤(0.9초 종료) 살짝 겹치면서 시작합니다.
+        // 아까 너무 느리다고 하셔서 1.0f -> 0.8f로 당겼습니다.
+        float starStartTime = 0.8f;
+
+        //  [조절 2] 별 간격: 0.3초
+        // 아까 0.1f는 너무 빨라서 후다닥 지나갔으니, 0.3f로 늘려서 "쿵... 쿵... 쿵" 느낌을 줍니다.
+        float starInterval = 0.3f;
 
         for (int i = 0; i < 3; i++)
         {
@@ -215,14 +201,15 @@ public class InGameQuestManager : MonoBehaviour
                 int index = i;
                 Image targetStar = resultStarFills[index];
 
-                resultSequence.AppendCallback(() =>
+                resultSequence.InsertCallback(starStartTime, () =>
                 {
                     targetStar.gameObject.SetActive(true);
                     targetStar.transform.localScale = Vector3.zero;
                 });
 
-                resultSequence.Append(targetStar.transform.DOScale(1f, 0.4f).SetEase(Ease.OutBack));
-                resultSequence.AppendInterval(0.15f);
+                resultSequence.Insert(starStartTime, targetStar.transform.DOScale(1f, 0.4f).SetEase(Ease.OutBack));
+
+                starStartTime += starInterval;
             }
         }
     }
