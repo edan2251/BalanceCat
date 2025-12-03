@@ -29,6 +29,12 @@ public class InGameQuestManager : MonoBehaviour
     public TextMeshProUGUI timeText;
     public Image[] resultStarFills;
 
+    // [추가] A. 배경 어둡게 처리를 위한 이미지 (패널 뒤의 검은 배경)
+    public Image resultBgImage;
+
+    // [추가] B. 타이틀 연출을 위한 텍스트 ("STAGE CLEAR")
+    public TextMeshProUGUI resultTitleText;
+
     [Header("--- 버튼 연결 ---")]
     public Button restartBtn;
     public Button mainBtn;
@@ -120,12 +126,31 @@ public class InGameQuestManager : MonoBehaviour
 
     void ShowResultUI()
     {
-        // 1. 게임 시간 정지
+        // 1. 시간 정지
         Time.timeScale = 0f;
 
-        // 2. 패널 활성화 및 초기 세팅 (크기를 0으로)
+        // 2. 초기화 (패널 켜고, 크기 0, 배경 투명하게)
         resultPanel.SetActive(true);
         resultPanel.transform.localScale = Vector3.zero;
+
+        // [A] 배경 이미지 초기화 (완전 투명)
+        if (resultBgImage != null)
+        {
+            Color c = resultBgImage.color;
+            c.a = 0f;
+            resultBgImage.color = c;
+        }
+
+        // [B] 타이틀 텍스트 초기화 (안보이게)
+        if (resultTitleText != null)
+        {
+            resultTitleText.alpha = 0f;
+            resultTitleText.transform.localScale = Vector3.one * 3f; // 엄청 크게 시작
+        }
+
+        // [D] 시간 텍스트 초기화 (00:00 부터 시작)
+        timeText.text = "00:00";
+
 
         // 3. 커서 풀기
         if (cursorController != null)
@@ -139,25 +164,50 @@ public class InGameQuestManager : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
         }
 
-        // 4. 시간 텍스트 갱신
-        int minutes = Mathf.FloorToInt(playTime / 60F);
-        int seconds = Mathf.FloorToInt(playTime % 60F);
-        timeText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
 
-        // =============================================
-        // [연출 시작] DOTween 시퀀스 하나로 통합 관리
-        // =============================================
+        // 4. DOTween 시퀀스 시작
         Sequence resultSequence = DOTween.Sequence();
-        resultSequence.SetUpdate(true); // 시간 정지 상태에서도 작동하게 설정
+        resultSequence.SetUpdate(true); // TimeScale 0이어도 작동
 
-        // [연출 1] 패널이 "띠용~" 하고 나타나기 (0.5초 동안)
-        // Ease.OutBack을 쓰면 크기가 1.0을 살짝 넘었다가 돌아오는 탄력 효과가 생깁니다.
-        resultSequence.Append(resultPanel.transform.DOScale(1f, 0.5f).SetEase(Ease.OutBack));
+        // --- Step 1: 배경이 어두워지면서 패널 팝업 ---
 
-        // [연출 2] 별들이 나오기 전 잠깐 뜸 들이기 (0.2초)
-        resultSequence.AppendInterval(0.2f);
+        // [A] 배경 페이드 인 (투명도 0 -> 0.7)
+        if (resultBgImage != null)
+            resultSequence.Append(resultBgImage.DOFade(0.8f, 0.5f));
 
-        // [연출 3] 별 채우기 애니메이션
+        // 패널 팝업 (배경 페이드와 동시에 시작하려면 Join 사용)
+        // 여기선 배경이 살짝 깔리고 패널이 나오게 Append 대신 Join을 쓰되 delay를 줌
+        resultSequence.Join(resultPanel.transform.DOScale(1f, 0.5f).SetEase(Ease.OutBack));
+
+
+        // --- Step 2: 타이틀 도장 찍기 ("쿵!") ---
+
+        // [B] 타이틀 텍스트 연출
+        if (resultTitleText != null)
+        {
+            // 투명도 1로, 크기는 3에서 1로 줄어들면서 쿵!
+            resultSequence.Insert(0.3f, resultTitleText.DOFade(1f, 0.3f));
+            resultSequence.Insert(0.3f, resultTitleText.transform.DOScale(1f, 0.4f).SetEase(Ease.OutBounce));
+        }
+
+
+        // --- Step 3: 플레이 타임 롤링 (00:00 -> 실제 시간) ---
+
+        // [D] 숫자 카운팅 연출
+        float tempTime = 0f; // 0초부터 시작
+        // DOTween.To를 사용하여 0부터 playTime까지 값을 변화시킴
+        resultSequence.Append(DOTween.To(() => tempTime, x => tempTime = x, playTime, 1.0f)
+            .OnUpdate(() =>
+            {
+                // 매 프레임마다 텍스트 갱신
+                int m = Mathf.FloorToInt(tempTime / 60F);
+                int s = Mathf.FloorToInt(tempTime % 60F);
+                timeText.text = string.Format("{0:00}:{1:00}", m, s);
+            }).SetEase(Ease.OutCubic));
+
+
+        // --- Step 4: 별 채우기 ---
+
         for (int i = 0; i < 3; i++)
         {
             if (tempQuestCleared[i])
@@ -165,20 +215,13 @@ public class InGameQuestManager : MonoBehaviour
                 int index = i;
                 Image targetStar = resultStarFills[index];
 
-                // 별 등장 시작 시점에 할 일 (켜고, 크기 0으로)
                 resultSequence.AppendCallback(() =>
                 {
                     targetStar.gameObject.SetActive(true);
                     targetStar.transform.localScale = Vector3.zero;
-
-                    // (추천) 여기에 별 획득 효과음 재생 코드 넣으면 딱 맞습니다!
-                    // AudioSource.PlayClipAtPoint(starSound, Camera.main.transform.position);
                 });
 
-                // 별이 쾅! 하고 커짐
                 resultSequence.Append(targetStar.transform.DOScale(1f, 0.4f).SetEase(Ease.OutBack));
-
-                // 다음 별 나오기 전 딜레이
                 resultSequence.AppendInterval(0.15f);
             }
         }
