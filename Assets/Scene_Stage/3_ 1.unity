@@ -5416,7 +5416,7 @@ GameObject:
   - component: {fileID: 1092247129}
   - component: {fileID: 1092247128}
   - component: {fileID: 1092247132}
-  m_Layer: 4
+  m_Layer: 14
   m_Name: LAVA
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6982,7 +6982,6 @@ MonoBehaviour:
   waterBobbingAmount: 1.5
   iceGroundDrag: -2.4
   iceControlMultiplier: 0.4
-  inventorySlotBreaker: {fileID: 0}
   playerHeight: 0.57
   groundCheckExtent: 0.12
   groundCheckMargin: 0.18
@@ -6992,15 +6991,10 @@ MonoBehaviour:
   orientation: {fileID: 8936515}
   rb: {fileID: 1348712743}
   playerAnimator: {fileID: 1640546946}
+  playerRespawn: {fileID: 0}
   horizontalInput: 0
   verticalInput: 0
   sideBias: {fileID: 0}
-  whatIsRespawn:
-    serializedVersion: 2
-    m_Bits: 0
-  headCheckPoint: {fileID: 1835582307}
-  fadePanelCanvasGroup: {fileID: 13404703}
-  mainWaterObject: {fileID: 0}
   balanceAdjustSpeed: 2
   balanceReturnSpeed: 1
 --- !u!114 &1348712745
