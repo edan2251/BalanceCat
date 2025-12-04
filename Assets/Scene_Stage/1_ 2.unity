@@ -69557,8 +69557,9 @@ GameObject:
   - component: {fileID: 3930542809991476236}
   - component: {fileID: 1254499429831999686}
   - component: {fileID: 749881109990252816}
+  - component: {fileID: 3930542809991476237}
   m_Layer: 12
-  m_Name: PP_Stone_Plateau_Moss_Grown_04 (5)
+  m_Name: WightPlatform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -69576,8 +69577,9 @@ GameObject:
   - component: {fileID: 3930542809521691234}
   - component: {fileID: 1254499429630701224}
   - component: {fileID: 749881110460026750}
+  - component: {fileID: 3930542809521691235}
   m_Layer: 12
-  m_Name: PP_Stone_Plateau_Moss_Grown_04 (2)
+  m_Name: WightPlatform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -69639,8 +69641,9 @@ GameObject:
   - component: {fileID: 3930542810490232500}
   - component: {fileID: 1254499429254998654}
   - component: {fileID: 749881110598716328}
+  - component: {fileID: 3930542810490232501}
   m_Layer: 12
-  m_Name: PP_Stone_Plateau_Moss_Grown_04 (1)
+  m_Name: WightPlatform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -69658,8 +69661,9 @@ GameObject:
   - component: {fileID: 3930542810439473602}
   - component: {fileID: 1254499429405502728}
   - component: {fileID: 749881110683094238}
+  - component: {fileID: 3930542810439473603}
   m_Layer: 12
-  m_Name: PP_Stone_Plateau_Moss_Grown_04 (6)
+  m_Name: WightPlatform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -69721,8 +69725,9 @@ GameObject:
   - component: {fileID: 3930542808909200908}
   - component: {fileID: 1254499430828034758}
   - component: {fileID: 749881111181585168}
+  - component: {fileID: 3930542808909200909}
   m_Layer: 12
-  m_Name: PP_Stone_Plateau_Moss_Grown_04 (3)
+  m_Name: WightPlatform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -69762,8 +69767,9 @@ GameObject:
   - component: {fileID: 3930542808572804705}
   - component: {fileID: 1254499430760073899}
   - component: {fileID: 749881111517981565}
+  - component: {fileID: 3930542808572804706}
   m_Layer: 12
-  m_Name: PP_Stone_Plateau_Moss_Grown_04
+  m_Name: WightPlatform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -69803,8 +69809,9 @@ GameObject:
   - component: {fileID: 3930542809517778020}
   - component: {fileID: 1254499430364942510}
   - component: {fileID: 749881111646744952}
+  - component: {fileID: 3930542809517778021}
   m_Layer: 12
-  m_Name: PP_Stone_Plateau_Moss_Grown_04 (4)
+  m_Name: WightPlatform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -70112,6 +70119,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 749881111517981566}
   m_Mesh: {fileID: -8416549797754013771, guid: 6bb3cecd1b0145b4ead975f261be2ea2, type: 3}
+--- !u!114 &3930542808572804706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 749881111517981566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26be57552b17b6941a789205b128065d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxDropDistance: 3
+  maxWeight: 10
+  dropSpeed: 1
 --- !u!33 &3930542808909200908
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -70120,6 +70142,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 749881111181585171}
   m_Mesh: {fileID: -8416549797754013771, guid: 6bb3cecd1b0145b4ead975f261be2ea2, type: 3}
+--- !u!114 &3930542808909200909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 749881111181585171}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26be57552b17b6941a789205b128065d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxDropDistance: 3
+  maxWeight: 10
+  dropSpeed: 1
 --- !u!33 &3930542809517778020
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -70128,6 +70165,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 749881111646744955}
   m_Mesh: {fileID: -8416549797754013771, guid: 6bb3cecd1b0145b4ead975f261be2ea2, type: 3}
+--- !u!114 &3930542809517778021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 749881111646744955}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26be57552b17b6941a789205b128065d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxDropDistance: 3
+  maxWeight: 10
+  dropSpeed: 1
 --- !u!33 &3930542809521691234
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -70136,6 +70188,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 749881110460026749}
   m_Mesh: {fileID: -8416549797754013771, guid: 6bb3cecd1b0145b4ead975f261be2ea2, type: 3}
+--- !u!114 &3930542809521691235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 749881110460026749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26be57552b17b6941a789205b128065d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxDropDistance: 3
+  maxWeight: 10
+  dropSpeed: 1
 --- !u!33 &3930542809991476236
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -70144,6 +70211,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 749881109990252819}
   m_Mesh: {fileID: -8416549797754013771, guid: 6bb3cecd1b0145b4ead975f261be2ea2, type: 3}
+--- !u!114 &3930542809991476237
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 749881109990252819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26be57552b17b6941a789205b128065d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxDropDistance: 3
+  maxWeight: 10
+  dropSpeed: 1
 --- !u!33 &3930542810439473602
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -70152,6 +70234,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 749881110683094237}
   m_Mesh: {fileID: -8416549797754013771, guid: 6bb3cecd1b0145b4ead975f261be2ea2, type: 3}
+--- !u!114 &3930542810439473603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 749881110683094237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26be57552b17b6941a789205b128065d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxDropDistance: 3
+  maxWeight: 10
+  dropSpeed: 1
 --- !u!33 &3930542810490232500
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -70160,6 +70257,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 749881110598716331}
   m_Mesh: {fileID: -8416549797754013771, guid: 6bb3cecd1b0145b4ead975f261be2ea2, type: 3}
+--- !u!114 &3930542810490232501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 749881110598716331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26be57552b17b6941a789205b128065d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxDropDistance: 3
+  maxWeight: 10
+  dropSpeed: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

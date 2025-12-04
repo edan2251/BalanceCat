@@ -355,9 +355,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fb5ced36072a8e45a5ad09298243f11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  requiredWeight: 10
-  currentWeight: 0
-  isWeightMet: 0
+  requiredWeight: 5
+  currentDetectedWeight: 0
+  isActivated: 0
   onWeightMet:
     m_PersistentCalls:
       m_Calls:
@@ -498,8 +498,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredWeight: 10
-  currentWeight: 0
-  isWeightMet: 0
+  currentDetectedWeight: 0
+  isActivated: 0
   onWeightMet:
     m_PersistentCalls:
       m_Calls:
@@ -584,7 +584,7 @@ Transform:
   m_GameObject: {fileID: 14013411}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 219.35707, y: 8.658337, z: 73.50031}
+  m_LocalPosition: {x: 219.35707, y: 9.450001, z: 73.50031}
   m_LocalScale: {x: 1, y: 1, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1279,8 +1279,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxDropDistance: 3
-  maxWeight: 51
-  dropSpeed: 1
+  minWeight: 0
+  maxWeight: 1
+  moveSpeed: 2
+  currentTotalWeight: 0
 --- !u!4 &156649725
 Transform:
   m_ObjectHideFlags: 0
@@ -1963,8 +1965,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredWeight: 10
-  currentWeight: 0
-  isWeightMet: 0
+  currentDetectedWeight: 0
+  isActivated: 0
   onWeightMet:
     m_PersistentCalls:
       m_Calls:
@@ -9156,7 +9158,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 518744286}
-  - component: {fileID: 518744284}
   - component: {fileID: 518744283}
   - component: {fileID: 518744287}
   - component: {fileID: 518744288}
@@ -9262,19 +9263,6 @@ MonoBehaviour:
   sideBias: {fileID: 269265970}
   balanceAdjustSpeed: 2
   balanceReturnSpeed: 1
---- !u!114 &518744284
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 518744279}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef4d35aea3dd45a4c9d91acbcce8f4e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objectWeight: 500
 --- !u!136 &518744285
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -9539,7 +9527,7 @@ Transform:
   m_GameObject: {fileID: 579009935}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.9428611, z: -0, w: 0.33318624}
-  m_LocalPosition: {x: 220.34706, y: 11.558336, z: 69.08331}
+  m_LocalPosition: {x: 220.34706, y: 12.35, z: 69.08331}
   m_LocalScale: {x: 4, y: 5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -17655,7 +17643,7 @@ Transform:
   m_GameObject: {fileID: 1210842304}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 223.63306, y: 9.128337, z: 124.47501}
+  m_LocalPosition: {x: 223.63306, y: 9.4, z: 124.47501}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -18545,7 +18533,7 @@ Transform:
   m_GameObject: {fileID: 1350702641}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 222.49782, y: 9.128337, z: 124.47501}
+  m_LocalPosition: {x: 222.49782, y: 9.4, z: 124.47501}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -19011,7 +18999,7 @@ Transform:
   m_GameObject: {fileID: 1471782020}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 218.66705, y: 9.858336, z: 77.64331}
+  m_LocalPosition: {x: 218.66705, y: 10.650001, z: 77.64331}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -19806,7 +19794,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1579596556
 RectTransform:
   m_ObjectHideFlags: 0
@@ -20028,7 +20016,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1684338835
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20805,7 +20793,7 @@ Transform:
   m_GameObject: {fileID: 1789296038}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 218.69707, y: 9.888337, z: 80.093315}
+  m_LocalPosition: {x: 218.69707, y: 10.680001, z: 80.093315}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -20878,7 +20866,7 @@ Transform:
   m_GameObject: {fileID: 1796952313}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 221.12706, y: 9.128337, z: 124.47501}
+  m_LocalPosition: {x: 221.12706, y: 9.4, z: 124.47501}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -22003,9 +21991,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fb5ced36072a8e45a5ad09298243f11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  requiredWeight: 10
-  currentWeight: 0
-  isWeightMet: 0
+  requiredWeight: 7
+  currentDetectedWeight: 0
+  isActivated: 0
   onWeightMet:
     m_PersistentCalls:
       m_Calls:
