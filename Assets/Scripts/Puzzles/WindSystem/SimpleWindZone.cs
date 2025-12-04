@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic; // 리스트 사용을 위해 추가
 
 [RequireComponent(typeof(Collider))]
 public class SimpleWindZone : MonoBehaviour
@@ -11,7 +12,10 @@ public class SimpleWindZone : MonoBehaviour
     public ParticleSystem windParticleSystem;
 
     private BoxCollider _zoneCollider;
-    private float _lastCheckedForce = float.MinValue; // [신규] 이전에 체크한 힘
+    private float _lastCheckedForce = float.MinValue;
+
+    // [신규] 파티클 데이터를 처리하기 위한 리스트
+    private List<ParticleSystem.Particle> _exitParticles = new List<ParticleSystem.Particle>();
 
     private void Awake()
     {
@@ -21,7 +25,6 @@ public class SimpleWindZone : MonoBehaviour
             _zoneCollider.isTrigger = true;
         }
 
-        // [신규] Awake에서는 트리거 설정만 하도록 변경
         if (windParticleSystem != null)
         {
             SetupParticleTriggers();
@@ -32,14 +35,11 @@ public class SimpleWindZone : MonoBehaviour
     {
         if (windParticleSystem == null) return;
 
-        // [수정] windForce가 0.01 이상 차이 날 때만 파티클 설정을 업데이트
         if (Mathf.Abs(windForce - _lastCheckedForce) > 0.01f)
         {
-            // 1. 파티클 힘(Force) 업데이트
             SetupParticleForce();
-            _lastCheckedForce = windForce; // 현재 힘을 저장
+            _lastCheckedForce = windForce;
 
-            // 2. 파티클 재생/정지
             if (Mathf.Abs(windForce) < 0.01f)
             {
                 if (windParticleSystem.isPlaying)
@@ -57,36 +57,56 @@ public class SimpleWindZone : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// [신규] 파티클의 '힘'만 설정하는 함수 (Update에서 호출)
-    /// </summary>
+    // --- [신규] 파티클이 트리거(박스) 이벤트를 겪을 때 유니티가 자동으로 호출하는 함수 ---
+    private void OnParticleTrigger()
+    {
+        if (windParticleSystem == null) return;
+
+        // 1. 박스를 '나가는(Exit)' 파티클들을 리스트에 담아옵니다.
+        int numExit = windParticleSystem.GetTriggerParticles(ParticleSystemTriggerEventType.Exit, _exitParticles);
+
+        // 2. 나가는 파티클들의 수명을 짧게 줄여서 '자연스럽게 죽게' 만듭니다.
+        for (int i = 0; i < numExit; i++)
+        {
+            ParticleSystem.Particle p = _exitParticles[i];
+
+            // 남은 수명을 0.3초~0.5초 정도로 설정
+            // (이 시간 동안 Color over Lifetime의 투명해지는 구간이 재생됩니다)
+            p.remainingLifetime = 1f;
+
+            _exitParticles[i] = p;
+        }
+
+        // 3. 변경된 정보를 파티클 시스템에 다시 적용합니다.
+        windParticleSystem.SetTriggerParticles(ParticleSystemTriggerEventType.Exit, _exitParticles);
+    }
+    // --- [신규] 끝 ---
+
     private void SetupParticleForce()
     {
         var forceModule = windParticleSystem.forceOverLifetime;
         forceModule.enabled = true;
         forceModule.space = ParticleSystemSimulationSpace.World;
 
-        // (0.1f 삭제한 버전)
-        forceModule.x = windDirection.normalized.x * windForce * 0.3f;
-        forceModule.y = windDirection.normalized.y * windForce * 0.3f;
-        forceModule.z = windDirection.normalized.z * windForce * 0.3f;
+        forceModule.x = windDirection.normalized.x * windForce * 0.1f;
+        forceModule.y = windDirection.normalized.y * windForce * 0.1f;
+        forceModule.z = windDirection.normalized.z * windForce * 0.1f;
 
         var mainModule = windParticleSystem.main;
         mainModule.startSpeed = 0;
     }
 
-    /// <summary>
-    /// [신규] 파티클의 '트리거'만 설정하는 함수 (Awake에서 한 번만 호출)
-    /// </summary>
     private void SetupParticleTriggers()
     {
         var triggerModule = windParticleSystem.trigger;
         triggerModule.enabled = true;
         triggerModule.AddCollider(_zoneCollider);
-        triggerModule.exit = ParticleSystemOverlapAction.Kill;
+
+        // [핵심 수정] 즉시 삭제(Kill)가 아니라, 스크립트에게 알려달라(Callback)고 설정
+        triggerModule.exit = ParticleSystemOverlapAction.Callback;
     }
 
-    // --- (플레이어 속도 제어 로직 - 그대로 유지) ---
+    // --- (플레이어 속도 제어 로직 - 변경 없음) ---
     private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -106,7 +126,7 @@ public class SimpleWindZone : MonoBehaviour
             PlayerMovement player = other.GetComponent<PlayerMovement>();
             if (player != null)
             {
-                player.SetSpeedControl(false); // 속도 제한 끄기
+                player.SetSpeedControl(false);
             }
         }
     }
@@ -118,18 +138,9 @@ public class SimpleWindZone : MonoBehaviour
             PlayerMovement player = other.GetComponent<PlayerMovement>();
             if (player != null)
             {
-                player.SetSpeedControl(true); // 속도 제한 다시 켜기
+                player.SetSpeedControl(true);
             }
         }
     }
-
-    private void OnDrawGizmosSelected()
-    {
-        // ... (이전과 동일) ...
-        Gizmos.color = Color.cyan;
-        Vector3 center = transform.position;
-        Vector3 direction = windDirection.normalized * 3;
-        Gizmos.DrawRay(center, direction);
-        Gizmos.DrawWireSphere(center + direction, 0.5f);
-    }
+    // --- (여기까지) ---
 }

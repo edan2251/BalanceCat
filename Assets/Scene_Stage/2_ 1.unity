@@ -4601,6 +4601,7 @@ GameObject:
   - component: {fileID: 755971129}
   - component: {fileID: 755971128}
   - component: {fileID: 755971127}
+  - component: {fileID: 755971130}
   - component: {fileID: 755971126}
   - component: {fileID: 755971125}
   m_Layer: 0
@@ -9459,6 +9460,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 90, y: 180, z: 0.647995}
+--- !u!114 &755971130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 755971124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6953646ebae789a42876f6f4c9259670, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onDuration: 5
+  offDuration: 4
+  startDelay: 0
+  windCollider: {fileID: 755971127}
+  windParticles: {fileID: 755971126}
+  windScript: {fileID: 755971128}
 --- !u!1001 &769449163
 PrefabInstance:
   m_ObjectHideFlags: 0

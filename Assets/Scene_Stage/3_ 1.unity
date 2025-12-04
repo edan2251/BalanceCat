@@ -11955,6 +11955,8 @@ GameObject:
   - component: {fileID: 4502809008899806096}
   - component: {fileID: 1844725038716430170}
   - component: {fileID: 1033666308565416925}
+  - component: {fileID: 4502809008899806098}
+  - component: {fileID: 4502809008899806097}
   m_Layer: 10
   m_Name: BreakablePlatform
   m_TagString: Untagged
@@ -12061,6 +12063,8 @@ GameObject:
   - component: {fileID: 2202816604753468146}
   - component: {fileID: 4140230061191687736}
   - component: {fileID: 3365482977426141887}
+  - component: {fileID: 4140230061191687738}
+  - component: {fileID: 4140230061191687737}
   m_Layer: 10
   m_Name: BreakablePlatform
   m_TagString: Untagged
@@ -12147,6 +12151,53 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &4140230061191687737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2483156019012095981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8583bc6e8bf90fd46a639c5e5ac79295, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeToBreak: 1
+  resetOnExit: 1
+  resetDelay: 2
+  visualResetDuration: 1
+  collisionGracePeriod: 0.1
+  canRespawn: 1
+  respawnTime: 6
+  breakingColor: {r: 0.04905659, g: 0.04905659, b: 0.04905659, a: 1}
+--- !u!54 &4140230061191687738
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2483156019012095981}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!33 &4502809008899806096
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -12155,6 +12206,53 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 187246650196592271}
   m_Mesh: {fileID: -3979114730172845084, guid: dfca5ae17034d4a4db7e06265ef1ece9, type: 3}
+--- !u!114 &4502809008899806097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 187246650196592271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8583bc6e8bf90fd46a639c5e5ac79295, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeToBreak: 1
+  resetOnExit: 1
+  resetDelay: 2
+  visualResetDuration: 1
+  collisionGracePeriod: 0.1
+  canRespawn: 1
+  respawnTime: 6
+  breakingColor: {r: 0.04905659, g: 0.04905659, b: 0.04905659, a: 1}
+--- !u!54 &4502809008899806098
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 187246650196592271}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!23 &4857735265305511412
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -12251,6 +12349,8 @@ GameObject:
   - component: {fileID: 7834898207768196804}
   - component: {fileID: 5431289616492577294}
   - component: {fileID: 6673847016871452297}
+  - component: {fileID: 7834898207768196806}
+  - component: {fileID: 7834898207768196805}
   m_Layer: 10
   m_Name: BreakablePlatform
   m_TagString: Untagged
@@ -12307,6 +12407,8 @@ GameObject:
   - component: {fileID: 7245961076942876990}
   - component: {fileID: 4857735265305511412}
   - component: {fileID: 6101165684422531443}
+  - component: {fileID: 7245961076942876992}
+  - component: {fileID: 7245961076942876991}
   m_Layer: 10
   m_Name: BreakablePlatform
   m_TagString: Untagged
@@ -12379,6 +12481,8 @@ GameObject:
   - component: {fileID: 6677586032649822411}
   - component: {fileID: 8885455107716748289}
   - component: {fileID: 7822453443460696198}
+  - component: {fileID: 8885455107716748291}
+  - component: {fileID: 8885455107716748290}
   m_Layer: 10
   m_Name: BreakablePlatform
   m_TagString: Untagged
@@ -12398,6 +12502,8 @@ GameObject:
   - component: {fileID: 6660193897298096393}
   - component: {fileID: 8901703614225810883}
   - component: {fileID: 7802664371403823428}
+  - component: {fileID: 8901703614225810885}
+  - component: {fileID: 8901703614225810884}
   m_Layer: 10
   m_Name: BreakablePlatform
   m_TagString: Untagged
@@ -12413,6 +12519,53 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6371142171936154657}
   m_Mesh: {fileID: -3979114730172845084, guid: dfca5ae17034d4a4db7e06265ef1ece9, type: 3}
+--- !u!114 &7245961076942876991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6371142171936154657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8583bc6e8bf90fd46a639c5e5ac79295, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeToBreak: 1
+  resetOnExit: 1
+  resetDelay: 2
+  visualResetDuration: 1
+  collisionGracePeriod: 0.1
+  canRespawn: 1
+  respawnTime: 6
+  breakingColor: {r: 0.04905659, g: 0.04905659, b: 0.04905659, a: 1}
+--- !u!54 &7245961076942876992
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6371142171936154657}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!4 &7711383618294968174
 Transform:
   m_ObjectHideFlags: 0
@@ -12495,6 +12648,53 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5791397473647944667}
   m_Mesh: {fileID: -3979114730172845084, guid: dfca5ae17034d4a4db7e06265ef1ece9, type: 3}
+--- !u!114 &7834898207768196805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5791397473647944667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8583bc6e8bf90fd46a639c5e5ac79295, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeToBreak: 1
+  resetOnExit: 1
+  resetDelay: 2
+  visualResetDuration: 1
+  collisionGracePeriod: 0.1
+  canRespawn: 1
+  respawnTime: 6
+  breakingColor: {r: 0.04905659, g: 0.04905659, b: 0.04905659, a: 1}
+--- !u!54 &7834898207768196806
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5791397473647944667}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!23 &8885455107716748289
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -12537,6 +12737,53 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &8885455107716748290
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6939913056445838804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8583bc6e8bf90fd46a639c5e5ac79295, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeToBreak: 1
+  resetOnExit: 1
+  resetDelay: 2
+  visualResetDuration: 1
+  collisionGracePeriod: 0.1
+  canRespawn: 1
+  respawnTime: 6
+  breakingColor: {r: 0.04905659, g: 0.04905659, b: 0.04905659, a: 1}
+--- !u!54 &8885455107716748291
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6939913056445838804}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!23 &8901703614225810883
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -12579,6 +12826,53 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &8901703614225810884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6956311234426840086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8583bc6e8bf90fd46a639c5e5ac79295, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeToBreak: 1
+  resetOnExit: 1
+  resetDelay: 2
+  visualResetDuration: 1
+  collisionGracePeriod: 0.1
+  canRespawn: 1
+  respawnTime: 6
+  breakingColor: {r: 0.04905659, g: 0.04905659, b: 0.04905659, a: 1}
+--- !u!54 &8901703614225810885
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6956311234426840086}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
