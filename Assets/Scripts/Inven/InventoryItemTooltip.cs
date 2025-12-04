@@ -208,10 +208,10 @@ public class InventoryItemTooltip : MonoBehaviour
             descriptionText.text = item.data.description;
 
         if (weightText)
-            weightText.text = string.Format(weightFormat, item.data.weight);
+            weightText.text = string.Format(weightFormat, item.data.weight) + "Kg";
 
         if (scoreText)
-            scoreText.text = string.Format(scoreFormat, item.data.score);
+            scoreText.text = string.Format(scoreFormat, item.data.score) + "Á¡";
 
         gameObject.SetActive(true);
     }
