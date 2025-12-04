@@ -1,75 +1,80 @@
 using UnityEngine;
-using UnityEngine.Events; 
+using UnityEngine.Events;
+using System.Collections.Generic;
 
 public class WeightSensor : MonoBehaviour
 {
-    [Header("감지 설정")]
-    [Tooltip("문이 열리거나 플랫폼이 작동하기 위해 필요한 최소 무게")]
+    [Header("설정")]
     public float requiredWeight = 10.0f;
 
-    // 현재 발판 위에 있는 총 무게
-    [Header("현재 상태")]
-    [Tooltip("현재 센서 위에 있는 총 무게 (Read Only)")]
-    [SerializeField] private float currentWeight = 0.0f;
+    [Header("상태 확인")]
+    [SerializeField] private float currentDetectedWeight = 0.0f;
+    [SerializeField] private bool isActivated = false;
 
-    [Tooltip("최소 무게를 충족했는지 여부 (Read Only)")]
-    public bool isWeightMet = false;
-
-    // 무게 충족 시/미충족 시 외부에 알리는 이벤트
-    [Header("이벤트")]
-    [Tooltip("요구 무게를 충족했을 때 발생")]
     public UnityEvent onWeightMet;
-    [Tooltip("요구 무게 미만으로 떨어졌을 때 발생")]
     public UnityEvent onWeightUnmet;
 
+    private List<InventorySideBias> currentObjects = new List<InventorySideBias>();
 
-    // --- 기능 구현 ---
+    private void Update()
+    {
+        CalculateWeight();
+        CheckCondition();
+    }
 
-    // 발판에 물체가 올라왔을 때
+    private void CalculateWeight()
+    {
+        float total = 0f;
+        for (int i = currentObjects.Count - 1; i >= 0; i--)
+        {
+            if (currentObjects[i] == null || !currentObjects[i].gameObject.activeInHierarchy)
+            {
+                currentObjects.RemoveAt(i);
+                continue;
+            }
+            total += currentObjects[i].weightAmount;
+        }
+        currentDetectedWeight = total;
+    }
+
+    private void CheckCondition()
+    {
+        bool condition = currentDetectedWeight >= requiredWeight;
+        if (condition != isActivated)
+        {
+            isActivated = condition;
+            if (isActivated) onWeightMet.Invoke();
+            else onWeightUnmet.Invoke();
+        }
+    }
+
+    // --- [수정된 부분] PlayerMovement를 통해 접근 ---
     private void OnTriggerEnter(Collider other)
     {
-        //WeightComponent라는 스크립트가 붙은 오브젝트만 무게로 인정
-        WeightComponent wc = other.GetComponent<WeightComponent>();
-        if (wc != null)
+        // 1. 먼저 PlayerMovement를 찾습니다.
+        PlayerMovement player = other.GetComponentInParent<PlayerMovement>();
+
+        if (player != null && player.sideBias != null)
         {
-            currentWeight += wc.objectWeight;
-            CheckWeightStatus();
+            // 2. 플레이어와 연결된 sideBias(인벤토리 무게)를 리스트에 추가
+            if (!currentObjects.Contains(player.sideBias))
+            {
+                currentObjects.Add(player.sideBias);
+            }
         }
+        // (혹시 플레이어가 아닌 다른 무게 오브젝트가 있다면 여기서 추가 처리가능)
     }
 
-    // 발판에서 물체가 내려갔을 때
     private void OnTriggerExit(Collider other)
     {
-        WeightComponent wc = other.GetComponent<WeightComponent>();
-        if (wc != null)
+        PlayerMovement player = other.GetComponentInParent<PlayerMovement>();
+
+        if (player != null && player.sideBias != null)
         {
-            currentWeight -= wc.objectWeight;
-
-            // 무게가 음수가 되는 것을 방지 (안전 장치)
-            if (currentWeight < 0) currentWeight = 0;
-
-            CheckWeightStatus();
-        }
-    }
-
-    // 현재 무게를 확인하고 상태 변화를 체크하는 함수
-    private void CheckWeightStatus()
-    {
-        bool newStatus = currentWeight >= requiredWeight;
-
-        // 상태가 '미충족 -> 충족'으로 바뀌었을 때 (문 열림)
-        if (newStatus && !isWeightMet)
-        {
-            isWeightMet = true;
-            onWeightMet.Invoke(); // 이벤트 발생
-            Debug.Log($"[WeightSensor] 무게 충족! 현재 무게: {currentWeight}");
-        }
-        // 상태가 '충족 -> 미충족'으로 바뀌었을 때 (문 닫힘)
-        else if (!newStatus && isWeightMet)
-        {
-            isWeightMet = false;
-            onWeightUnmet.Invoke(); // 이벤트 발생
-            Debug.Log($"[WeightSensor] 무게 미충족. 현재 무게: {currentWeight}");
+            if (currentObjects.Contains(player.sideBias))
+            {
+                currentObjects.Remove(player.sideBias);
+            }
         }
     }
 }

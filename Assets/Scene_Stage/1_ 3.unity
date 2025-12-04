@@ -27797,8 +27797,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxDropDistance: 11.5
-  maxWeight: 1
-  dropSpeed: 0.8
+  minWeight: 0
+  maxWeight: 0
+  moveSpeed: 2
+  currentTotalWeight: 0
 --- !u!1001 &756072011
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -54576,8 +54578,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredWeight: 10
-  currentWeight: 0
-  isWeightMet: 0
+  currentDetectedWeight: 0
+  isActivated: 0
   onWeightMet:
     m_PersistentCalls:
       m_Calls:
@@ -61332,7 +61334,7 @@ MonoBehaviour:
   runKey: 304
   balanceLeftKey: 122
   balanceRightKey: 99
-  waterMoveSpeed: 1
+  waterMoveSpeed: 1.5
   floatingForce: 9.9
   waterDrag: 3
   waterBobbingSpeed: 5
@@ -61366,7 +61368,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef4d35aea3dd45a4c9d91acbcce8f4e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectWeight: 500
 --- !u!136 &1647304099
 CapsuleCollider:
   m_ObjectHideFlags: 0
