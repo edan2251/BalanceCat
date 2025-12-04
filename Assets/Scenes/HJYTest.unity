@@ -9240,7 +9240,7 @@ MonoBehaviour:
   runKey: 304
   balanceLeftKey: 122
   balanceRightKey: 99
-  waterMoveSpeed: 1
+  waterMoveSpeed: 1.5
   floatingForce: 9.9
   waterDrag: 3
   waterBobbingSpeed: 5

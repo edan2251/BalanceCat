@@ -24,7 +24,7 @@ public class PlayerMovement : MonoBehaviour
     public KeyCode balanceRightKey = KeyCode.C;
 
     [Header("Water Physics")]
-    public float waterMoveSpeed = 2.0f;
+    public float waterMoveSpeed = 1.5f;
     public float floatingForce = 10.0f;
     public float waterDrag = 2.0f;
     public float waterBobbingSpeed = 1.0f;
