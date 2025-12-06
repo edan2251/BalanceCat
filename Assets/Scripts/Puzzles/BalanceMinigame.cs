@@ -118,6 +118,13 @@ public class BalanceMiniGame : MonoBehaviour
                     SafeSetBool("isStaggering", false);
                     SafeSetBool("isFalling", true);
 
+                    // 퀘스트 매니저에 넘어졌다는거 알려주기
+                    if (InGameQuestManager.Instance != null)
+                    {
+                        InGameQuestManager.Instance.OnPlayerFall();
+                    }
+                    // =========================================================
+
                     if (slotBreaker != null)
                     {
                         slotBreaker.BreakRandomSlotAndDrop();

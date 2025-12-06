@@ -1,15 +1,31 @@
 using UnityEngine;
 
+// 퀘스트 종류를 정의합니다.
+public enum QuestType
+{
+    General,        // 일반 (그냥 깨면 됨)
+    TimeLimit,      // 시간 제한 (targetValue초 이내 클리어)
+    Delivery,       // 아이템 배달 (나중에 구현)
+    NoFall,         // 안 넘어지기 (나중에 구현)
+    NoRespawn,      // 노 데스 (나중에 구현)
+    InventoryLimit  // 가방 정리 (나중에 구현)
+}
+
 [CreateAssetMenu(fileName = "QuestData_", menuName = "GameData/Quest Data", order = 2)]
 public class QuestData : ScriptableObject
 {
-    [Tooltip("UI에 표시될 퀘스트 제목 (예: 스테이지 클리어)")]
-    public string questTitle = "퀘스트 제목";
-
+    [Header("기본 정보")]
+    public string questTitle;
     [TextArea(2, 5)]
-    [Tooltip("UI에 표시될 퀘스트 상세 설명")]
-    public string questDescription = "퀘스트 설명을 입력하세요.";
+    public string questDescription;
 
-    // 필요시 아이콘 등 추가 가능
-    // public Sprite questIcon;
+    [Header("퀘스트 조건 설정")]
+    [Tooltip("이 퀘스트의 종류를 선택하세요.")]
+    public QuestType type;
+
+    [Tooltip("목표 값 (시간 제한일 경우 '초' 단위, 아이템일 경우 '개수' 등)")]
+    public float targetValue;
+
+    // 필요 시 아이콘 등 추가
+    // public string questID; // (필요하면 사용)
 }

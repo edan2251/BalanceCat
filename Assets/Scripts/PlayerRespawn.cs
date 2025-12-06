@@ -180,6 +180,13 @@ public class PlayerRespawn : MonoBehaviour
     private IEnumerator RespawnCoroutine()
     {
         _isRespawning = true;
+
+        // [추가] 퀘스트 매니저에게 리스폰 사실 알림
+        if (InGameQuestManager.Instance != null)
+        {
+            InGameQuestManager.Instance.OnPlayerRespawn();
+        }
+
         playerMovement.SetControlEnabled(false);
 
         // Fade Out

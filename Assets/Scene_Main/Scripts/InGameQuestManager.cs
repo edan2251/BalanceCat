@@ -7,7 +7,6 @@ using System.Collections;
 
 public class InGameQuestManager : MonoBehaviour
 {
-    // ... (기존 변수들은 그대로) ...
     public static InGameQuestManager Instance;
 
     [Header("--- 데이터 ---")]
@@ -16,29 +15,35 @@ public class InGameQuestManager : MonoBehaviour
     [Tooltip("다음 스테이지의 데이터 SO를 여기에 넣어주세요!")]
     public StageData nextStageData;
 
-    [Header("--- 커서 제어 ---")]
-    public ShowCursor cursorController; // 인스펙터 연결 필수
+    [Header("--- 퀘스트 UI 연결 ---")]
+    [Tooltip("Canvas에 있는 QuestDisplayManager가 붙은 오브젝트 연결")]
+    public QuestDisplayManager questPanelController; // [추가됨]
 
-    [Header("--- 인게임 HUD ---")]
+    [Header("--- 커서 제어 ---")]
+    public ShowCursor cursorController;
+
+    [Header("--- 인게임 HUD (상단 작게 표시되는) ---")]
     public Image[] hudStarImages;
     public Sprite filledStarSprite;
     public Sprite emptyStarSprite;
+
+    [Tooltip("인게임 화면 상단에 시간을 표시할 TMP를 연결하세요")]
+    public TextMeshProUGUI hudPlayTimeText;
 
     [Header("--- 결과창 UI ---")]
     public GameObject resultPanel;
     public TextMeshProUGUI timeText;
     public Image[] resultStarFills;
-
-    // [추가] A. 배경 어둡게 처리를 위한 이미지 (패널 뒤의 검은 배경)
     public Image resultBgImage;
-
-    // [추가] B. 타이틀 연출을 위한 텍스트 ("STAGE CLEAR")
     public TextMeshProUGUI resultTitleText;
 
     [Header("--- 버튼 연결 ---")]
     public Button restartBtn;
     public Button mainBtn;
     public Button nextBtn;
+
+    private int respawnCount = 0;
+    private int fallCount = 0;
 
     private bool[] tempQuestCleared = new bool[3];
     private float playTime = 0f;
@@ -48,33 +53,146 @@ public class InGameQuestManager : MonoBehaviour
 
     void Start()
     {
-        // [중요] 혹시 멈춘 상태로 들어왔을 경우를 대비해 시간 복구
         Time.timeScale = 1f;
-
         isGameActive = true;
         playTime = 0f;
         resultPanel.SetActive(false);
 
+        // 상단 HUD 별 초기화
         if (emptyStarSprite != null)
         {
             foreach (var img in hudStarImages) if (img != null) img.sprite = emptyStarSprite;
         }
 
+        // 결과창 별 초기화
         foreach (var star in resultStarFills) if (star != null) star.gameObject.SetActive(false);
 
         restartBtn.onClick.AddListener(OnRestartClicked);
         mainBtn.onClick.AddListener(OnMainClicked);
         nextBtn.onClick.AddListener(OnNextClicked);
+
+        RefreshQuestUI();
     }
 
     void Update()
     {
-        if (isGameActive) playTime += Time.deltaTime;
+        if (isGameActive)
+        {
+            playTime += Time.deltaTime;
 
-        // 테스트용 (삭제 가능)
-        if (Input.GetKeyDown(KeyCode.Alpha1)) SolveQuest(0);
-        if (Input.GetKeyDown(KeyCode.Alpha2)) SolveQuest(1);
-        if (Input.GetKeyDown(KeyCode.Alpha3)) SolveQuest(2);
+            // [추가] 실시간 시간 표시 업데이트 (00:00 형식)
+            if (hudPlayTimeText != null)
+            {
+                int m = Mathf.FloorToInt(playTime / 60F);
+                int s = Mathf.FloorToInt(playTime % 60F);
+                hudPlayTimeText.text = string.Format("{0:00}:{1:00}", m, s);
+            }
+        }
+
+        // 테스트용: 1번 키 누르면 메인 클리어 시도
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            // 메인 퀘스트(0번) 클리어 시도 -> 이때 서브 퀘스트 체크도 같이 함
+            CheckClearCondition();
+        }
+    }
+
+    public void RefreshQuestUI()
+    {
+        if (questPanelController == null || currentStageData == null) return;
+
+        for (int i = 0; i < currentStageData.quests.Count; i++)
+        {
+            if (i >= 3) break;
+
+            QuestData q = currentStageData.quests[i];
+            if (q == null) continue;
+
+            string descText = $"{q.questTitle}\n{q.questDescription}";
+            bool isStarOn = false;
+
+            // 1. 메인 퀘스트
+            if (i == 0) isStarOn = tempQuestCleared[0];
+
+            // 2. 시간 제한
+            else if (q.type == QuestType.TimeLimit) isStarOn = tempQuestCleared[i];
+
+            // 3. 리스폰 제한 (수정됨!)
+            else if (q.type == QuestType.NoRespawn)
+            {
+                descText += $" <color=yellow>({respawnCount} / {q.targetValue})</color>";
+
+                // [변경] <= (이하)를 < (미만)으로 변경
+                // 이제 respawnCount가 targetValue와 같아지는 순간(1/1) 별이 꺼집니다.
+                if (respawnCount < q.targetValue) isStarOn = true;
+                else isStarOn = false;
+            }
+
+            // 4. 넘어짐 제한 (수정됨!)
+            else if (q.type == QuestType.NoFall)
+            {
+                descText += $" <color=yellow>({fallCount} / {q.targetValue})</color>";
+
+                // [변경] <= (이하)를 < (미만)으로 변경
+                if (fallCount < q.targetValue) isStarOn = true;
+                else isStarOn = false;
+            }
+
+            questPanelController.UpdateQuestRealtime(i, descText, isStarOn);
+        }
+    }
+
+    public void OnPlayerRespawn()
+    {
+        respawnCount++;
+        Debug.Log($"[퀘스트] 리스폰 {respawnCount}회");
+        RefreshQuestUI(); // 즉시 UI 반영 (별 꺼지거나 숫자 증가)
+    }
+
+    public void OnPlayerFall()
+    {
+        fallCount++;
+        Debug.Log($"[퀘스트] 넘어짐 {fallCount}회");
+        RefreshQuestUI(); // 즉시 UI 반영
+    }
+
+
+
+    public void CheckClearCondition()
+    {
+        SolveQuest(0);
+
+        if (currentStageData != null)
+        {
+            for (int i = 1; i < currentStageData.quests.Count; i++)
+            {
+                QuestData q = currentStageData.quests[i];
+                if (q == null) continue;
+
+                bool isSuccess = false;
+
+                if (q.type == QuestType.TimeLimit)
+                {
+                    if (playTime <= q.targetValue) isSuccess = true;
+                }
+
+                // [변경] 리스폰 제한 조건 수정
+                else if (q.type == QuestType.NoRespawn)
+                {
+                    // 목표치보다 작아야 성공 (같으면 실패)
+                    if (respawnCount < q.targetValue) isSuccess = true;
+                }
+
+                // [변경] 넘어짐 제한 조건 수정
+                else if (q.type == QuestType.NoFall)
+                {
+                    // 목표치보다 작아야 성공 (같으면 실패)
+                    if (fallCount < q.targetValue) isSuccess = true;
+                }
+
+                if (isSuccess) SolveQuest(i);
+            }
+        }
     }
 
     public void SolveQuest(int questIndex)
@@ -84,11 +202,16 @@ public class InGameQuestManager : MonoBehaviour
 
         tempQuestCleared[questIndex] = true;
 
-        // HUD 연출 (게임 중이므로 일반 TimeScale 따름)
         if (hudStarImages.Length > questIndex && hudStarImages[questIndex] != null)
         {
             hudStarImages[questIndex].sprite = filledStarSprite;
             hudStarImages[questIndex].transform.DOPunchScale(Vector3.one * 0.5f, 0.3f);
+        }
+
+        // 클리어 시에는 '멋지게 5초간 보여주기'만 호출 (이미 실시간으로 별은 켜져 있었을 테니)
+        if (questPanelController != null)
+        {
+            questPanelController.ShowQuestClearSequence(questIndex, 5.0f);
         }
 
         if (questIndex == 0) FinishStage();
@@ -111,21 +234,21 @@ public class InGameQuestManager : MonoBehaviour
         }
         GameProgressManager.ClearStage(chapterIdx, stageID);
 
-        // 결과창 띄우기 (1초 뒤)
-        // [수정] 코루틴을 사용하여 딜레이 후 실행 (Invoke는 timeScale=0이면 작동 안 할 수 있어서)
         StartCoroutine(ShowResultRoutine());
     }
 
+    // ... (이하 결과창 연출, 버튼 함수들은 기존 그대로 유지) ...
+    // ... (너무 길어서 생략하지만 기존 코드를 유지하시면 됩니다) ...
+
     IEnumerator ShowResultRoutine()
     {
-        // 1초 대기 (이때는 아직 시간이 흐름)
         yield return new WaitForSeconds(1.0f);
-
         ShowResultUI();
     }
 
     void ShowResultUI()
     {
+        // (직전에 만들어드린 Juicy한 결과창 코드 그대로 사용)
         Time.timeScale = 0f;
 
         if (resultBgImage != null)
@@ -172,7 +295,6 @@ public class InGameQuestManager : MonoBehaviour
             resultSequence.Insert(0.2f, resultTitleText.transform.DOScale(1f, 0.3f).SetEase(Ease.OutBounce));
         }
 
-
         float tempTime = 0f;
         resultSequence.Insert(0.4f, DOTween.To(() => tempTime, x => tempTime = x, playTime, 0.5f)
             .OnUpdate(() =>
@@ -182,16 +304,7 @@ public class InGameQuestManager : MonoBehaviour
                 timeText.text = string.Format("{0:00}:{1:00}", m, s);
             }).SetEase(Ease.OutCubic));
 
-
-        // --- Step 4: 별 채우기 (타이밍 조절 핵심!) ---
-
-        //  [조절 1] 별 시작 시간: 0.8초
-        // 숫자가 거의 다 올라갈 때쯤(0.9초 종료) 살짝 겹치면서 시작합니다.
-        // 아까 너무 느리다고 하셔서 1.0f -> 0.8f로 당겼습니다.
         float starStartTime = 0.8f;
-
-        //  [조절 2] 별 간격: 0.3초
-        // 아까 0.1f는 너무 빨라서 후다닥 지나갔으니, 0.3f로 늘려서 "쿵... 쿵... 쿵" 느낌을 줍니다.
         float starInterval = 0.3f;
 
         for (int i = 0; i < 3; i++)
@@ -208,39 +321,27 @@ public class InGameQuestManager : MonoBehaviour
                 });
 
                 resultSequence.Insert(starStartTime, targetStar.transform.DOScale(1f, 0.4f).SetEase(Ease.OutBack));
-
                 starStartTime += starInterval;
             }
         }
     }
 
-    // --- 버튼 기능들 (중요: 시간을 다시 흐르게 해줘야 함) ---
-
     void OnRestartClicked()
     {
-        Time.timeScale = 1f; // [필수] 시간 복구
+        Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     void OnMainClicked()
     {
-        Time.timeScale = 1f; // [필수] 시간 복구
+        Time.timeScale = 1f;
         SceneManager.LoadScene("Main");
     }
 
     void OnNextClicked()
     {
-        Time.timeScale = 1f; // [필수] 시간 복구
-
-        if (nextStageData != null)
-        {
-            // [핵심] 로딩 씬 컨트롤러에게 다음 스테이지 데이터를 넘기면서 로딩 시작!
-            LoadingSceneController.LoadScene(nextStageData);
-        }
-        else
-        {
-            Debug.LogWarning("다음 스테이지 데이터(nextStageData)가 연결되지 않았습니다! 메인으로 이동합니다.");
-            SceneManager.LoadScene("Main"); // 데이터 없으면 안전하게 메인으로
-        }
+        Time.timeScale = 1f;
+        if (nextStageData != null) LoadingSceneController.LoadScene(nextStageData);
+        else SceneManager.LoadScene("Main");
     }
 }
