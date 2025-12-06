@@ -125,7 +125,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9189209547149350410}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 228.38705, y: 10.5683365, z: 118.37}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -148,9 +148,9 @@ MonoBehaviour:
   objectName: "\uC544\uC774\uD15C"
   interactionText: "[E] \uD68D\uB4DD"
   interactionType: 0
-  highlightColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  highlightIntensity: 1.5
-  objectRenderer: {fileID: 3975848638788740491}
+  highlightColor: {r: 1, g: 1, b: 1, a: 1}
+  scaleAmount: 1.3
+  animationSpeed: 10
   itemData: {fileID: 11400000, guid: 5026d139bc02e3349aef31a52e939135, type: 2}
 --- !u!136 &3352165965569167688
 CapsuleCollider:

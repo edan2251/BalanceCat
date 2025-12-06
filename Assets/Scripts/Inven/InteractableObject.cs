@@ -9,30 +9,50 @@ public class InteractableObject : MonoBehaviour
     public string interactionText = "[E] 상호 작용";
     public InteractionType interactionType = InteractionType.Item;
 
-    [Header("하이라이트 설정")]
-    public Color highlightColor = Color.yellow;
-    public float highlightIntensity = 1.5f;
+    [Header("하이라이트 설정 (스프라이트 전용)")]
+    public Color highlightColor = new Color(1f, 1f, 1f, 1f);
+    public float scaleAmount = 1.2f; 
+    public float animationSpeed = 10f; 
 
-    public Renderer objectRenderer;
-
+    private SpriteRenderer spriteRenderer;
     private Color originalColor;
+    private Vector3 originalScale;
+    private Vector3 targetScale;
     private bool isHighlighted = false;
 
     public enum InteractionType
     {
-        Item,       
+        Item,
         NPC
     }
 
     protected virtual void Start()
     {
-        objectRenderer = GetComponent<Renderer>();
-        if(objectRenderer != null )
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer == null)
+            spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+
+        if (spriteRenderer != null)
         {
-            originalColor = objectRenderer.material.color;
+            originalColor = spriteRenderer.color;
         }
-        gameObject.layer = 8;
+        else
+        {
+            var rend = GetComponent<Renderer>();
+            if (rend != null) originalColor = rend.material.color;
+        }
+
+        originalScale = transform.localScale;
+        targetScale = originalScale;
+
+        gameObject.layer = 8; 
     }
+
+    protected virtual void Update()
+    {
+        transform.localScale = Vector3.Lerp(transform.localScale, targetScale, Time.deltaTime * animationSpeed);
+    }
+
 
     public virtual void OnPlayerEnter()
     {
@@ -46,24 +66,23 @@ public class InteractableObject : MonoBehaviour
 
     protected virtual void HighlightObject()
     {
-        if(objectRenderer != null && !isHighlighted)
+        if (!isHighlighted)
         {
-            objectRenderer.material.color = highlightColor;
-            objectRenderer.material.SetFloat("_Emission", highlightIntensity);
+            if (spriteRenderer != null) spriteRenderer.color = highlightColor;
+            targetScale = originalScale * scaleAmount;
             isHighlighted = true;
         }
     }
 
     protected virtual void RemoveHighlight()
     {
-        if (objectRenderer != null && isHighlighted)
+        if (isHighlighted)
         {
-            objectRenderer.material.color = originalColor;
-            objectRenderer.material.SetFloat("_Emission", 0f);
+            if (spriteRenderer != null) spriteRenderer.color = originalColor;
+            targetScale = originalScale; 
             isHighlighted = false;
         }
     }
-
     protected virtual void CollectItem()
     {
         Destroy(gameObject);
@@ -76,8 +95,8 @@ public class InteractableObject : MonoBehaviour
 
     public virtual void Interact()
     {
-        switch(interactionType)
-        { 
+        switch (interactionType)
+        {
             case InteractionType.Item:
                 CollectItem();
                 break;
