@@ -6,8 +6,6 @@ using UnityEngine;
 public class InventoryOpenController : MonoBehaviour
 {
     public GameObject inventoryPanel;
-    public GameObject storagePanel;
-    public StorageZone storageZone;
 
     private Animator _animator;
     private bool _isOpen = false;
@@ -22,11 +20,6 @@ public class InventoryOpenController : MonoBehaviour
         if (inventoryPanel != null)
         {
             _animator = inventoryPanel.GetComponent<Animator>();
-        }
-
-        if (storagePanel != null)
-        {
-            storagePanel.SetActive(false);
         }
 
         if (playerMovement == null)
@@ -53,7 +46,6 @@ public class InventoryOpenController : MonoBehaviour
 
     void Update()
     {
-        //  I 키 입력 감지 -> 이거 Tab키로 연동 필요
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             ToggleInventory();
@@ -69,20 +61,6 @@ public class InventoryOpenController : MonoBehaviour
             _animator.SetBool("isOpen", _isOpen);
         }
 
-        if (_isOpen)
-        {
-            if (storageZone != null && storageZone.IsPlayerInside && storagePanel != null)
-            {
-                storagePanel.SetActive(true);
-            }
-        }
-        else
-        {
-            if (storagePanel != null)
-            {
-                storagePanel.SetActive(false);
-            }
-        }
 
         if (showCursor != null)
         {

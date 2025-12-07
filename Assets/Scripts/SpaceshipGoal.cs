@@ -14,7 +14,7 @@ public class SpaceshipGoal : MonoBehaviour
     {
         if (!other.CompareTag(playerTag)) return;
 
-        if (!requireClear || WarehouseController.Cleared)
+        if (!requireClear || ScoreZone.Cleared)
         {
             SceneManager.LoadScene(mainSceneName);
         }
