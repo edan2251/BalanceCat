@@ -2328,7 +2328,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridWidth: 2
   gridHeight: 5
-  carryCapacity: 50
+  carryCapacity: 20
 --- !u!114 &269265970
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2345,7 +2345,7 @@ MonoBehaviour:
   leftWeight: 0
   rightWeight: 0
   weightAmount: 0
-  maxWeight: 30
+  maxWeight: 20
   tilt: 0
 --- !u!114 &269265971
 MonoBehaviour:
@@ -9899,6 +9899,7 @@ GameObject:
   - component: {fileID: 708422574}
   - component: {fileID: 708422573}
   - component: {fileID: 708422572}
+  - component: {fileID: 708422575}
   m_Layer: 0
   m_Name: default
   m_TagString: Untagged
@@ -9955,6 +9956,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 151128546}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &708422575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 708422571}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f250f0a6f5d2d543bf37036e67317b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentScore: 0
+  requiredScore: 1500
 --- !u!1 &745095001
 GameObject:
   m_ObjectHideFlags: 0
@@ -10285,7 +10300,7 @@ MonoBehaviour:
   inventory: {fileID: 0}
   leftWeight: 0
   rightWeight: 0
-  maxWeight: 100
+  maxWeight: 20
 --- !u!1 &767924961
 GameObject:
   m_ObjectHideFlags: 0
@@ -20254,9 +20269,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentStageData: {fileID: 11400000, guid: ac9c236223f706240afc06d08f5622af, type: 2}
   questText1: {fileID: 1497074010}
+  questStar1: {fileID: 0}
   questText2: {fileID: 560708565}
+  questStar2: {fileID: 0}
   questText3: {fileID: 1002183394}
+  questStar3: {fileID: 0}
+  filledStar: {fileID: 0}
+  emptyStar: {fileID: 0}
   panelAnimator: {fileID: 1228062708}
+  panelOpenDuration: 0.5
   promptCanvasGroup: {fileID: 1812767140}
   promptFadeDuration: 0.5
   autoCloseDelay: 3

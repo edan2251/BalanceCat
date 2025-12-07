@@ -19,79 +19,86 @@ public class SpeechBubbleController : MonoBehaviour
 
     void Start()
     {
-        // 시작할 땐 무조건 안 보이게 설정
-        if (bubbleRoot != null)
-        {
-            bubbleRoot.SetActive(false);
-        }
-
+        if (bubbleRoot != null) bubbleRoot.SetActive(false);
         mainCamera = Camera.main;
-        if (mainCamera == null) Debug.LogError("메인 카메라를 찾을 수 없습니다!");
     }
 
     void LateUpdate()
     {
-        // 빌보드 기능: 항상 카메라를 정면으로 바라보게 함
         if (mainCamera != null)
         {
             transform.rotation = mainCamera.transform.rotation;
         }
     }
 
-    // 외부(트리거)에서 이 함수를 호출해서 메시지를 띄웁니다.
+    // 일정 시간 뒤에 사라지는 메시지
     public void ShowMessage(string message, float duration = 10f)
     {
         if (textMeshPro == null || bubbleRoot == null) return;
 
-        // 1. 메시지 설정
         textMeshPro.text = message;
-
-        // 2. [중요] 나타날 땐 알파값을 1(완전 불투명)로 즉시 초기화
         SetTextAlpha(1f);
         bubbleRoot.SetActive(true);
 
-        // 3. 만약 이미 메시지를 끄려고 기다리던 중이었다면, 그 타이머 취소
-        if (hideCoroutine != null)
-        {
-            StopCoroutine(hideCoroutine);
-        }
-
-        // 4. 새로운 사라지기 코루틴 시작
+        if (hideCoroutine != null) StopCoroutine(hideCoroutine);
         hideCoroutine = StartCoroutine(HideProcess(duration));
     }
 
-    // 정해진 시간 대기 후 -> 페이드 아웃 -> 끄기
+    // ---------------------------------------------------------
+    //구역 안에 있을 때 계속 띄우기 위한 함수들
+    // ---------------------------------------------------------
+
+    // 사라지지 않고 계속 떠있는 메시지 (점수 갱신용)
+    public void ShowContinuousMessage(string message)
+    {
+        if (textMeshPro == null || bubbleRoot == null) return;
+
+        textMeshPro.text = message;
+
+        SetTextAlpha(1f);
+        bubbleRoot.SetActive(true);
+
+        if (hideCoroutine != null)
+        {
+            StopCoroutine(hideCoroutine);
+            hideCoroutine = null;
+        }
+    }
+
+    public void HideContinuousMessage(bool fadeOut = true)
+    {
+        if (fadeOut)
+        {
+            if (hideCoroutine != null) StopCoroutine(hideCoroutine);
+            hideCoroutine = StartCoroutine(HideProcess(0f));
+        }
+        else
+        {
+            if (bubbleRoot != null) bubbleRoot.SetActive(false);
+        }
+    }
+
     private IEnumerator HideProcess(float duration)
     {
-        // 전체 지속 시간에서 페이드 아웃 시간을 뺀 만큼만 대기
-        // (예: 10초 유지인데 페이드가 1초면, 9초 동안은 가만히 있다가 1초 동안 사라짐)
         float waitTime = Mathf.Max(0, duration - fadeOutDuration);
-
         yield return new WaitForSeconds(waitTime);
 
-        // 페이드 아웃 시작
         float timer = 0f;
         while (timer < fadeOutDuration)
         {
             timer += Time.deltaTime;
-            // 1에서 0으로 서서히 줄어듦
             float newAlpha = Mathf.Lerp(1f, 0f, timer / fadeOutDuration);
             SetTextAlpha(newAlpha);
             yield return null;
         }
 
-        // 확실하게 투명하게 만들고 오브젝트 끄기
         SetTextAlpha(0f);
         bubbleRoot.SetActive(false);
         hideCoroutine = null;
     }
 
-    // TMP의 투명도(Alpha)를 조절하는 헬퍼 함수
     private void SetTextAlpha(float alpha)
     {
-        if (textMeshPro != null)
-        {
-            textMeshPro.alpha = alpha; // TMP 고유 기능 사용
-        }
+        if (textMeshPro != null) textMeshPro.alpha = alpha;
     }
 }
