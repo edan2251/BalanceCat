@@ -108,6 +108,51 @@ public class InventoryUI : MonoBehaviour
         foreach (var i in previewRight) if (i) i.transform.SetAsLastSibling();
     }
 
+    void UpdateSlotVisibility()
+    {
+        if (inventory == null) return;
+
+        int index = 0;
+
+        // ¿ÞÂÊ °¡¹æ ½½·Ô
+        if (inventory.leftGrid != null)
+        {
+            int w = inventory.leftGrid.width;
+            int h = inventory.leftGrid.height;
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    if (index >= slotPool.Count) return;
+                    var go = slotPool[index++];
+                    if (!go) continue;
+
+                    bool blocked = inventory.leftGrid.IsCellBlocked(x, y);
+                    go.SetActive(!blocked);
+                }
+            }
+        }
+
+        // ¿À¸¥ÂÊ °¡¹æ ½½·Ô
+        if (inventory.rightGrid != null)
+        {
+            int w = inventory.rightGrid.width;
+            int h = inventory.rightGrid.height;
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    if (index >= slotPool.Count) return;
+                    var go = slotPool[index++];
+                    if (!go) continue;
+
+                    bool blocked = inventory.rightGrid.IsCellBlocked(x, y);
+                    go.SetActive(!blocked);
+                }
+            }
+        }
+    }
+
     void BuildGridSlots(RectTransform root, int w, int h, bool alignRight = false)
     {
         if (!root) return;
@@ -190,6 +235,8 @@ public class InventoryUI : MonoBehaviour
         }
 
         EnsurePreviewOnTop();
+
+        UpdateSlotVisibility();
     }
 
     void SpawnItemIcon(ItemPlacement p, BagSide side)

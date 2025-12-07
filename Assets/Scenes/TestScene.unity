@@ -12639,8 +12639,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 143, y: -86}
-  m_SizeDelta: {x: 260, y: 666}
+  m_AnchoredPosition: {x: 144, y: -85}
+  m_SizeDelta: {x: 260, y: 665}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1248757515
 MonoBehaviour:
@@ -12655,14 +12655,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -16633,8 +16633,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -144, y: -86}
-  m_SizeDelta: {x: 260, y: 666}
+  m_AnchoredPosition: {x: -144, y: -85}
+  m_SizeDelta: {x: 260, y: 665}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1738057721
 MonoBehaviour:
@@ -16649,14 +16649,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -23552,7 +23552,7 @@ MonoBehaviour:
   leftRoot: {fileID: 1738057720}
   rightRoot: {fileID: 1248757514}
   cellSize: {x: 125, y: 125}
-  cellSpacing: {x: 8, y: 8}
+  cellSpacing: {x: 10, y: 10}
   slotPrefab: {fileID: 6536019324217192851, guid: 77ed5c9fb4871a641a7d6a1211f2245d,
     type: 3}
   itemPrefab: {fileID: 2453707475959700000, guid: 005ac7d350c0f604ebcb3ee1ab889cb0,
