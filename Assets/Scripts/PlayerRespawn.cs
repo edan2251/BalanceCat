@@ -18,7 +18,7 @@ public class PlayerRespawn : MonoBehaviour
     public LayerMask whatIsRespawn;
 
     [Tooltip("안전 지점으로 기록할 수 있는 땅 레이어 (무너지는 땅 제외)")]
-    public LayerMask whatIsSafeGround; // [신규] 안전한 땅 레이어
+    public LayerMask whatIsSafeGround;
 
     [Tooltip("안전 지점 저장을 위한 최소 대기 시간")]
     public float safePosSaveTime = 0.5f;
@@ -34,7 +34,6 @@ public class PlayerRespawn : MonoBehaviour
     private bool _isLavaDying = false;
     private bool _isDrowning = false;
 
-    // 외부에서 상태 확인용 프로퍼티
     public bool IsRespawning => _isRespawning;
     public bool IsLavaDying => _isLavaDying;
 
@@ -43,7 +42,6 @@ public class PlayerRespawn : MonoBehaviour
         if (playerMovement == null)
             playerMovement = GetComponent<PlayerMovement>();
 
-        // 시작 위치 저장
         _lastSafePosition = transform.position;
     }
 
@@ -51,20 +49,16 @@ public class PlayerRespawn : MonoBehaviour
     {
         if (_isRespawning || _isLavaDying) return;
 
-        // 1. 안전 지점 저장 로직
         UpdateSafePosition();
 
-        // 2. 익사 체크 (플레이어가 물에 있을 때만)
         if (playerMovement.IsInWater)
         {
             CheckDrowning();
         }
     }
 
-    // --- [신규] 안전한 땅인지 체크하고 위치 저장 ---
     private void UpdateSafePosition()
     {
-        // 플레이어가 땅에 있고 + 그 땅이 '안전한 땅' 레이어라면
         if (playerMovement.IsGrounded && CheckIfOnSafeGround())
         {
             _safePositionTimer += Time.deltaTime;
@@ -80,10 +74,8 @@ public class PlayerRespawn : MonoBehaviour
         }
     }
 
-    // 발 밑의 땅이 SafeLayer인지 확인하는 레이캐스트
     private bool CheckIfOnSafeGround()
     {
-        // 플레이어 발 밑으로 짧게 레이를 쏴서 확인
         float checkDist = playerMovement.playerHeight + 0.2f;
         if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, checkDist, whatIsSafeGround))
         {
@@ -92,7 +84,6 @@ public class PlayerRespawn : MonoBehaviour
         return false;
     }
 
-    // --- 익사 감지 ---
     private void CheckDrowning()
     {
         Collider waterCol = playerMovement.CurrentWaterCollider;
@@ -107,7 +98,6 @@ public class PlayerRespawn : MonoBehaviour
         }
     }
 
-    // --- 충돌 감지 (낙사/함정) ---
     private void OnTriggerEnter(Collider other)
     {
         if (((1 << other.gameObject.layer) & whatIsRespawn) != 0)
@@ -124,12 +114,13 @@ public class PlayerRespawn : MonoBehaviour
         }
     }
 
-    // --- 공개 함수들 (외부 호출용) ---
+    // --- 공개 함수들 ---
 
     public void TriggerRespawn()
     {
         if (_isRespawning) return;
-        StartCoroutine(RespawnCoroutine());
+        // 일반 사망은 아이템 드랍 false
+        StartCoroutine(RespawnCoroutine(false));
     }
 
     public void TriggerLavaDeath()
@@ -143,45 +134,36 @@ public class PlayerRespawn : MonoBehaviour
     private IEnumerator DrowningProcessCoroutine()
     {
         _isDrowning = true;
-        yield return new WaitForSeconds(0.4f); // 연출 대기
+        yield return new WaitForSeconds(0.4f);
 
-        // 여전히 가라앉은 상태라면 리스폰
         if (_isDrowning)
         {
-            StartCoroutine(RespawnCoroutine());
+            // 익사는 아이템 드랍 false (필요하면 true로 변경 가능)
+            StartCoroutine(RespawnCoroutine(false));
         }
     }
 
     private IEnumerator LavaDeathProcessCoroutine()
     {
         _isLavaDying = true;
-        playerMovement.SetControlEnabled(false); // 조작 차단
+        playerMovement.SetControlEnabled(false);
 
-        
-
-        // 2. 끈적하게 가라앉기 (물리 효과)
         Rigidbody rb = playerMovement.rb;
-        rb.velocity = Vector3.zero; // 속도 초기화
-        rb.drag = 3.0f;             // 꿀처럼 끈적하게 떨어지도록 저항 높임
+        rb.velocity = Vector3.zero;
+        rb.drag = 3.0f;
 
-        // 3. 0.5초 대기 (가라앉는 연출)
         yield return new WaitForSeconds(0.5f);
 
-        // 4. 리스폰 시작
-        StartCoroutine(RespawnCoroutine());
-
-        // 1. 아이템 떨구기 (InventorySlotBreaker 연결 확인)
-        if (inventorySlotBreaker != null)
-        {
-            inventorySlotBreaker.BreakRandomSlotAndDrop();
-        }
+        // [핵심 변경] 리스폰 코루틴을 실행하되, '아이템 드랍 = true'로 전달
+        // 기존에 여기서 아이템을 떨구던 로직은 삭제했습니다.
+        StartCoroutine(RespawnCoroutine(true));
     }
 
-    private IEnumerator RespawnCoroutine()
+    // [핵심 변경] 매개변수 bool dropItem 추가 (기본값 false)
+    private IEnumerator RespawnCoroutine(bool dropItem = false)
     {
         _isRespawning = true;
 
-        // [추가] 퀘스트 매니저에게 리스폰 사실 알림
         if (InGameQuestManager.Instance != null)
         {
             InGameQuestManager.Instance.OnPlayerRespawn();
@@ -189,29 +171,35 @@ public class PlayerRespawn : MonoBehaviour
 
         playerMovement.SetControlEnabled(false);
 
-        // Fade Out
+        // 1. 화면 깜빡임 (Fade Out) - 아직 플레이어는 죽은 위치
         yield return StartCoroutine(FadeCanvas(1f, 0.5f));
 
-        // 수위 리셋
+        // 2. 수위 리셋
         if (mainWaterObject != null) mainWaterObject.ResetToDefaultHeight();
 
-        // 위치 이동 및 물리 초기화
+        // 3. 위치 이동 및 물리 초기화 (이제 플레이어는 안전지대로 이동됨)
         transform.position = _lastSafePosition;
+
         Rigidbody rb = playerMovement.rb;
         rb.velocity = Vector3.zero;
 
-        // 상태 초기화
-        if (playerMovement.IsInWater) playerMovement.ForceExitWater(); // 물에서 강제 퇴장
+        if (playerMovement.IsInWater) playerMovement.ForceExitWater();
         playerMovement.SetSlippery(false);
+        rb.drag = 0f;
 
         _isLavaDying = false;
         _isDrowning = false;
-        rb.drag = 0f;
 
-        // Fade In
+        // [여기입니다!] 플레이어가 안전한 위치로 온 직후에 아이템 드랍
+        if (dropItem && inventorySlotBreaker != null)
+        {
+            // 이제 transform.position이 _lastSafePosition이므로 안전한 땅 위에 아이템이 떨어짐
+            inventorySlotBreaker.BreakRandomSlotAndDrop();
+        }
+
+        // 4. 화면 밝아짐 (Fade In)
         yield return StartCoroutine(FadeCanvas(0f, 0.5f));
 
-        // 조작 복구
         playerMovement.SetSpeedControl(true);
         playerMovement.SetControlEnabled(true);
         _isRespawning = false;
