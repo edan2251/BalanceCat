@@ -24,7 +24,7 @@ RenderSettings:
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 3
+  m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 2100000, guid: 2bd8959f5fbd3644aa33af1a155fc147, type: 2}
   m_HaloStrength: 0.5
@@ -158,7 +158,7 @@ TerrainCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_TerrainData: {fileID: 15600000, guid: a4f4f45ffc3e5ea46943e29471a2ca37, type: 2}
+  m_TerrainData: {fileID: 15600000, guid: d0f292bb6c4deb44b8d705092001639b, type: 2}
   m_EnableTreeColliders: 1
 --- !u!218 &25438185
 Terrain:
@@ -169,7 +169,7 @@ Terrain:
   m_GameObject: {fileID: 25438183}
   m_Enabled: 1
   serializedVersion: 6
-  m_TerrainData: {fileID: 15600000, guid: a4f4f45ffc3e5ea46943e29471a2ca37, type: 2}
+  m_TerrainData: {fileID: 15600000, guid: d0f292bb6c4deb44b8d705092001639b, type: 2}
   m_TreeDistance: 500
   m_TreeBillboardDistance: 30
   m_TreeCrossFadeLength: 5
@@ -1306,6 +1306,13 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 7168
   _weightSpeedMultiplier: 1
+  useWeightPenalty: 1
+  penalty1WeightPercent: 30
+  penalty2WeightPercent: 60
+  penalty3WeightPercent: 100
+  penalty1SpeedDecreasePercent: 20
+  penalty2SpeedDecreasePercent: 20
+  penalty3SpeedDecreasePercent: 100
   orientation: {fileID: 2111869131}
   rb: {fileID: 794751483}
   playerAnimator: {fileID: 715667284}

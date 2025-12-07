@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 204
   displayName: "\uC911\uB825 \uC81C\uC5B4 \uCF54\uC5B4"
-  icon: {fileID: 21300000, guid: 6f814d701b6860f439f4f56595320b8f, type: 3}
+  icon: {fileID: 21300000, guid: 3ac6134a6a93031489b1d6037e6a759e, type: 3}
   description: "\uC6B0\uC8FC\uC120\uC758 \uC911\uB825 \uC870\uC808\uC5D0 \uD544\uC694\uD55C
     \uCF54\uC5B4\r\n"
   worldPrefab: {fileID: 2334124664012510461, guid: 50fa3279486da734b87f03f437e21247,

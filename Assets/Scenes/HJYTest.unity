@@ -1088,13 +1088,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 151128545}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.054922447, y: 0.9891143, z: 0.0012365803, w: -0.13650985}
-  m_LocalPosition: {x: 196.86, y: 13.4, z: 63.53}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 708422574}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1720307278}
   m_LocalEulerAnglesHint: {x: -0.999, y: 195.661, z: 6.219}
 --- !u!1 &156298047
 GameObject:
@@ -7818,7 +7818,7 @@ Transform:
   m_GameObject: {fileID: 297273886}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 209.68706, y: 12.978336, z: 109.593315}
+  m_LocalPosition: {x: 234.24, y: 12.978336, z: 75.12}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9257,6 +9257,13 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 15360
   _weightSpeedMultiplier: 1
+  useWeightPenalty: 1
+  penalty1WeightPercent: 30
+  penalty2WeightPercent: 60
+  penalty3WeightPercent: 100
+  penalty1SpeedDecreasePercent: 20
+  penalty2SpeedDecreasePercent: 20
+  penalty3SpeedDecreasePercent: 100
   orientation: {fileID: 1723329261}
   rb: {fileID: 518744282}
   playerAnimator: {fileID: 1406156664}
@@ -9348,6 +9355,8 @@ MonoBehaviour:
   player: {fileID: 518744286}
   forwardOffset: 0
   upOffset: 0.6
+  storageZone: {fileID: 0}
+  scoreZone: {fileID: 0}
 --- !u!114 &518744289
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17050,17 +17059,13 @@ MonoBehaviour:
   animator: {fileID: 1406156664}
   panel: {fileID: 0}
   slotBreaker: {fileID: 269265971}
-  prefabQ: {fileID: 8172400142041372761, guid: d3b57faff603baf4b8997c808090120d, type: 3}
-  prefabW: {fileID: 698275105033385832, guid: 0c53d85cc06063b4792908f6c4a30d3e, type: 3}
-  prefabE: {fileID: 3550428868698952758, guid: e6e9ff0228c523f47bd6c3bec35296ea, type: 3}
-  prefabA: {fileID: 1951284640862055786, guid: d428a4f829896e948aae76a0fd93e8ee, type: 3}
-  prefabS: {fileID: 3538429042915497539, guid: b6a0cc207b668ed45abcc799c65d3979, type: 3}
-  prefabD: {fileID: 13094023789566953, guid: b183df7be36653a4198712f695ce9e77, type: 3}
+  keyPrefab: {fileID: 0}
   sequenceLength: 6
   highlightCurrent: 1
   successUnlockDelay: 0
   failDownDuration: 2
-  highlightColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  timeLimit: 10
+  timerSlider: {fileID: 0}
 --- !u!4 &1113129680
 Transform:
   m_ObjectHideFlags: 0
@@ -18519,9 +18524,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5c834c1329137342b93b264f637f316, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  warehouseInventory: {fileID: 1333558588}
-  clearTextGO: {fileID: 1146268709}
-  clearThreshold: 3
 --- !u!114 &1333558590
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18537,7 +18539,6 @@ MonoBehaviour:
   inventory: {fileID: 1333558588}
   leftRoot: {fileID: 113552726}
   rightRoot: {fileID: 615886639}
-  externalUI: {fileID: 1927377272}
   cellSize: {x: 190, y: 190}
   cellSpacing: {x: 10, y: 10}
   slotPrefab: {fileID: 6536019324217192851, guid: 77ed5c9fb4871a641a7d6a1211f2245d,
@@ -18549,7 +18550,6 @@ MonoBehaviour:
     type: 3}
   previewOK: {r: 0, g: 1, b: 0, a: 0.25}
   previewBad: {r: 1, g: 0, b: 0, a: 0.35}
-  singleSide: 1
   itemTooltip: {fileID: 0}
   dropController: {fileID: 518744288}
 --- !u!225 &1333558591
@@ -20289,11 +20289,12 @@ Transform:
   m_GameObject: {fileID: 1720307277}
   serializedVersion: 2
   m_LocalRotation: {x: 0.054922447, y: 0.9891143, z: 0.0012365803, w: -0.13650985}
-  m_LocalPosition: {x: 196.86, y: 13.400001, z: 63.53}
+  m_LocalPosition: {x: 217.36, y: 11.87, z: 120.91}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1748233301}
+  - {fileID: 151128546}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -0.999, y: 195.661, z: 6.219}
 --- !u!1 &1723329260
@@ -21975,7 +21976,6 @@ MonoBehaviour:
   inventory: {fileID: 269265969}
   leftRoot: {fileID: 1396518336}
   rightRoot: {fileID: 1663057860}
-  externalUI: {fileID: 1333558590}
   cellSize: {x: 125, y: 125}
   cellSpacing: {x: 8, y: 8}
   slotPrefab: {fileID: 6536019324217192851, guid: 77ed5c9fb4871a641a7d6a1211f2245d,
@@ -21987,7 +21987,6 @@ MonoBehaviour:
     type: 3}
   previewOK: {r: 0, g: 1, b: 0, a: 0.25}
   previewBad: {r: 1, g: 0, b: 0, a: 0.35}
-  singleSide: 0
   itemTooltip: {fileID: 1579596558}
   dropController: {fileID: 518744288}
 --- !u!95 &1927377273
@@ -22066,8 +22065,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventoryPanel: {fileID: 1927377271}
-  storagePanel: {fileID: 1333558586}
-  storageZone: {fileID: 708422572}
   showCursor: {fileID: 773903131}
   playerMovement: {fileID: 518744283}
   cameraController: {fileID: 252847434}
@@ -24473,7 +24470,6 @@ SceneRoots:
   - {fileID: 373611923}
   - {fileID: 159829926}
   - {fileID: 534422595}
-  - {fileID: 151128546}
   - {fileID: 1720307278}
   - {fileID: 1428988410}
   - {fileID: 1684338836}

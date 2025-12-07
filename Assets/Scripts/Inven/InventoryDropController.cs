@@ -9,22 +9,40 @@ public class InventoryDropController : MonoBehaviour
     public StorageZone storageZone;
     public ScoreZone scoreZone;
 
-    public void Drop(ItemInstance inst)
+    public bool Drop(ItemInstance inst)
     {
-        if (inst == null || inst.data == null) return;
+        if (inst == null || inst.data == null) return false;
 
+        // 1. StorageZone (배달/점수) 체크
         if (storageZone != null && storageZone.IsPlayerInside && scoreZone != null)
         {
+            if (InGameQuestManager.Instance != null)
+            {
+                InGameQuestManager.Instance.OnItemDelivered(inst.data.id);
+            }
+
             scoreZone.AddScore(inst.Score);
-            return;
+
+            if (InGameQuestManager.Instance != null)
+            {
+                InGameQuestManager.Instance.CheckClearCondition();
+            }
+
+            return true;
         }
 
+        // 2. 월드 드롭
         var prefab = inst.data.worldPrefab;
-        if (prefab == null) return;
+        if (prefab != null)
+        {
+            Vector3 pos = player.position + player.forward * forwardOffset + Vector3.up * upOffset;
+            Quaternion rot = Quaternion.identity;
 
-        Vector3 pos = player.position + player.forward * forwardOffset + Vector3.up * upOffset;
+            Object.Instantiate(prefab, pos, rot);
 
-        Quaternion rot = Quaternion.identity;
-        var go = Object.Instantiate(prefab, pos, rot);
+            return true; 
+        }
+
+        return false;
     }
 }

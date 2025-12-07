@@ -11,6 +11,9 @@ public class InventoryUI : MonoBehaviour
     public RectTransform leftRoot;
     public RectTransform rightRoot;
 
+    [Header("UI Settings")]
+    public bool singleSide = false;
+
     [Header("Visual")]
     public Vector2 cellSize = new Vector2(64, 64);
     public Vector2 cellSpacing = new Vector2(2, 2);
@@ -324,14 +327,40 @@ public class InventoryUI : MonoBehaviour
         {
             dragging = moving;
             draggingFromSide = fromSide;
-            TryDropAt(pointerScreenPos);
+            TryMoveInternal(pointerScreenPos);
             dragging = null;
         }
 
         _dropGuard = false;
     }
 
-    bool TryDropAt(Vector2 screenPos)
+    bool TryDropOrScore(Vector2 screenPos)
+    {
+        if (inventory == null || dragging == null || dropController == null) return false;
+
+        var cam = UICam;
+        bool inLeft = leftRoot && RectTransformUtility.RectangleContainsScreenPoint(leftRoot, screenPos, cam);
+        bool inRight = (!singleSide) && rightRoot && RectTransformUtility.RectangleContainsScreenPoint(rightRoot, screenPos, cam);
+
+        // 1. 인벤토리 내부 이동 (기존 유지)
+        if (inLeft || inRight)
+        {
+            return TryMoveInternal(screenPos); // 이름 변경 (기존 TryDropAt 로직)
+        }
+
+        // 2. 외부 드롭 (StorageZone 또는 월드 드롭)
+        // [수정] Drop 함수가 bool을 반환하도록 바뀌었으므로 if문 사용 가능
+        if (dropController.Drop(dragging.item))
+        {
+            // Drop이 성공(true)했으므로 인벤토리에서 아이템 삭제
+            inventory.RemovePlacement(dragging, draggingFromSide);
+            return true;
+        }
+
+        return false;
+    }
+
+    bool TryMoveInternal(Vector2 screenPos)
     {
         if (inventory == null || dragging == null) return false;
 

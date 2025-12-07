@@ -26,6 +26,6 @@ public class QuestData : ScriptableObject
     [Tooltip("목표 값 (시간 제한일 경우 '초' 단위, 아이템일 경우 '개수' 등)")]
     public float targetValue;
 
-    // 필요 시 아이콘 등 추가
-    // public string questID; // (필요하면 사용)
+    [Header("Delivery Quest 전용")]
+    public string requiredItemID;
 }
