@@ -2,9 +2,29 @@ using UnityEngine;
 
 public class ScoreZone : MonoBehaviour
 {
+    public static ScoreZone Instance { get; private set; }
+
     // 점수 로직이 연결하면 됨
     public int currentScore = 0;
     public int requiredScore = 1500;
+
+    public bool IsCleared => currentScore >= requiredScore;
+    public static bool Cleared => Instance != null && Instance.currentScore >= Instance.requiredScore;
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Debug.LogWarning("ScoreZone: 여러 개가 씬에 있습니다.");
+        }
+        Instance = this;
+    }
+
+    public void AddScore(int amount)
+    {
+        if (amount <= 0) return;
+        currentScore += amount;
+    }
 
     private void OnTriggerEnter(Collider other)
     {

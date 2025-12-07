@@ -11,9 +11,6 @@ public class InventoryUI : MonoBehaviour
     public RectTransform leftRoot;
     public RectTransform rightRoot;
 
-    [Header("External Drop")]
-    public InventoryUI externalUI;
-
     [Header("Visual")]
     public Vector2 cellSize = new Vector2(64, 64);
     public Vector2 cellSpacing = new Vector2(2, 2);
@@ -41,9 +38,6 @@ public class InventoryUI : MonoBehaviour
     bool _previewsBuilt = false;
     bool _dropGuard = false;
 
-    [Header("Single Grid Mode (for Storage)")]
-    public bool singleSide = false;
-       
     public InventoryItemTooltip itemTooltip;
     public InventoryDropController dropController;
     int Idx(int x, int y, int w) => y * w + x;
@@ -69,8 +63,6 @@ public class InventoryUI : MonoBehaviour
     {
         if (inventory != null) inventory.OnChanged -= Refresh;
         ClearPreview();
-        if (externalUI) externalUI.ClearPreviewEx();
-
         HideItemTooltip();
     }
 
@@ -80,16 +72,21 @@ public class InventoryUI : MonoBehaviour
 
         if (slotPool.Count == 0)
         {
-            BuildGridSlots(leftRoot, inventory.leftGrid.width, inventory.leftGrid.height);
-            if (!singleSide && rightRoot)
+            if (leftRoot != null && inventory.leftGrid != null)
+                BuildGridSlots(leftRoot, inventory.leftGrid.width, inventory.leftGrid.height);
+
+            if (rightRoot != null && inventory.rightGrid != null)
                 BuildGridSlots(rightRoot, inventory.rightGrid.width, inventory.rightGrid.height, alignRight: true);
         }
 
         if (!_previewsBuilt)
         {
-            BuildPreviewGrid(leftRoot, inventory.leftGrid.width, inventory.leftGrid.height, false, previewLeft);
-            if (!singleSide && rightRoot)
+            if (leftRoot != null && inventory.leftGrid != null)
+                BuildPreviewGrid(leftRoot, inventory.leftGrid.width, inventory.leftGrid.height, false, previewLeft);
+
+            if (rightRoot != null && inventory.rightGrid != null)
                 BuildPreviewGrid(rightRoot, inventory.rightGrid.width, inventory.rightGrid.height, true, previewRight);
+
             _previewsBuilt = true;
         }
         else
@@ -104,9 +101,6 @@ public class InventoryUI : MonoBehaviour
         foreach (var i in previewLeft) { if (i) i.enabled = false; }
         foreach (var i in previewRight) { if (i) i.enabled = false; }
     }
-
-    public void ClearPreviewEx() => ClearPreview();
-    public void EnsurePreviewOnTopEx() => EnsurePreviewOnTop();
 
     void EnsurePreviewOnTop()
     {
@@ -183,12 +177,17 @@ public class InventoryUI : MonoBehaviour
         foreach (var go in itemPool) if (go) Destroy(go);
         itemPool.Clear();
 
-        foreach (var p in inventory.leftGrid.placements)
-            SpawnItemIcon(p, BagSide.Left);
+        if (inventory.leftGrid != null)
+        {
+            foreach (var p in inventory.leftGrid.placements)
+                SpawnItemIcon(p, BagSide.Left);
+        }
 
-        if (!singleSide)
+        if (inventory.rightGrid != null)
+        {
             foreach (var p in inventory.rightGrid.placements)
                 SpawnItemIcon(p, BagSide.Right);
+        }
 
         EnsurePreviewOnTop();
     }
@@ -269,7 +268,6 @@ public class InventoryUI : MonoBehaviour
         if (dragGhost) dragGhost.gameObject.SetActive(false);
 
         ClearPreview();
-        if (externalUI) externalUI.ClearPreviewEx();
 
         var moving = dragging;
         var fromSide = draggingFromSide;
@@ -292,7 +290,7 @@ public class InventoryUI : MonoBehaviour
 
         var cam = UICam;
         bool inLeft = leftRoot && RectTransformUtility.RectangleContainsScreenPoint(leftRoot, screenPos, cam);
-        bool inRight = (!singleSide) && rightRoot && RectTransformUtility.RectangleContainsScreenPoint(rightRoot, screenPos, cam);
+         bool inRight = rightRoot && RectTransformUtility.RectangleContainsScreenPoint(rightRoot, screenPos, cam);
 
         if (inLeft || inRight)
         {
@@ -306,34 +304,6 @@ public class InventoryUI : MonoBehaviour
 
             bool ok = inventory.TryMove(dragging, draggingFromSide, targetSide, gx, gy, dragging.item.rotated90);
             return ok;
-        }
-
-        if (externalUI && externalUI.inventory != null && externalUI.isActiveAndEnabled)
-        {
-            externalUI.inventory.EnsureReady();
-
-            var cam2 = externalUI.dragCanvas ? externalUI.dragCanvas.worldCamera : null;
-            bool inExtLeft = externalUI.leftRoot && RectTransformUtility.RectangleContainsScreenPoint(externalUI.leftRoot, screenPos, cam2);
-            bool inExtRight = (!externalUI.singleSide) && externalUI.rightRoot && RectTransformUtility.RectangleContainsScreenPoint(externalUI.rightRoot, screenPos, cam2);
-
-            if (inExtLeft || inExtRight)
-            {
-                BagSide targetSide = inExtLeft ? BagSide.Left : BagSide.Right;
-                var root = inExtLeft ? externalUI.leftRoot : externalUI.rightRoot;
-                var grid = inExtLeft ? externalUI.inventory.leftGrid : externalUI.inventory.rightGrid;
-                bool alignRight = (targetSide == BagSide.Right);
-
-                if (grid == null) return false;
-
-                if (!externalUI.ScreenToCell(root, grid.width, grid.height, alignRight, screenPos, dragging.item, out int gx, out int gy))
-                    return false;
-
-                bool ok = inventory.TryMoveToOtherInventory(
-                    dragging, draggingFromSide, externalUI.inventory,
-                    targetSide, gx, gy, dragging.item.rotated90
-                );
-                return ok;
-            }
         }
 
         return false;
@@ -380,18 +350,15 @@ public class InventoryUI : MonoBehaviour
         if (inventory == null || dragging == null)
         {
             ClearPreview();
-            if (externalUI) externalUI.ClearPreviewEx();
             return;
         }
 
         var cam = UICam;
         bool inLeft = leftRoot && RectTransformUtility.RectangleContainsScreenPoint(leftRoot, screenPos, cam);
-        bool inRight = (!singleSide) && rightRoot && RectTransformUtility.RectangleContainsScreenPoint(rightRoot, screenPos, cam);
+        bool inRight = rightRoot && RectTransformUtility.RectangleContainsScreenPoint(rightRoot, screenPos, cam);
 
         if (inLeft || inRight)
         {
-            if (externalUI) externalUI.ClearPreviewEx();
-
             BagSide side = inLeft ? BagSide.Left : BagSide.Right;
             var root = inLeft ? leftRoot : rightRoot;
             var grid = inLeft ? inventory.leftGrid : inventory.rightGrid;
@@ -429,79 +396,10 @@ public class InventoryUI : MonoBehaviour
             }
             return;
         }
-
-        if (externalUI != null &&
-        externalUI.inventory != null && (externalUI.leftRoot != null || externalUI.rightRoot != null))
-        {
-            ClearPreview();
-            externalUI.ShowPreviewForExternal(screenPos, dragging.item);
-        }
-        else
-        {
-            ClearPreview();
-        }
-    }
-
-    public void ShowPreviewForExternal(Vector2 screenPos, ItemInstance item)
-    {
-        if (inventory == null || item == null || item.data == null)
-            return;
-        if (leftRoot == null && rightRoot == null)
-            return;
-
-        var cam = dragCanvas ? dragCanvas.worldCamera : null;
-
-        bool inLeft = leftRoot && RectTransformUtility.RectangleContainsScreenPoint(leftRoot, screenPos, cam);
-        bool inRight = (!singleSide) && rightRoot && RectTransformUtility.RectangleContainsScreenPoint(rightRoot, screenPos, cam);
-
-        if (!inLeft && !inRight)
-        {
-            ClearPreview();
-            return;
-        }
-
-        BagSide side = inLeft ? BagSide.Left : BagSide.Right;
-        var root = inLeft ? leftRoot : rightRoot;
-        var grid = inLeft ? inventory.leftGrid : inventory.rightGrid;
-
-        if (grid == null)
-        {
-            ClearPreview();
-            return;
-        }
-
-        bool alignRight = (side == BagSide.Right);
-
-        if (!ScreenToCell(root, grid.width, grid.height, alignRight, screenPos, item, out int gx, out int gy))
-            return;
-
-        int w = item.rotated90 ? item.data.sizeH : item.data.sizeW;
-        int h = item.rotated90 ? item.data.sizeW : item.data.sizeH;
-
-        bool can = grid.CanPlace(gx, gy, w, h);
-
-        var pool = inLeft ? previewLeft : previewRight;
-        var color = can ? previewOK : previewBad;
-
+        
         ClearPreview();
-        for (int yy = gy; yy < gy + h; yy++)
-        {
-            for (int xx = gx; xx < gx + w; xx++)
-            {
-                int idx = Idx(xx, yy, grid.width);
-                if (idx < 0 || idx >= pool.Count) continue;
-
-                var img = pool[idx];
-                if (img == null) continue;
-
-                img.color = color;
-                img.enabled = true;
-            }
-        }
-
-        EnsurePreviewOnTop();
     }
-
+    
     public void ShowItemTooltip(ItemInstance item)
     {
         if (itemTooltip == null) return;

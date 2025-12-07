@@ -16,33 +16,32 @@ public class BalanceMiniGame : MonoBehaviour
 
     [SerializeField] InventorySlotBreaker slotBreaker;
 
-    [Header("Key Prefabs (Q W E A S D)")]
-    [SerializeField] GameObject prefabQ;
-    [SerializeField] GameObject prefabW;
-    [SerializeField] GameObject prefabE;
-    [SerializeField] GameObject prefabA;
-    [SerializeField] GameObject prefabS;
-    [SerializeField] GameObject prefabD;
+    [Header("Key Prefab (Unified)")]
+    [SerializeField] GameObject keyPrefab;
 
     [Header("Settings")]
     [SerializeField, Min(1)] int sequenceLength = 6;
     [SerializeField] bool highlightCurrent = true;   // 현재 키 강조(스케일 업)
     [SerializeField] float successUnlockDelay = 0f;  // 성공 시 바로 복귀(원하면 딜레이 조절)
     [SerializeField] float failDownDuration = 2f;    // 실패 시 넘어짐 유지 시간
-    [SerializeField] Color highlightColor = Color.yellow;
+
+    [SerializeField] float timeLimit = 10f;
+    [SerializeField] Slider timerSlider;
 
     readonly char[] _pool = { 'Q', 'W', 'E', 'A', 'S', 'D' };
     Dictionary<char, GameObject> _prefabs;
     readonly List<char> _seq = new List<char>();
     readonly List<GameObject> _spawned = new List<GameObject>();
-    readonly List<Color> _origColors = new List<Color>();
     readonly List<bool> _cleared = new List<bool>();
+
+    readonly List<BalanceMiniGameKeyButton> _keyButtons = new List<BalanceMiniGameKeyButton>();
+
     int _idx;
     bool _running;
+    float _remainTime;
 
     void Awake()
     {
-        // 레퍼런스 폴백
         if (!movement) movement = GetComponentInParent<PlayerMovement>();
         if (!animator)
         {
@@ -52,15 +51,17 @@ public class BalanceMiniGame : MonoBehaviour
 
         if (!slotBreaker) slotBreaker = FindObjectOfType<InventorySlotBreaker>();
 
-        // 프리팹 매핑
-        _prefabs = new Dictionary<char, GameObject>
+        _prefabs = new Dictionary<char, GameObject>();
+        if (keyPrefab != null)
         {
-            { 'Q', prefabQ }, { 'W', prefabW }, { 'E', prefabE },
-            { 'A', prefabA }, { 'S', prefabS }, { 'D', prefabD },
-        };
+            foreach (var c in _pool)
+            {
+                _prefabs[c] = keyPrefab;
+            }
+        }
 
-        // BalanceSafetyRing 이벤트 자동 연결(있을 때만)
-        if (ring) ring.onExitRing.AddListener(StartStaggerSequence); // 링 밖 이탈 시 시작
+        if (ring) ring.onExitRing.AddListener(StartStaggerSequence);
+        if (timerSlider) timerSlider.gameObject.SetActive(false);
     }
 
     void OnDisable()
@@ -71,14 +72,24 @@ public class BalanceMiniGame : MonoBehaviour
         SafeSetBool("isStaggering", false);
         SafeSetBool("isFalling", false);
         movement?.SetControlEnabled(true);
+        if (timerSlider) timerSlider.gameObject.SetActive(false);
     }
 
-    // === 외부에서 호출(Inspector 이벤트로 연결해도 됨) ===
     public void StartStaggerSequence()
     {
         if (_running || !panel) return;
 
         IsRunning = true;
+
+        _remainTime = timeLimit;
+        if (timerSlider)
+        {
+            bool useTimer = timeLimit > 0f;
+            timerSlider.gameObject.SetActive(useTimer);
+            timerSlider.minValue = 0f;
+            timerSlider.maxValue = 1f;
+            timerSlider.value = 1f;
+        }
 
         panel.gameObject.SetActive(true);
         StartCoroutine(Co_StaggerAndMiniGame());
@@ -98,9 +109,25 @@ public class BalanceMiniGame : MonoBehaviour
         BuildUI();
         FocusCurrent();
 
-        // 3) 입력 루프(정확히 6개 맞추면 성공)
+        // 3) 입력 루프
         while (_idx < _seq.Count)
         {
+            if (timeLimit > 0f)
+            {
+                _remainTime -= Time.deltaTime;
+                if (timerSlider)
+                {
+                    timerSlider.value = Mathf.Clamp01(_remainTime / timeLimit);
+                }
+
+                if (_remainTime <= 0f)
+                {
+                    // 시간 초과 실패
+                    yield return Co_FailSequence();
+                    yield break;
+                }
+            }
+
             char expected = _seq[_idx];
             if (TryReadKeyDown(out char pressed))
             {
@@ -112,40 +139,42 @@ public class BalanceMiniGame : MonoBehaviour
                 }
                 else
                 {
-                    // 실패 처리
-                    ClearUI();
-                    if (panel) panel.gameObject.SetActive(false);
-                    SafeSetBool("isStaggering", false);
-                    SafeSetBool("isFalling", true);
-
-                    // 퀘스트 매니저에 넘어졌다는거 알려주기
-                    if (InGameQuestManager.Instance != null)
-                    {
-                        InGameQuestManager.Instance.OnPlayerFall();
-                    }
-                    // =========================================================
-
-                    if (slotBreaker != null)
-                    {
-                        slotBreaker.BreakRandomSlotAndDrop();
-                    }
-
-                    yield return new WaitForSeconds(failDownDuration);
-                    SafeSetBool("isFalling", false);
-                    movement?.SetControlEnabled(true);
-                    _running = false;
-                    IsRunning = false;
+                    // 잘못된 키 → 실패
+                    yield return Co_FailSequence();
                     yield break;
                 }
             }
+
             yield return null;
         }
 
         // 4) 성공 처리
         ClearUI();
         if (panel) panel.gameObject.SetActive(false);
+        if (timerSlider) timerSlider.gameObject.SetActive(false);
         SafeSetBool("isStaggering", false);
         if (successUnlockDelay > 0f) yield return new WaitForSeconds(successUnlockDelay);
+        movement?.SetControlEnabled(true);
+        _running = false;
+        IsRunning = false;
+    }
+
+    IEnumerator Co_FailSequence()
+    {
+        ClearUI();
+        if (panel) panel.gameObject.SetActive(false);
+        SafeSetBool("isStaggering", false);
+        SafeSetBool("isFalling", true);
+
+        if (slotBreaker != null)
+        {
+            slotBreaker.BreakRandomSlotAndDrop();
+        }
+
+        if (timerSlider) timerSlider.gameObject.SetActive(false);
+
+        yield return new WaitForSeconds(failDownDuration);
+        SafeSetBool("isFalling", false);
         movement?.SetControlEnabled(true);
         _running = false;
         IsRunning = false;
@@ -174,11 +203,17 @@ public class BalanceMiniGame : MonoBehaviour
                 Debug.LogWarning($"[MiniGame] Prefab for '{key}' is missing.");
                 continue;
             }
+
             var go = Instantiate(prefab, panel);
             _spawned.Add(go);
 
-            var g = go.GetComponentInChildren<Graphic>();
-            _origColors.Add(g ? g.color : Color.white);
+            var keyUI = go.GetComponent<BalanceMiniGameKeyButton>();
+            if (keyUI != null)
+            {
+                keyUI.Setup(key);
+            }
+            _keyButtons.Add(keyUI);
+
             _cleared.Add(false);
         }
     }
@@ -189,35 +224,51 @@ public class BalanceMiniGame : MonoBehaviour
             if (_spawned[i]) Destroy(_spawned[i]);
         _spawned.Clear();
 
-        _origColors.Clear();
         _cleared.Clear();
+        _keyButtons.Clear();
     }
 
     void FocusCurrent()
     {
-        if (!highlightCurrent) return;
-
+        // [변경] 색상 조절 없이 스프라이트/스케일만 상태 반영
         for (int i = 0; i < _spawned.Count; i++)
         {
             var go = _spawned[i];
             if (!go) continue;
 
-            // 완료된 칸은 건드리지 않음
-            if (_cleared.Count > i && _cleared[i])
-            {
-                go.transform.localScale = Vector3.one * 0.9f;
-                continue;
-            }
-
-            var g = go.GetComponentInChildren<Graphic>();
+            bool isCleared = (_cleared.Count > i && _cleared[i]);
             bool isCurrent = (i == _idx);
 
-            go.transform.localScale = isCurrent ? Vector3.one * 1.15f : Vector3.one;
-           
-            if (g)
+            var keyUI = (i < _keyButtons.Count) ? _keyButtons[i] : go.GetComponent<BalanceMiniGameKeyButton>();
+            if (keyUI != null)
             {
-                if (isCurrent) g.color = highlightColor;
-                else if (_origColors.Count > i) g.color = _origColors[i];
+                if (isCleared)
+                {
+                    keyUI.SetCleared();
+                }
+                else if (isCurrent && highlightCurrent)
+                {
+                    keyUI.SetCurrent();
+                }
+                else
+                {
+                    keyUI.SetNormal();
+                }
+            }
+            else
+            {
+                if (isCleared)
+                {
+                    go.transform.localScale = Vector3.one * 0.9f;
+                }
+                else if (isCurrent && highlightCurrent)
+                {
+                    go.transform.localScale = Vector3.one * 1.15f;
+                }
+                else
+                {
+                    go.transform.localScale = Vector3.one;
+                }
             }
         }
     }
@@ -225,16 +276,8 @@ public class BalanceMiniGame : MonoBehaviour
     void MarkCleared(int i)
     {
         if (i < 0 || i >= _spawned.Count || !_spawned[i]) return;
-
-        _cleared[i] = true;
-
-        var g = _spawned[i].GetComponentInChildren<Graphic>();
-        if (g)
-        {
-            Color baseCol = (_origColors.Count > i) ? _origColors[i] : g.color;
-            g.color = new Color(baseCol.r, baseCol.g, baseCol.b, 0.35f);
-        }
-        _spawned[i].transform.localScale = Vector3.one * 0.9f;
+        if (_cleared.Count > i)
+            _cleared[i] = true;
     }
 
     bool TryReadKeyDown(out char key)
@@ -259,7 +302,7 @@ public class BalanceMiniGame : MonoBehaviour
 // Animator 파라미터 유틸(옵션)
 public static class AnimatorExt
 {
-    static readonly Dictionary<Animator, HashSet<int>> _cache = new();
+    static readonly Dictionary<Animator, HashSet<int>> _cache = new Dictionary<Animator, HashSet<int>>();
 
     public static bool HasParameter(this Animator anim, string name)
     {

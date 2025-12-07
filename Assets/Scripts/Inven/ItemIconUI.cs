@@ -40,7 +40,11 @@ public class ItemIconUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (cg) { cg.alpha = 1f; cg.blocksRaycasts = true; }
+        if (cg) 
+        { 
+            cg.alpha = 1f; 
+            cg.blocksRaycasts = true;
+        }
 
         if (ui == null || placement == null)
             return;
@@ -54,26 +58,9 @@ public class ItemIconUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         {
             overAnyInventory = true;
         }
-        else if (!ui.singleSide && ui.rightRoot &&
-                 RectTransformUtility.RectangleContainsScreenPoint(ui.rightRoot, pos, cam))
+        else if (ui.rightRoot && RectTransformUtility.RectangleContainsScreenPoint(ui.rightRoot, pos, cam))
         {
             overAnyInventory = true;
-        }
-
-        if (!overAnyInventory && ui.externalUI && ui.externalUI.inventory != null && ui.externalUI.isActiveAndEnabled)
-        {
-            var ext = ui.externalUI;
-            var cam2 = ext.dragCanvas ? ext.dragCanvas.worldCamera : null;
-
-            if (ext.leftRoot && RectTransformUtility.RectangleContainsScreenPoint(ext.leftRoot, pos, cam2))
-            {
-                overAnyInventory = true;
-            }
-            else if (!ext.singleSide && ext.rightRoot &&
-                     RectTransformUtility.RectangleContainsScreenPoint(ext.rightRoot, pos, cam2))
-            {
-                overAnyInventory = true;
-            }
         }
 
         ui.EndDrag(pos, cancel: false);
