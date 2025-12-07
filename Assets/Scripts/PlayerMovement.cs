@@ -46,6 +46,9 @@ public class PlayerMovement : MonoBehaviour
     private bool _isOnIce = false;
     private Collider _currentWaterCollider;
 
+    // [신규] 외부(얼음물 등)에서 속도를 줄이기 위한 배율 변수 (1.0 = 정상, 0.5 = 절반 속도)
+    private float _externalSpeedMultiplier = 1.0f;
+
     // --- 외부 참조용 프로퍼티 ---
     public bool IsGrounded => grounded;
     public bool IsInWater => _isInWater;
@@ -59,7 +62,7 @@ public class PlayerMovement : MonoBehaviour
     public Rigidbody rb;
     public Animator playerAnimator;
 
-    // [신규] 리스폰 매니저 참조 (상태 확인용)
+    // 리스폰 매니저 참조 (상태 확인용)
     public PlayerRespawn playerRespawn;
 
     [HideInInspector] public float horizontalInput;
@@ -140,8 +143,15 @@ public class PlayerMovement : MonoBehaviour
 
         bool isRunning = Input.GetKey(runKey) && !_isInWater;
         float speedMult = isRunning ? runMultiplier : 1.0f;
-        currentMoveSpeed = moveSpeed * speedMult;
-        if (_isInWater) currentMoveSpeed = waterMoveSpeed;
+
+        // 기본 속도 계산 (물 속 or 지상)
+        if (_isInWater)
+            currentMoveSpeed = waterMoveSpeed;
+        else
+            currentMoveSpeed = moveSpeed * speedMult;
+
+        // [신규] 여기서 얼음물 효과(배율)를 최종적으로 곱해줍니다.
+        currentMoveSpeed *= _externalSpeedMultiplier;
 
         // 리스폰 중이거나 용암 사망 중이면 점프 불가
         bool isRespawning = (playerRespawn != null && (playerRespawn.IsRespawning || playerRespawn.IsLavaDying));
@@ -197,6 +207,13 @@ public class PlayerMovement : MonoBehaviour
     }
 
     // --- 공개 함수 (외부 제어용) ---
+
+    // 외부(얼음물 상태 스크립트 등)에서 속도 배율을 조절하는 함수
+    public void SetSpeedMultiplier(float multiplier)
+    {
+        // 0.1 ~ 1.0 사이로 안전하게 제한 (최소 10% 속도는 유지)
+        _externalSpeedMultiplier = Mathf.Clamp(multiplier, 0.1f, 1.0f);
+    }
 
     public void SetInWater(bool inWater, Collider waterCollider)
     {
