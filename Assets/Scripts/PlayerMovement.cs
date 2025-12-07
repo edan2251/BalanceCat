@@ -46,8 +46,9 @@ public class PlayerMovement : MonoBehaviour
     private bool _isOnIce = false;
     private Collider _currentWaterCollider;
 
-    // [신규] 외부(얼음물 등)에서 속도를 줄이기 위한 배율 변수 (1.0 = 정상, 0.5 = 절반 속도)
+    //외부에서 속도를 줄이기 위한 배율 변수 (1.0 = 정상, 0.5 = 절반 속도)
     private float _externalSpeedMultiplier = 1.0f;
+    public float _weightSpeedMultiplier = 1.0f; //무게 관련 속도
 
     // --- 외부 참조용 프로퍼티 ---
     public bool IsGrounded => grounded;
@@ -150,8 +151,8 @@ public class PlayerMovement : MonoBehaviour
         else
             currentMoveSpeed = moveSpeed * speedMult;
 
-        // [신규] 여기서 얼음물 효과(배율)를 최종적으로 곱해줍니다.
-        currentMoveSpeed *= _externalSpeedMultiplier;
+        //  이동속도 최종계산
+        currentMoveSpeed *= _externalSpeedMultiplier * _weightSpeedMultiplier;
 
         // 리스폰 중이거나 용암 사망 중이면 점프 불가
         bool isRespawning = (playerRespawn != null && (playerRespawn.IsRespawning || playerRespawn.IsLavaDying));
