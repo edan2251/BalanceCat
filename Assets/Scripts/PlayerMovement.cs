@@ -50,6 +50,19 @@ public class PlayerMovement : MonoBehaviour
     private float _externalSpeedMultiplier = 1.0f;
     public float _weightSpeedMultiplier = 1.0f; //무게 관련 속도
 
+    [Header("Weight Penalty")]
+    public bool useWeightPenalty = true;
+
+    [Range(0f, 100f)] public float penalty1WeightPercent = 30f;
+    [Range(0f, 100f)] public float penalty2WeightPercent = 60f;
+    [Range(0f, 100f)] public float penalty3WeightPercent = 100f;
+
+    [Range(0f, 100f)] public float penalty1SpeedDecreasePercent = 20f;
+    [Range(0f, 100f)] public float penalty2SpeedDecreasePercent = 20f;
+    [Range(0f, 100f)] public float penalty3SpeedDecreasePercent = 100f;
+
+    int _currentWeightPenaltyStage = 0;
+
     // --- 외부 참조용 프로퍼티 ---
     public bool IsGrounded => grounded;
     public bool IsInWater => _isInWater;
@@ -137,12 +150,73 @@ public class PlayerMovement : MonoBehaviour
         grounded = !_isInWater && Physics.BoxCast(boxCenter, boxHalf, Vector3.down, Quaternion.identity, groundCheckMargin, whatIsGround);
     }
 
+    void UpdateWeightPenalty()
+    {
+        _currentWeightPenaltyStage = 0;
+        _weightSpeedMultiplier = 1.0f;
+
+        if (!useWeightPenalty) return;
+        if (sideBias == null) return;
+
+        float maxW = sideBias.maxWeight;
+        float curW = sideBias.weightAmount;
+
+        if (maxW <= 0f) return;
+
+        float ratio = curW / maxW; // 현재 무게비 (0~1+)
+
+        float p1 = Mathf.Max(0f, penalty1WeightPercent) * 0.01f;
+        float p2 = Mathf.Max(0f, penalty2WeightPercent) * 0.01f;
+        float p3 = Mathf.Max(0f, penalty3WeightPercent) * 0.01f;
+
+        // 단계 결정(3 → 2 → 1 순으로 체크)
+        if (ratio >= p3) _currentWeightPenaltyStage = 3;
+        else if (ratio >= p2) _currentWeightPenaltyStage = 2;
+        else if (ratio >= p1) _currentWeightPenaltyStage = 1;
+        else _currentWeightPenaltyStage = 0;
+
+        // 각 단계별 이동속도 감소 비율
+        float s1 = Mathf.Clamp01(penalty1SpeedDecreasePercent * 0.01f);
+        float s2 = Mathf.Clamp01(penalty2SpeedDecreasePercent * 0.01f);
+        float s3 = Mathf.Clamp01(penalty3SpeedDecreasePercent * 0.01f);
+
+        switch (_currentWeightPenaltyStage)
+        {
+            case 0:
+                _weightSpeedMultiplier = 1.0f;
+                break;
+            case 1:
+                _weightSpeedMultiplier = 1.0f - s1;
+                break;
+            case 2:
+                _weightSpeedMultiplier = 1.0f - s2;
+                break;
+            case 3:
+                _weightSpeedMultiplier = 1.0f - s3; // 기본값 100% 감소 → 0
+                break;
+        }
+
+        if (_weightSpeedMultiplier < 0f)
+            _weightSpeedMultiplier = 0f;
+    }
+
     private void GetInput()
     {
+        UpdateWeightPenalty();
+
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
-        bool isRunning = Input.GetKey(runKey) && !_isInWater;
+        // 3단계 패널티: 이동 불가 → 입력 자체를 막음
+        if (_currentWeightPenaltyStage >= 3)
+        {
+            horizontalInput = 0f;
+            verticalInput = 0f;
+        }
+
+        bool canRunByPenalty = (_currentWeightPenaltyStage < 2);    // 2단계부터 런 금지
+
+        bool isRunning = Input.GetKey(runKey) && !_isInWater && canRunByPenalty;
         float speedMult = isRunning ? runMultiplier : 1.0f;
 
         // 기본 속도 계산 (물 속 or 지상)
@@ -157,7 +231,9 @@ public class PlayerMovement : MonoBehaviour
         // 리스폰 중이거나 용암 사망 중이면 점프 불가
         bool isRespawning = (playerRespawn != null && (playerRespawn.IsRespawning || playerRespawn.IsLavaDying));
 
-        if (Input.GetKey(jumpKey) && readyToJump && grounded && !_isInWater && !isRespawning)
+        bool canJumpByPenalty = (_currentWeightPenaltyStage < 2); // 2단계부터 점프 금지
+
+        if (Input.GetKey(jumpKey) && readyToJump && grounded && !_isInWater && !isRespawning && canJumpByPenalty)
         {
             readyToJump = false;
             Jump();
@@ -306,6 +382,7 @@ public class PlayerMovement : MonoBehaviour
         playerAnimator.SetBool("isInWater", _isInWater);
         if (_isInWater) { playerAnimator.SetBool("isRunning", false); return; }
         bool isMoving = horizontalInput != 0 || verticalInput != 0;
+        bool canRunByPenalty = (_currentWeightPenaltyStage < 2);
         playerAnimator.SetBool("isRunning", Input.GetKey(runKey) && isMoving);
     }
 
