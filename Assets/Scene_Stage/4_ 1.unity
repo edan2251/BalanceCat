@@ -20,11 +20,11 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.38039216, g: 0.38039216, b: 0.38039216, a: 1}
+  m_AmbientSkyColor: {r: 1.5215687, g: 1.5215687, b: 1.5215687, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 3
+  m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 2100000, guid: 2bd8959f5fbd3644aa33af1a155fc147, type: 2}
   m_HaloStrength: 0.5
@@ -1506,6 +1506,13 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 7168
   _weightSpeedMultiplier: 1
+  useWeightPenalty: 1
+  penalty1WeightPercent: 30
+  penalty2WeightPercent: 60
+  penalty3WeightPercent: 100
+  penalty1SpeedDecreasePercent: 20
+  penalty2SpeedDecreasePercent: 20
+  penalty3SpeedDecreasePercent: 100
   orientation: {fileID: 110254607}
   rb: {fileID: 598678163}
   playerAnimator: {fileID: 1383364839}
