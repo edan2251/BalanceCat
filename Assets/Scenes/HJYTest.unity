@@ -8804,7 +8804,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   movement: {fileID: 518744283}
-  sideBias: {fileID: 0}
+  sideBias: {fileID: 269265970}
   tiltDeadZone: 0.02
   inputDeadZone: 0.08
   biasAccumulationSpeed: 1
@@ -9256,6 +9256,7 @@ MonoBehaviour:
   whatIsGround:
     serializedVersion: 2
     m_Bits: 15360
+  _weightSpeedMultiplier: 1
   orientation: {fileID: 1723329261}
   rb: {fileID: 518744282}
   playerAnimator: {fileID: 1406156664}

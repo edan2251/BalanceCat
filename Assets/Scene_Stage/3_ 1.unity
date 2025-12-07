@@ -6988,6 +6988,7 @@ MonoBehaviour:
   whatIsGround:
     serializedVersion: 2
     m_Bits: 7168
+  _weightSpeedMultiplier: 1
   orientation: {fileID: 8936515}
   rb: {fileID: 1348712743}
   playerAnimator: {fileID: 1640546946}
@@ -8569,6 +8570,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentStageData: {fileID: 11400000, guid: ae24e55ab95fd08459380e17c7616ab1, type: 2}
   nextStageData: {fileID: 11400000, guid: 95a7e0308f4c7d341aa6b2505fe0af54, type: 2}
+  questPanelController: {fileID: 0}
   cursorController: {fileID: 1219540384}
   hudStarImages:
   - {fileID: 2049733359}
@@ -8576,6 +8578,7 @@ MonoBehaviour:
   - {fileID: 1685921723}
   filledStarSprite: {fileID: 1780521068, guid: 71c37a3618efbd34e8ba230abdedab21, type: 3}
   emptyStarSprite: {fileID: 1236932125, guid: 71c37a3618efbd34e8ba230abdedab21, type: 3}
+  hudPlayTimeText: {fileID: 0}
   resultPanel: {fileID: 898611617}
   timeText: {fileID: 1265290174}
   resultStarFills:
@@ -11055,9 +11058,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentStageData: {fileID: 11400000, guid: ac9c236223f706240afc06d08f5622af, type: 2}
   questText1: {fileID: 1102091293}
+  questStar1: {fileID: 0}
   questText2: {fileID: 78547678}
+  questStar2: {fileID: 0}
   questText3: {fileID: 144886948}
+  questStar3: {fileID: 0}
+  filledStar: {fileID: 0}
+  emptyStar: {fileID: 0}
   panelAnimator: {fileID: 910399487}
+  panelOpenDuration: 0.5
   promptCanvasGroup: {fileID: 0}
   promptFadeDuration: 0.5
   autoCloseDelay: 3
