@@ -61,6 +61,12 @@ public class InGameQuestManager : MonoBehaviour
         playTime = 0f;
         resultPanel.SetActive(false);
 
+        if (SoundManager.Instance != null && currentStageData != null)
+        {
+            // 1√©≈Õ = index 0, 2√©≈Õ = index 1 ...
+            SoundManager.Instance.PlayChapterBGM(currentStageData.chapterIndex);
+        }
+
         // ªÛ¥‹ HUD ∫∞ √ ±‚»≠
         if (emptyStarSprite != null)
         {
