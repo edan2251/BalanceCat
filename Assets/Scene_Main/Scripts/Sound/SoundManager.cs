@@ -11,9 +11,11 @@ using UnityEngine.Audio;
 public enum SFX
 {
     Drop,       // 0번: 아이템 드롭
-    Clear,      // 1번: 성공
-    Fail,       // 2번: 실패
-    Fall        // 3번: 꽈당
+    Clear,      // 1번: 스테이지 클리어
+    Fail,       // 2번: 퀘스트 실패
+    Fall,       // 3번: 넘어짐
+    StarPop,     // 4번: 별 획득
+    BackBackOpen // 5번: 배낭열기
 }
 
 public class SoundManager : MonoBehaviour
@@ -38,6 +40,9 @@ public class SoundManager : MonoBehaviour
     {
         if (Instance == null) { Instance = this; DontDestroyOnLoad(gameObject); }
         else { Destroy(gameObject); }
+
+        if (bgmSource != null) bgmSource.loop = true;  // BGM은 무조건 반복
+        if (sfxSource != null) sfxSource.loop = false; // 효과음은 반복 안 함
     }
 
     void Start()

@@ -2261,11 +2261,13 @@ MonoBehaviour:
   mainMixer: {fileID: 24100000, guid: bf704a54de53e6b488639a8297894b81, type: 2}
   bgmSource: {fileID: 406281033}
   sfxSource: {fileID: 406281032}
+  mainMenuBgm: {fileID: 0}
   chapterBgms:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  SfxClips: []
 --- !u!4 &406281035
 Transform:
   m_ObjectHideFlags: 0
@@ -10145,6 +10147,7 @@ SceneRoots:
   - {fileID: 1420685859}
   - {fileID: 1823434656}
   - {fileID: 394809917}
+  - {fileID: 406281035}
   - {fileID: 7352987193847791802}
   - {fileID: 61835553}
   - {fileID: 1956425151}
@@ -10160,4 +10163,3 @@ SceneRoots:
   - {fileID: 1023504497}
   - {fileID: 1904261085}
   - {fileID: 734016028}
-  - {fileID: 406281035}
