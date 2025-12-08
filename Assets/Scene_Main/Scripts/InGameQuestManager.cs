@@ -279,11 +279,11 @@ public class InGameQuestManager : MonoBehaviour
                 }
                 else if (q.type == QuestType.NoRespawn)
                 {
-                    if (isMainCleared && respawnCount <= q.targetValue) isSuccess = true; // <= 로 복구 (허용횟수)
+                    if (isMainCleared && respawnCount < q.targetValue) isSuccess = true; // < 로 복구 (허용횟수)
                 }
                 else if (q.type == QuestType.NoFall)
                 {
-                    if (isMainCleared && fallCount <= q.targetValue) isSuccess = true; // <= 로 복구
+                    if (isMainCleared && fallCount < q.targetValue) isSuccess = true; // < 로 복구
                 }
 
                 // 배달 퀘스트는 메인 클리어와 상관없이 언제든 달성 가능
