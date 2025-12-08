@@ -23,6 +23,8 @@ public class PlayerMovement : MonoBehaviour
     public KeyCode balanceLeftKey = KeyCode.Z;
     public KeyCode balanceRightKey = KeyCode.C;
 
+    private bool _simulateInputForRing = false;
+
     [Header("Water Physics")]
     public float waterMoveSpeed = 1.5f;
     public float floatingForce = 10.0f;
@@ -69,7 +71,7 @@ public class PlayerMovement : MonoBehaviour
     public Collider CurrentWaterCollider => _currentWaterCollider;
     public float FlatSpeed => new Vector3(rb.velocity.x, 0f, rb.velocity.z).magnitude;
     public bool IsControlEnabled => _controlEnabled;
-    public float CurrentMoveSpeed => currentMoveSpeed;
+    public float CurrentMoveSpeed => _simulateInputForRing ? FlatSpeed : currentMoveSpeed;
 
     [Header("References")]
     public Transform orientation;
@@ -81,6 +83,7 @@ public class PlayerMovement : MonoBehaviour
 
     [HideInInspector] public float horizontalInput;
     [HideInInspector] public float verticalInput;
+
 
     [Header("Control/Links")]
     public InventorySideBias sideBias;
@@ -207,6 +210,17 @@ public class PlayerMovement : MonoBehaviour
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
+        if (_simulateInputForRing && horizontalInput == 0 && verticalInput == 0 && FlatSpeed > 0.5f)
+        {
+            // 1. 현재 날아가는 방향을 알아냄
+            Vector3 localVel = orientation.InverseTransformDirection(rb.velocity).normalized;
+
+            // 2. 링이 반응할 수 있는 최소한의 입력(0.08)보다 살짝 큰 값을 넣어줌
+            // (얼음 위라 제어력이 0.1배라 물리적으로는 거의 티 안 남)
+            horizontalInput = localVel.x * 0.15f;
+            verticalInput = localVel.z * 0.15f;
+        }
+
         // 3단계 패널티: 이동 불가 → 입력 자체를 막음
         if (_currentWeightPenaltyStage >= 3)
         {
@@ -318,6 +332,10 @@ public class PlayerMovement : MonoBehaviour
     public void SetSlippery(bool isOnIce)
     {
         _isOnIce = isOnIce;
+    }
+    public void SetExternalForceSimulation(bool active)
+    {
+        _simulateInputForRing = active;
     }
 
     public void SetSpeedControl(bool isEnabled)
