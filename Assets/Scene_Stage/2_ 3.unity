@@ -599,6 +599,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PP_Rock_Pile_Cemetery_01 (9)
       objectReference: {fileID: 0}
+    - target: {fileID: 2845584621159097905, guid: da69d1a2835e18d4aa37656ce73d47ab,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 3185835553248574603, guid: da69d1a2835e18d4aa37656ce73d47ab,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -7062,6 +7067,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PP_Rock_Pile_Cemetery_01 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 2845584621159097905, guid: da69d1a2835e18d4aa37656ce73d47ab,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 3185835553248574603, guid: da69d1a2835e18d4aa37656ce73d47ab,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -7933,6 +7943,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PP_Tree_Spooky_01
+      objectReference: {fileID: 0}
+    - target: {fileID: 6356094692772538003, guid: 873838da260f20f418c00a7c06e74e6b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8886,6 +8901,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PP_Rock_Pile_Cemetery_07 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6560891662588828603, guid: 187e3e98bdf57104eb9e30d1a03b40da,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -14024,6 +14044,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PP_Rock_Pile_Cemetery_03 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 8669470769097145190, guid: b4853773e7b7385459886d9977ab3718,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -14736,6 +14761,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PP_Rock_Pile_Cemetery_01 (10)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2845584621159097905, guid: da69d1a2835e18d4aa37656ce73d47ab,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3185835553248574603, guid: da69d1a2835e18d4aa37656ce73d47ab,
         type: 3}
@@ -18039,6 +18069,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PP_Rock_Pile_Cemetery_01 (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 2845584621159097905, guid: da69d1a2835e18d4aa37656ce73d47ab,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 3185835553248574603, guid: da69d1a2835e18d4aa37656ce73d47ab,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -18910,6 +18945,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PP_Rock_Pile_Cemetery_02
       objectReference: {fileID: 0}
+    - target: {fileID: 2079603785083173686, guid: dde1e333d7760094598a6c0b375a4d5d,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -19382,6 +19422,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PP_Rock_Pile_Cemetery_01 (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2845584621159097905, guid: da69d1a2835e18d4aa37656ce73d47ab,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3185835553248574603, guid: da69d1a2835e18d4aa37656ce73d47ab,
         type: 3}
@@ -26852,6 +26897,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PP_Rock_Pile_Cemetery_01 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 2845584621159097905, guid: da69d1a2835e18d4aa37656ce73d47ab,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 3185835553248574603, guid: da69d1a2835e18d4aa37656ce73d47ab,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -31505,6 +31555,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PP_Rock_Pile_Cemetery_01 (11)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2845584621159097905, guid: da69d1a2835e18d4aa37656ce73d47ab,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3185835553248574603, guid: da69d1a2835e18d4aa37656ce73d47ab,
         type: 3}
@@ -41700,6 +41755,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PP_Rock_Pile_Cemetery_01 (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 2845584621159097905, guid: da69d1a2835e18d4aa37656ce73d47ab,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 3185835553248574603, guid: da69d1a2835e18d4aa37656ce73d47ab,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -45542,6 +45602,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PP_Rock_Pile_Cemetery_07
+      objectReference: {fileID: 0}
+    - target: {fileID: 6560891662588828603, guid: 187e3e98bdf57104eb9e30d1a03b40da,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -49557,6 +49622,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PP_Rock_Pile_Cemetery_01 (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 2845584621159097905, guid: da69d1a2835e18d4aa37656ce73d47ab,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 3185835553248574603, guid: da69d1a2835e18d4aa37656ce73d47ab,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -50508,6 +50578,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PP_Rock_Pile_Cemetery_01 (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2845584621159097905, guid: da69d1a2835e18d4aa37656ce73d47ab,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3185835553248574603, guid: da69d1a2835e18d4aa37656ce73d47ab,
         type: 3}
@@ -52962,6 +53037,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PP_Rock_Pile_Cemetery_05
       objectReference: {fileID: 0}
+    - target: {fileID: 2097856630584327268, guid: 5113753692c4b0a4795fc620aff46760,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -55145,7 +55225,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1101401651}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Rock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -56957,6 +57037,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PP_Rock_Pile_Cemetery_03
+      objectReference: {fileID: 0}
+    - target: {fileID: 8669470769097145190, guid: b4853773e7b7385459886d9977ab3718,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -58864,6 +58949,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PP_Rock_Pile_Cemetery_01 (8)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2845584621159097905, guid: da69d1a2835e18d4aa37656ce73d47ab,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3185835553248574603, guid: da69d1a2835e18d4aa37656ce73d47ab,
         type: 3}
@@ -67526,6 +67616,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PP_Rock_Pile_Cemetery_04
+      objectReference: {fileID: 0}
+    - target: {fileID: 1967322436228257787, guid: 0bae376ae5085154b813f6aed7cb76b7,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -89173,6 +89268,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PP_Rock_Pile_Cemetery_03 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8669470769097145190, guid: b4853773e7b7385459886d9977ab3718,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -102209,6 +102309,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PP_Rock_Pile_Cemetery_01
       objectReference: {fileID: 0}
+    - target: {fileID: 2845584621159097905, guid: da69d1a2835e18d4aa37656ce73d47ab,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 3185835553248574603, guid: da69d1a2835e18d4aa37656ce73d47ab,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -103421,6 +103526,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PP_Rock_Pile_Cemetery_06
+      objectReference: {fileID: 0}
+    - target: {fileID: 5586218380562339660, guid: d7b3eef19358ed1489ef7e4d7eefaa0b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
