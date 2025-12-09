@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+// using UnityEngine.UI; // 더 이상 필요 없음
 
 public class InteractionSystem : MonoBehaviour
 {
@@ -10,9 +10,9 @@ public class InteractionSystem : MonoBehaviour
     public LayerMask interactionLayerMask = 1;
     public KeyCode interactionKey = KeyCode.E;
 
-    [Header("UI 설정")]
-    public Text interactionText;
-    public GameObject interactionUI;
+    [Header("UI 연결")]
+    // [신규] 말풍선 컨트롤러 연결 (Inspector에서 할당하거나 Start에서 자동 찾기)
+    public SpeechBubbleController speechBubble;
 
     private Transform playerTransform;
     private InteractableObject currentInteractable;
@@ -20,7 +20,13 @@ public class InteractionSystem : MonoBehaviour
     private void Start()
     {
         playerTransform = transform;
-        //interactionLayerMask = 1 << 8;
+
+        // 만약 인스펙터에서 연결 안 했다면 자식 오브젝트에서 찾기
+        if (speechBubble == null)
+        {
+            speechBubble = GetComponentInChildren<SpeechBubbleController>();
+        }
+
         HideInteractionUI();
     }
 
@@ -39,30 +45,30 @@ public class InteractionSystem : MonoBehaviour
 
             if (t == InteractableObject.InteractionType.Item)
             {
+                // 아이템을 먹었으면 UI 즉시 숨김
                 HideInteractionUI();
                 currentInteractable = null;
             }
         }
     }
 
+    // [수정] 기존 UI 대신 말풍선 함수 호출
     void ShowInteractionUI(string text)
     {
-        if(interactionUI != null)
+        if (speechBubble != null)
         {
-            interactionUI.SetActive(true);
-        }
-
-        if(interactionText != null)
-        {
-            interactionText.text = text;
+            // 예: "[E] 상호작용" 형태로 표시
+            speechBubble.ShowContinuousMessage($"[{interactionKey}] 줍기");
         }
     }
 
+    // [수정] 말풍선 숨기기 호출
     void HideInteractionUI()
     {
-        if(interactionUI != null)
+        if (speechBubble != null)
         {
-            interactionUI.SetActive(false);
+            // true를 넣어 부드럽게 페이드 아웃
+            speechBubble.HideContinuousMessage(true);
         }
     }
 
@@ -75,8 +81,9 @@ public class InteractionSystem : MonoBehaviour
         InteractableObject closestInteractable = null;
         float closestDistance = float.MaxValue;
 
-        foreach(Collider collider in hitColliders)
+        foreach (Collider collider in hitColliders)
         {
+            // 부모나 자식에 있을 수도 있으니 InParent/InChildren 고려 가능 (지금은 그대로 유지)
             InteractableObject interactable = collider.GetComponent<InteractableObject>();
             if (interactable != null)
             {
@@ -93,22 +100,25 @@ public class InteractionSystem : MonoBehaviour
             }
         }
 
-        if(closestInteractable != currentInteractable)
+        // 대상이 바뀌었거나 새로 생겼을 때
+        if (closestInteractable != currentInteractable)
         {
-            if(currentInteractable != null)
+            if (currentInteractable != null)
             {
                 currentInteractable.OnPlayerExit();
             }
 
             currentInteractable = closestInteractable;
 
-            if(currentInteractable != null)
+            if (currentInteractable != null)
             {
                 currentInteractable.OnPlayerEnter();
+                // 여기서 ShowInteractionUI 호출 -> 말풍선 켜짐
                 ShowInteractionUI(currentInteractable.GetInteractionText());
             }
             else
             {
+                // 대상이 없어지면 말풍선 꺼짐
                 HideInteractionUI();
             }
         }

@@ -6,7 +6,7 @@ public class InteractableObject : MonoBehaviour
 {
     [Header("상호 작용 정보")]
     public string objectName = "아이템";
-    public string interactionText = "[E] 상호 작용";
+    public string interactionText = "[E] 줍기";
     public InteractionType interactionType = InteractionType.Item;
 
     [Header("하이라이트 설정 (스프라이트 전용)")]
