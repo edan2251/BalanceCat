@@ -8395,7 +8395,6 @@ GameObject:
   - component: {fileID: 538881236}
   - component: {fileID: 538881235}
   - component: {fileID: 538881234}
-  - component: {fileID: 538881233}
   m_Layer: 0
   m_Name: default
   m_TagString: Untagged
@@ -8418,21 +8417,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1298421656}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &538881233
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 538881231}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7aa10237dd58fa2468c29e28614ca8bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerTag: Player
-  mainSceneName: Main
-  requireClear: 1
 --- !u!65 &538881234
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8708,8 +8692,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   interactionKey: 101
-  interactionText: {fileID: 107159871}
-  interactionUI: {fileID: 1175975381}
+  speechBubble: {fileID: 0}
 --- !u!1 &623716442
 GameObject:
   m_ObjectHideFlags: 0
@@ -11829,6 +11812,7 @@ MonoBehaviour:
   inputDeadZone: 0.08
   biasAccumulationSpeed: 1
   biasReturnSpeed: 3
+  ringTiltFollowSpeed: 1
 --- !u!120 &1088103898
 LineRenderer:
   serializedVersion: 2
@@ -23551,6 +23535,7 @@ MonoBehaviour:
   inventory: {fileID: 623716445}
   leftRoot: {fileID: 1738057720}
   rightRoot: {fileID: 1248757514}
+  singleSide: 0
   cellSize: {x: 125, y: 125}
   cellSpacing: {x: 10, y: 10}
   slotPrefab: {fileID: 6536019324217192851, guid: 77ed5c9fb4871a641a7d6a1211f2245d,
@@ -24253,7 +24238,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbce7f2a7e6a75c4bbe700f846b9562f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentStageData: {fileID: 11400000, guid: ac9c236223f706240afc06d08f5622af, type: 2}
   questText1: {fileID: 1720197146}
   questStar1: {fileID: 0}
   questText2: {fileID: 2046663903}

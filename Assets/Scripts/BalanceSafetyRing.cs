@@ -23,13 +23,13 @@ public class BalanceSafetyRing : MonoBehaviour
 
     [Header("MiniGame")]
     public bool autoStartMiniGame = false;
-    public UnityEvent onExitRing;        // 링을 넘었을 때(미니게임 시작 등)
+    public UnityEvent onExitRing;        // 링을 넘었을 때
 
     [Header("Bias Follow Settings")]
     public PlayerMovement movement;          // 플레이어 이동 스크립트
     public InventorySideBias sideBias;       // 편향 값
-   
-    public float tiltDeadZone = 0.02f;       // 이 값 이하면 편향 무시
+
+    public float tiltDeadZone = 0.02f;       // 이 값 이하면 편향 무시(아크 그리기용)
     public float inputDeadZone = 0.08f;      // 입력 데드존
 
     [Header("Bias Accumulation")]
@@ -38,8 +38,14 @@ public class BalanceSafetyRing : MonoBehaviour
     [Tooltip("쏠림/입력 없을 때 중심으로 되돌아가는 속도")]
     public float biasReturnSpeed = 3.0f;
 
-    // 플레이어 로컬 기준 링 중심 오프셋
+    [Header("Smoothing")]
+    [Tooltip("기울기 값 변화를 부드럽게 만드는 시간 (초 단위)")]
+    public float tiltSmoothTime = 0.15f;
+
     Vector3 _localOffset;
+
+    float _currentSmoothTilt;
+    float _tiltVelocity;
 
     bool _triggered;
 
@@ -64,6 +70,7 @@ public class BalanceSafetyRing : MonoBehaviour
 
         biasAccumulationSpeed = 1.0f;
         biasReturnSpeed = 3.0f;
+        tiltSmoothTime = 0.15f;
 
         if (line)
         {
@@ -94,12 +101,15 @@ public class BalanceSafetyRing : MonoBehaviour
         _localOffset = Vector3.zero;
         ringCenter.localPosition = Vector3.zero;
         _triggered = false;
+
+        _currentSmoothTilt = 0f;
+        _tiltVelocity = 0f;
     }
 
     float GetTilt()
     {
         if (movement != null)
-            return movement.GetEffectiveTilt(); // 인벤토리 + Z/C 보정
+            return movement.GetEffectiveTilt();
         if (sideBias != null)
             return sideBias.tilt;
         return 0f;
@@ -121,9 +131,11 @@ public class BalanceSafetyRing : MonoBehaviour
             return;
         }
 
+        float targetTilt = GetTilt();
+        _currentSmoothTilt = Mathf.SmoothDamp(_currentSmoothTilt, targetTilt, ref _tiltVelocity, tiltSmoothTime);
+
         UpdateRingOffsetLocal();
 
-        // 로컬 XZ 거리 기준으로 미니게임/아크 처리
         Vector3 local = ringCenter.localPosition;
         Vector2 localXZ = new Vector2(local.x, local.z);
         float dist = localXZ.magnitude;
@@ -157,7 +169,6 @@ public class BalanceSafetyRing : MonoBehaviour
         DrawArcLocal(dist);
     }
 
-    // 캐릭터는 편향을 받고, 링은 편향 없는 경로를 로컬 기준으로 따르게 만드는 부분
     void UpdateRingOffsetLocal()
     {
         float hx = 0f, vz = 0f;
@@ -169,10 +180,9 @@ public class BalanceSafetyRing : MonoBehaviour
         Vector2 in2 = new Vector2(hx, vz);
         bool hasInput = in2.sqrMagnitude > (inputDeadZone * inputDeadZone);
 
-        float tilt = GetTilt();
-        float absTilt = Mathf.Abs(tilt);
+        float tilt = _currentSmoothTilt;
 
-        if (hasInput && absTilt > tiltDeadZone)
+        if (hasInput)
         {
             float moveSpeed = 0f;
             if (movement != null)
@@ -180,39 +190,25 @@ public class BalanceSafetyRing : MonoBehaviour
 
             if (moveSpeed > 0.001f)
             {
-                float lateralRatio = absTilt / Mathf.Sqrt(1f + tilt * tilt);
+                float lateralRatio = tilt / Mathf.Sqrt(1f + tilt * tilt);
                 float lateralSpeed = lateralRatio * moveSpeed * biasAccumulationSpeed;
 
-                float sign = Mathf.Sign(tilt);   // 오른쪽(+1) / 왼쪽(-1)
-
-                // 캐릭터는 오른쪽(+x)으로 밀릴 때 링은 그만큼 왼쪽(-x)으로 이동 → 편향 없는 경로를 추적
-                _localOffset.x -= sign * lateralSpeed * Time.deltaTime;
+                _localOffset.x -= lateralSpeed * Time.deltaTime;
             }
         }
         else
         {
-            // 입력 없거나 쏠림 거의 없으면 원점으로 서서히 복귀
             _localOffset = Vector3.Lerp(_localOffset, Vector3.zero, biasReturnSpeed * Time.deltaTime);
         }
 
-        _localOffset.y = 0f; // 높이는 쓰지 않음
-
+        _localOffset.y = 0f;
         ringCenter.localPosition = _localOffset;
     }
 
-    // 로컬 기준 아크 그리기 (왼쪽/오른쪽만)
     void DrawArcLocal(float dist)
     {
-        float tilt = GetTilt();
-        float absTilt = Mathf.Abs(tilt);
-
-        if (absTilt <= tiltDeadZone)
-        {
-            line.enabled = false;
-            return;
-        }
-
-        bool isRight = tilt > 0f; // 오른쪽이 무거우면 오른쪽 아크
+        Vector3 local = ringCenter.localPosition;
+        bool isRight = local.x < 0f;
 
         float t = Mathf.InverseLerp(dangerStart, ringRadius, dist);
         t = Mathf.Clamp01(t);
@@ -220,7 +216,6 @@ public class BalanceSafetyRing : MonoBehaviour
         float arcAngle = Mathf.Lerp(minArcAngle, maxArcAngle, t);
         float halfArc = arcAngle * 0.5f;
 
-        // 로컬 기준: 앞(+Z), 오른(+X), 왼(-X)
         float sideAngle = isRight ? 90f : -90f;
         float startAngle = sideAngle - halfArc;
         float endAngle = sideAngle + halfArc;
@@ -237,7 +232,6 @@ public class BalanceSafetyRing : MonoBehaviour
             float x = Mathf.Sin(angRad) * ringRadius;
             float z = Mathf.Cos(angRad) * ringRadius;
 
-            // 로컬 좌표
             Vector3 localPos = new Vector3(x, yOffset, z);
             line.SetPosition(i, localPos);
         }

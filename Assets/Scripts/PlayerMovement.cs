@@ -99,6 +99,8 @@ public class PlayerMovement : MonoBehaviour
     public float balanceReturnSpeed = 1.0f;
     float _manualTilt = 0f;
 
+    bool _wasBalanceMiniRunning = false;
+
     private void Start()
     {
         if (rb == null) rb = GetComponent<Rigidbody>();
@@ -111,6 +113,16 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        bool isMiniGameRunning = BalanceMiniGame.IsRunning;
+        if (_wasBalanceMiniRunning && !isMiniGameRunning)
+        {
+            // 미니게임이 막 끝난 순간: 이전 수동 기울기와 남아있던 수평 속도 제거
+            _manualTilt = 0f;
+            if (rb != null)
+                rb.velocity = new Vector3(0f, rb.velocity.y, 0f);
+        }
+        _wasBalanceMiniRunning = isMiniGameRunning;
+
         // 1. 지면 체크
         CheckGround();
 
@@ -412,13 +424,38 @@ public class PlayerMovement : MonoBehaviour
     }
     void UpdateBalanceControl()
     {
-        if (sideBias == null) { _manualTilt = 0f; return; }
+        if (sideBias == null)
+        {
+            _manualTilt = 0f;
+            return;
+        }
+
         float baseTilt = sideBias.tilt;
-        if (Mathf.Abs(baseTilt) < 0.001f) { _manualTilt = Mathf.MoveTowards(_manualTilt, 0f, balanceReturnSpeed * Time.deltaTime); return; }
-        bool pressLeft = Input.GetKey(balanceLeftKey); bool pressRight = Input.GetKey(balanceRightKey);
-        bool correct = (baseTilt > 0f && pressLeft) || (baseTilt < 0f && pressRight);
-        _manualTilt = Mathf.MoveTowards(_manualTilt, correct ? -baseTilt : 0f, (correct ? balanceAdjustSpeed : balanceReturnSpeed) * Time.deltaTime);
+
+        float inputDir = 0f;
+        if (Input.GetKey(balanceLeftKey)) inputDir -= 1f;
+        if (Input.GetKey(balanceRightKey)) inputDir += 1f;
+
+        if (Mathf.Abs(baseTilt) < 0.001f || inputDir == 0f)
+        {
+            _manualTilt = Mathf.MoveTowards(_manualTilt, 0f, balanceReturnSpeed * Time.deltaTime);
+            return;
+        }
+
+        if (baseTilt * inputDir < 0f)
+        {
+            float maxManual = Mathf.Abs(baseTilt) * 2.0f;
+            float target = inputDir * maxManual;
+
+            _manualTilt = Mathf.MoveTowards(_manualTilt, target, balanceAdjustSpeed * Time.deltaTime);
+        }
+        else
+        {
+            _manualTilt = Mathf.MoveTowards(_manualTilt, 0f, balanceReturnSpeed * Time.deltaTime);
+        }
     }
+
+
     private void OnDrawGizmos()
     {
         CapsuleCollider capsule = GetComponent<CapsuleCollider>();
