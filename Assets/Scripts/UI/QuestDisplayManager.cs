@@ -8,7 +8,7 @@ public class QuestDisplayManager : MonoBehaviour
 {
     // ... (기존 변수들: Header 1~5 그대로 유지) ...
     [Header("1. 스테이지 데이터")]
-    public StageData currentStageData;
+    private StageData currentStageData;
 
     [Header("2. UI 연결")]
     public TextMeshProUGUI questText1;
@@ -42,7 +42,7 @@ public class QuestDisplayManager : MonoBehaviour
     {
         if (panelAnimator == null) panelAnimator = GetComponent<Animator>();
 
-        LoadQuestData();
+        //LoadQuestData();
 
         isPanelOpen = true;
         panelAnimator.SetBool("isOpen", true);
@@ -56,6 +56,12 @@ public class QuestDisplayManager : MonoBehaviour
         }
 
         RestartAutoCloseTimer(autoCloseDelay);
+    }
+
+    public void Initialize(StageData data)
+    {
+        this.currentStageData = data;
+        LoadQuestData(); // 데이터 들어왔으니 UI 갱신!
     }
 
     void Update() { if (Input.GetKeyDown(KeyCode.M)) TogglePanel(); }

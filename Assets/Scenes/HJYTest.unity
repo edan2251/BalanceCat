@@ -9243,7 +9243,7 @@ MonoBehaviour:
   runKey: 304
   balanceLeftKey: 122
   balanceRightKey: 99
-  waterMoveSpeed: 1.5
+  waterMoveSpeed: 1.7
   floatingForce: 9.9
   waterDrag: 3
   waterBobbingSpeed: 5
@@ -9258,11 +9258,11 @@ MonoBehaviour:
     m_Bits: 15360
   _weightSpeedMultiplier: 1
   useWeightPenalty: 1
-  penalty1WeightPercent: 30
-  penalty2WeightPercent: 60
+  penalty1WeightPercent: 55
+  penalty2WeightPercent: 80
   penalty3WeightPercent: 100
-  penalty1SpeedDecreasePercent: 20
-  penalty2SpeedDecreasePercent: 20
+  penalty1SpeedDecreasePercent: 30
+  penalty2SpeedDecreasePercent: 50
   penalty3SpeedDecreasePercent: 100
   orientation: {fileID: 1723329261}
   rb: {fileID: 518744282}
@@ -22634,7 +22634,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2100553390}
   m_Layer: 0
-  m_Name: -----[ENV]-----------------------
+  m_Name: -----[StageWaters]-----------------------
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24260,6 +24260,7 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 767924964}
   - {fileID: 1004914224}
   - {fileID: 252847439}
   - {fileID: 1500862444}
@@ -24275,12 +24276,11 @@ SceneRoots:
   - {fileID: 412184754}
   - {fileID: 1298884207}
   - {fileID: 2100553390}
-  - {fileID: 767924964}
   - {fileID: 373611923}
   - {fileID: 159829926}
   - {fileID: 534422595}
-  - {fileID: 1720307278}
   - {fileID: 1428988410}
+  - {fileID: 1720307278}
   - {fileID: 518744286}
   - {fileID: 2103146639}
   - {fileID: 156298048}

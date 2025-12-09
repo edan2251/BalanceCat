@@ -61,6 +61,11 @@ public class InGameQuestManager : MonoBehaviour
         playTime = 0f;
         resultPanel.SetActive(false);
 
+        if (questPanelController != null && currentStageData != null)
+        {
+            questPanelController.Initialize(currentStageData);
+        }
+
         if (SoundManager.Instance != null && currentStageData != null)
         {
             // 1ц╘ем = index 0, 2ц╘ем = index 1 ...
