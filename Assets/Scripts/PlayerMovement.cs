@@ -101,6 +101,12 @@ public class PlayerMovement : MonoBehaviour
 
     bool _wasBalanceMiniRunning = false;
 
+    [Header("Audio Settings")]
+    public float walkStepInterval = 0.5f; // 걷는 발소리 간격 (초)
+    public float runStepInterval = 0.3f;  // 달리는 발소리 간격 (더 빠름)
+
+    private float _stepTimer = 0f; // 타이머 계산용
+
     private void Start()
     {
         if (rb == null) rb = GetComponent<Rigidbody>();
@@ -143,6 +149,8 @@ public class PlayerMovement : MonoBehaviour
 
         UpdateAnimator();
         ApplyDrag();
+
+        HandleFootsteps();
     }
 
     private void FixedUpdate()
@@ -155,6 +163,51 @@ public class PlayerMovement : MonoBehaviour
     }
 
     // --- 내부 로직 함수들 ---
+
+    private void HandleFootsteps()
+    {
+        // 1. 소리가 나면 안 되는 상황 체크
+        if (!grounded || _isInWater || (horizontalInput == 0 && verticalInput == 0))
+        {
+            _stepTimer = 0f;
+            return;
+        }
+
+        // 2. 현재 상태 확인
+        bool isRunning = playerAnimator.GetBool("isRunning");
+
+        // 3. 간격 결정 (이 부분 덕분에 달리기는 소리가 더 자주 남!)
+        float currentInterval = isRunning ? runStepInterval : walkStepInterval;
+
+        // 4. 타이머 카운트
+        _stepTimer -= Time.deltaTime;
+
+        if (_stepTimer <= 0f)
+        {
+            // [수정] 걷든 달리든 파일은 'SFX.Walk' 하나만 사용!
+
+            if (isRunning)
+            {
+                // 달리기는 같은 소리지만 약간 급하게(1.2배 Pitch) 재생
+                if (SoundManager.Instance != null)
+                {
+
+                    SoundManager.Instance.PlaySFX(SFX.Walk);
+                }
+            }
+            else
+            {
+                // 걷기는 정상 속도(1.0배)
+                if (SoundManager.Instance != null)
+                {
+                    SoundManager.Instance.PlaySFX(SFX.Walk);
+                }
+            }
+
+            // 타이머 리셋
+            _stepTimer = currentInterval;
+        }
+    }
 
     private void CheckGround()
     {

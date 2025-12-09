@@ -142,6 +142,10 @@ public class StageUIManager : MonoBehaviour
 
     private void StartStage(StageData data)
     {
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySFX(SFX.ButtonClick);
+        }
         if (!string.IsNullOrEmpty(data.targetSceneName)) LoadingSceneController.LoadScene(data);
         else Debug.LogError($"StageData ID {data.stageID}: Scene Name Missing");
     }

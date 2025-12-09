@@ -29185,6 +29185,7 @@ MonoBehaviour:
   inputDeadZone: 0.08
   biasAccumulationSpeed: 2.5
   biasReturnSpeed: 0.8
+  tiltSmoothTime: 0.15
 --- !u!136 &3215964916493311395
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -35692,7 +35693,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   interactionKey: 101
-  speechBubble: {fileID: 0}
+  speechBubble: {fileID: 4290701806538116221}
 --- !u!114 &8735749819301739730
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36127,6 +36128,8 @@ MonoBehaviour:
   sideBias: {fileID: 7808025462234092188}
   balanceAdjustSpeed: 2
   balanceReturnSpeed: 1
+  walkStepInterval: 0.5
+  runStepInterval: 0.3
 --- !u!1 &9036168974913844245
 GameObject:
   m_ObjectHideFlags: 0

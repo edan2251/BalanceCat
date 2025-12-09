@@ -23622,6 +23622,7 @@ MonoBehaviour:
   inputDeadZone: 0.08
   biasAccumulationSpeed: 2.5
   biasReturnSpeed: 0.8
+  tiltSmoothTime: 0.15
 --- !u!222 &6807614684345183846
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -150,6 +150,11 @@ public class QuestDisplayManager : MonoBehaviour
         Image targetStar = GetStarImage(questIndex);
         if (targetStar != null && filledStar != null)
         {
+            if (SoundManager.Instance != null)
+            {
+                SoundManager.Instance.PlaySFX(SFX.QuestClearSound);
+            }
+
             targetStar.sprite = filledStar;
 
             // DOTween 연출 (각 별마다 독립적으로 실행됨)

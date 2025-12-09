@@ -450,18 +450,31 @@ public class InGameQuestManager : MonoBehaviour
 
     void OnRestartClicked()
     {
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySFX(SFX.ButtonClick);
+        }
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     void OnMainClicked()
     {
+        if (SoundManager.Instance != null)
+        {
+            if (SoundManager.Instance != null)
+            {
+                SoundManager.Instance.PlaySFX(SFX.ButtonClick);
+            }
+        }
         Time.timeScale = 1f;
         SceneManager.LoadScene("Main");
     }
 
     void OnNextClicked()
     {
+        SoundManager.Instance.PlaySFX(SFX.ButtonClick);
+
         Time.timeScale = 1f;
         if (nextStageData != null) LoadingSceneController.LoadScene(nextStageData);
         else SceneManager.LoadScene("Main");

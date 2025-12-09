@@ -51,6 +51,12 @@ public class ChapterSelector : MonoBehaviour
 
     void Start()
     {
+        //배경음 출력
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlayMainMenuBGM();
+        }
+
         totalChapters = planets.Count;
         currentTargetRotation = 0f;
 
@@ -238,6 +244,11 @@ public class ChapterSelector : MonoBehaviour
 
     public void EnterChapterSelectionFromUI()
     {
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySFX(SFX.ButtonClick);
+        }
+
         if (isChapterSelectionActive || isAnimating) return;
 
         if (mainUIManager != null) mainUIManager.HideUI();

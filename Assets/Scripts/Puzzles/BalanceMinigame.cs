@@ -131,14 +131,21 @@ public class BalanceMiniGame : MonoBehaviour
             char expected = _seq[_idx];
             if (TryReadKeyDown(out char pressed))
             {
+
                 if (pressed == expected)
                 {
-                    MarkCleared(_idx);
+                    //미니게임 버튼 성공
+                    if (SoundManager.Instance != null)
+                    {
+                        SoundManager.Instance.PlaySFX(SFX.MiniGameClearButton);
+                    }
+                        MarkCleared(_idx);
                     _idx++;
                     FocusCurrent();
                 }
                 else
                 {
+
                     // 잘못된 키 → 실패
                     yield return Co_FailSequence();
                     yield break;
@@ -180,6 +187,10 @@ public class BalanceMiniGame : MonoBehaviour
 
         if (timerSlider) timerSlider.gameObject.SetActive(false);
 
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySFX(SFX.MiniGameFail);
+        }
         yield return new WaitForSeconds(failDownDuration);
         SafeSetBool("isFalling", false);
         movement?.SetControlEnabled(true);

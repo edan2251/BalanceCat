@@ -54,10 +54,12 @@ public class InventoryOpenController : MonoBehaviour
 
     public void ToggleInventory()
     {
+        
         _isOpen = !_isOpen; 
 
         if (_animator != null)
         {
+
             _animator.SetBool("isOpen", _isOpen);
         }
 
@@ -66,6 +68,11 @@ public class InventoryOpenController : MonoBehaviour
         {
             if (_isOpen)
             {
+                //배낭열기 사운드
+                if (SoundManager.Instance != null)
+                {
+                    SoundManager.Instance.PlaySFX(SFX.OpenInventory);
+                }
                 showCursor.UnlockCursor(); 
             }
             else

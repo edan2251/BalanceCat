@@ -85,6 +85,7 @@ public class InteractableObject : MonoBehaviour
     }
     protected virtual void CollectItem()
     {
+
         Destroy(gameObject);
     }
 

@@ -1,7 +1,9 @@
 using UnityEngine;
 using UnityEngine.Audio;
 
-// 사운드 넣는곳에 SoundManager.Instance.PlaySFX(SFX.Drop); 추가해주기
+// 사운드 넣는곳에 SoundManager.Instance.PlaySFX(SFX.ButtonClick); 추가해주기
+
+//SoundManager.Instance.PlaySFX(SFX.Test);
 
 //ChapterSelector.cs Start에 이거 넣어주기
 //if (SoundManager.Instance != null)
@@ -10,12 +12,17 @@ using UnityEngine.Audio;
 //}
 public enum SFX
 {
-    Drop,       // 0번: 아이템 드롭
-    Clear,      // 1번: 스테이지 클리어
-    Fail,       // 2번: 퀘스트 실패
-    Fall,       // 3번: 넘어짐
-    StarPop,     // 4번: 별 획득
-    BackBackOpen // 5번: 배낭열기
+    Test,  // 0 : 테스트 사운드
+    ButtonClick, //1 : 버튼클릭
+    Nyaong, //2 : 야옹소리
+    Walk, //3 : 걷는 소리 ( 발자국 한번 )
+    Jump, //4 : 점프소리
+    Pickup, //5 : 아이템 획득
+    OpenInventory, //6 : 인벤 열기
+    MiniGameClearButton, //7 : 미니게임 버튼 성공하기
+    MiniGameFail,    //8: 미니게임 실패 넘어짐
+    QuestClearSound //9 : 퀘스트 클리어 사운드
+
 }
 
 public class SoundManager : MonoBehaviour
@@ -71,18 +78,42 @@ public class SoundManager : MonoBehaviour
         bgmSource.Play();
     }
 
-    public void PlaySFX(SFX sfxName)
+    public void PlaySFX(SFX sfxName, float pitch = 1.0f)
     {
         int index = (int)sfxName;
 
         if (index >= 0 && index < SfxClips.Length)
         {
-            if (SfxClips[index] != null)
-                sfxSource.PlayOneShot(SfxClips[index]);
+            AudioClip clip = SfxClips[index];
+            if (clip == null) return;
+
+            // 1. 일반 재생 (속도 변화 없음)
+            if (Mathf.Approximately(pitch, 1.0f))
+            {
+                sfxSource.PlayOneShot(clip);
+            }
+            // 2. 속도 변환 재생 (별도의 임시 소스 생성)
+            else
+            {
+                // 잠깐 쓸 AudioSource를 SoundManager 몸체에 붙임
+                AudioSource tempSource = gameObject.AddComponent<AudioSource>();
+
+                // 설정 복사 (믹서 연결 중요!)
+                tempSource.clip = clip;
+                tempSource.pitch = pitch;
+                tempSource.outputAudioMixerGroup = sfxSource.outputAudioMixerGroup;
+                tempSource.volume = sfxSource.volume;
+                tempSource.spatialBlend = sfxSource.spatialBlend; // 2D/3D 설정 유지
+
+                tempSource.Play();
+
+                // 재생이 끝나면(길이/속도) 컴포넌트 삭제 (청소)
+                Destroy(tempSource, clip.length / pitch + 0.1f);
+            }
         }
         else
         {
-            Debug.LogWarning($"[SoundManager] {sfxName}에 해당하는 오디오 클립이 없습니다!");
+            Debug.LogWarning($"[SoundManager] {sfxName} 오디오 클립이 없습니다!");
         }
     }
 

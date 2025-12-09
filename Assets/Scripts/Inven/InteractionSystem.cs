@@ -45,6 +45,12 @@ public class InteractionSystem : MonoBehaviour
 
             if (t == InteractableObject.InteractionType.Item)
             {
+                //æ∆¿Ã≈€ »πµÊ
+                if (SoundManager.Instance != null)
+                {
+                    SoundManager.Instance.PlaySFX(SFX.Pickup, 2f);
+                }
+
                 // æ∆¿Ã≈€¿ª ∏‘æ˙¿∏∏È UI ¡ÔΩ√ º˚±Ë
                 HideInteractionUI();
                 currentInteractable = null;
