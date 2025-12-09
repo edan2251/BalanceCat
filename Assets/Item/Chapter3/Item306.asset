@@ -20,5 +20,5 @@ MonoBehaviour:
     type: 3}
   sizeW: 2
   sizeH: 2
-  weight: 2
-  score: 100
+  weight: 3
+  score: 200

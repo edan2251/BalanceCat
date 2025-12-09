@@ -14,9 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 406
   displayName: "\uC5BC\uC74C \uB8E8\uBE44"
-  icon: {fileID: 21300000, guid: 89a29c83fca1ec442bb81da92d0a1e69, type: 3}
+  icon: {fileID: 21300000, guid: ba2771f78b023824db3c75df54b8fa68, type: 3}
   description: "\uBB3C\uC758 \uD589\uC131\uC5D0\uC11C \uBC1C\uACAC\uD55C \uC5BC\uC74C\uCC98\uB7FC
     \uCC28\uAC00\uC6B4 \uB8E8\uBE44 \uAD11\uBB3C\r"
+  worldPrefab: {fileID: 2443722370668895791, guid: 8f674672991f6ba41bead282c0278854,
+    type: 3}
   sizeW: 1
   sizeH: 1
   weight: 2
+  score: 50

@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a1b3985fd97d34e47a5e220fabf0564d, type: 3}
-  m_Name: Item205
+  m_Name: Item408
   m_EditorClassIdentifier: 
-  id: 205
-  displayName: "\uC911\uB825 \uB0B4\uAD6C\uC131 \uD504\uB808\uC784"
-  icon: {fileID: 21300000, guid: 7c7db8397c5608b49a3dc17d3ce39bc6, type: 3}
-  description: "\uACE0\uC911\uB825\uC5D0\uC11C\uB3C4 \uBB38\uC81C \uC5C6\uB294 \uD2BC\uD2BC\uD55C
-    \uAE08\uC18D \uD504\uB808\uC784"
-  worldPrefab: {fileID: 4039659851891050408, guid: eabbef075d194cf4cb05683d3382cee6,
+  id: 408
+  displayName: "\uC5BC\uC74C \uD654\uC11D"
+  icon: {fileID: 21300000, guid: 64d7b6c8a5d03c8459ed1554d864ba9a, type: 3}
+  description: "\uBA3C \uACFC\uAC70\uC5D0\uB3C4 \uACE0\uC591\uC774\uD0D0\uC0AC\uB300\uAC00
+    \uC774 \uD589\uC131\uC5D0 \uC654\uC5C8\uB2E4\uB294 \uBC1C\uC790\uAD6D \uD654\uC11D."
+  worldPrefab: {fileID: 3266910335927713254, guid: 761a7468b24161c4aa7ec07b99cc46d0,
     type: 3}
   sizeW: 2
   sizeH: 2
