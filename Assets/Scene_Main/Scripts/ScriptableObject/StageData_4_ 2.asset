@@ -20,8 +20,7 @@ MonoBehaviour:
   synopsis: "\uC2E0\uAE30\uD558\uACE0 \uCC98\uC74C \uBCF4\uB294 \uBB3C\uAC74\uB4E4\uC744
     \uC794\uB729 \n\uBC1C\uACAC\uD588\uB2E4. \uCD5C\uB300\uD55C \uB9CE\uC774 \uCC59\uACA8\uBCF4\uC790."
   loadingComicImage: {fileID: 21300000, guid: 52b3e5dcbaa840640be2b8d9889e9e90, type: 3}
-  loadingDescription: "\uB85C\uB529 \uC911\uC5D0 \uD45C\uC2DC\uD560 \uD301\uC774\uB098
-    \uC2A4\uD1A0\uB9AC \uD14D\uC2A4\uD2B8"
+  loadingDescription: "[4 - 2]\n\uC228\uACA8\uC9C4\uAC83\uC744 \uBC1C\uACAC\uD574\uBCF4\uC138\uC694."
   quests:
   - {fileID: 11400000, guid: ee0c980e1f180bf46a841d4b9a7ce20b, type: 2}
   - {fileID: 11400000, guid: c78da01eb29afdb49b85af465de86d4d, type: 2}

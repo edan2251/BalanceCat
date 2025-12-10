@@ -66,8 +66,8 @@ public class BalanceMiniGame : MonoBehaviour
     }
 
     //미니게임 즉시클리어 치트용
-    private bool _forceClear = false;
-    void Update(){ if (_running && Input.GetKeyDown(KeyCode.Alpha4)){_forceClear = true;}}
+    //private bool _forceClear = false;
+    //void Update(){ if (_running && Input.GetKeyDown(KeyCode.Alpha4)){_forceClear = true;}}
 
 
 
@@ -107,7 +107,7 @@ public class BalanceMiniGame : MonoBehaviour
         _running = true;
 
         //즉시클리어용 초기화
-        _forceClear = false;
+        //_forceClear = false;
 
         // 1) 비틀거림 시작 + 조작성 잠금
         movement?.SetControlEnabled(false);
@@ -123,7 +123,7 @@ public class BalanceMiniGame : MonoBehaviour
         while (_idx < _seq.Count)
         {
             //즉시클리어용 치트키
-            if (_forceClear){for (int i = _idx; i < _seq.Count; i++) MarkCleared(i);break;}
+            //if (_forceClear){for (int i = _idx; i < _seq.Count; i++) MarkCleared(i);break;}
 
             if (timeLimit > 0f)
             {

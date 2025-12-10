@@ -102,7 +102,7 @@ public class ChapterSelector : MonoBehaviour
 
     void Update()
     {
-        /* 치트키(배포용에선 뻄)*/
+        /* 치트키(배포용에선 뻄)
         // 'O' 키로 진행 상황 리셋
         if (Input.GetKeyDown(KeyCode.O))
         {
@@ -161,7 +161,8 @@ public class ChapterSelector : MonoBehaviour
                 RefreshCurrentUIAndCheckRewards(chapterIdx);
             }
         }
-        
+        */
+
         // 로고 모드
         if (!isChapterSelectionActive)
         {

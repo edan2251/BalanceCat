@@ -104,7 +104,7 @@ public class InGameQuestManager : MonoBehaviour
         }
 
         /*인게임 퀘스트 클리어 치트키용
-          */
+          
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             Debug.Log("[Cheat] 퀘스트 1 (메인) 강제 완료");
@@ -122,6 +122,7 @@ public class InGameQuestManager : MonoBehaviour
             Debug.Log("[Cheat] 퀘스트 3 강제 완료");
             SolveQuest(2);
         }
+        */
     }
 
     public void OnItemDelivered(string itemID)
