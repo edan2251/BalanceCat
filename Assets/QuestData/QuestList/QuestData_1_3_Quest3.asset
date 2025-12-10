@@ -15,3 +15,6 @@ MonoBehaviour:
   questTitle: "[\uBC30\uACE0\uD30C!]"
   questDescription: "\uC6B0\uC8FC \uBE44\uC0C1 \uC2DD\uB7C9 3\uAC1C \uBAA8\uB450
     \uD68D\uB4DD\uD558\uAE30"
+  type: 2
+  targetValue: 3
+  requiredItemID: 103

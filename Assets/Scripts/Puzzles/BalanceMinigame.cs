@@ -8,6 +8,7 @@ public class BalanceMiniGame : MonoBehaviour
 {
     public static bool IsRunning { get; private set; }
 
+    
     [Header("Refs")]
     [SerializeField] BalanceSafetyRing ring;     // (선택) 있으면 onExitRing에 자동 연결
     [SerializeField] PlayerMovement movement;    // 입력 잠금용
@@ -64,6 +65,12 @@ public class BalanceMiniGame : MonoBehaviour
         if (timerSlider) timerSlider.gameObject.SetActive(false);
     }
 
+    //미니게임 즉시클리어 치트용
+    private bool _forceClear = false;
+    void Update(){ if (_running && Input.GetKeyDown(KeyCode.Alpha4)){_forceClear = true;}}
+
+
+
     void OnDisable()
     {
         IsRunning = false;
@@ -99,6 +106,9 @@ public class BalanceMiniGame : MonoBehaviour
     {
         _running = true;
 
+        //즉시클리어용 초기화
+        _forceClear = false;
+
         // 1) 비틀거림 시작 + 조작성 잠금
         movement?.SetControlEnabled(false);
         SafeSetBool("isFalling", false);
@@ -112,6 +122,9 @@ public class BalanceMiniGame : MonoBehaviour
         // 3) 입력 루프
         while (_idx < _seq.Count)
         {
+            //즉시클리어용 치트키
+            if (_forceClear){for (int i = _idx; i < _seq.Count; i++) MarkCleared(i);break;}
+
             if (timeLimit > 0f)
             {
                 _remainTime -= Time.deltaTime;

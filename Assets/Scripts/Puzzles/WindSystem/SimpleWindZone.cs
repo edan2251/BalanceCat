@@ -143,4 +143,29 @@ public class SimpleWindZone : MonoBehaviour
         }
     }
     // --- (여기까지) ---
+
+    private void OnDrawGizmos()
+    {
+        BoxCollider box = GetComponent<BoxCollider>();
+        if (box == null) return;
+
+        // 1. 바람 영역 그리기 (하늘색 박스)
+        Gizmos.matrix = transform.localToWorldMatrix;
+        Gizmos.color = new Color(0f, 1f, 1f, 0.3f); // 반투명 하늘색
+        Gizmos.DrawCube(box.center, box.size);
+        Gizmos.color = Color.cyan; // 외곽선
+        Gizmos.DrawWireCube(box.center, box.size);
+
+        // 2. 바람 방향 화살표 그리기 (노란색)
+        Gizmos.matrix = Matrix4x4.identity; // 월드 좌표계로 복귀
+
+        // 박스의 실제 월드 중심점 계산
+        Vector3 worldCenter = transform.TransformPoint(box.center);
+        Vector3 dir = windDirection.normalized;
+        Vector3 arrowEnd = worldCenter + dir * 3.0f; // 화살표 길이 3
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(worldCenter, arrowEnd); // 몸통
+        Gizmos.DrawSphere(arrowEnd, 0.2f);      // 화살표 끝 (구)
+    }
 }

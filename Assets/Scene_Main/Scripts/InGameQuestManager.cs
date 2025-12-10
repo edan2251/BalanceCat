@@ -103,11 +103,24 @@ public class InGameQuestManager : MonoBehaviour
             }
         }
 
-        // 테스트용: 1번 키 누르면 메인 클리어 시도
+        /*인게임 퀘스트 클리어 치트키용
+          */
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            // 메인 퀘스트(0번) 클리어 시도 -> 이때 서브 퀘스트 체크도 같이 함
-            CheckClearCondition();
+            Debug.Log("[Cheat] 퀘스트 1 (메인) 강제 완료");
+            SolveQuest(0);
+        }
+        
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            Debug.Log("[Cheat] 퀘스트 2 강제 완료");
+            SolveQuest(1);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            Debug.Log("[Cheat] 퀘스트 3 강제 완료");
+            SolveQuest(2);
         }
     }
 
@@ -460,21 +473,22 @@ public class InGameQuestManager : MonoBehaviour
 
     void OnMainClicked()
     {
-        if (SoundManager.Instance != null)
-        {
             if (SoundManager.Instance != null)
             {
                 SoundManager.Instance.PlaySFX(SFX.ButtonClick);
             }
-        }
+        
         Time.timeScale = 1f;
         SceneManager.LoadScene("Main");
     }
 
     void OnNextClicked()
     {
-        SoundManager.Instance.PlaySFX(SFX.ButtonClick);
 
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySFX(SFX.ButtonClick);
+        }
         Time.timeScale = 1f;
         if (nextStageData != null) LoadingSceneController.LoadScene(nextStageData);
         else SceneManager.LoadScene("Main");

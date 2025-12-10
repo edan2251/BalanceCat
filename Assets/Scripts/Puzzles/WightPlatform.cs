@@ -11,6 +11,8 @@ public class WeightPlatform : MonoBehaviour
 
     [SerializeField] private float currentTotalWeight = 0.0f;
 
+    private bool _isLocked = false;
+
     private Vector3 startPos;
     private List<InventorySideBias> currentObjects = new List<InventorySideBias>();
 
@@ -26,6 +28,21 @@ public class WeightPlatform : MonoBehaviour
 
     private void Update()
     {
+        if (_isLocked)
+        {
+            // 잠겼을 때 행동 선택:
+            // 1. 그냥 그 자리에 얼음처럼 멈추기 -> return;
+            // 2. 원래 위치로 복귀하기 (추천) -> 아래 코드 사용
+
+            transform.position = Vector3.MoveTowards(transform.position, startPos, moveSpeed * Time.deltaTime);
+
+            // 잠겨있어도 플레이어 위치 동기화(Delta Movement)는 계속 해줘야 자연스러움
+            // (플랫폼이 복귀할 때 플레이어가 위에 있으면 같이 올라가야 하니까)
+            SyncPlayerPosition();
+
+            return;
+        }
+
         // 1. 무게 계산
         CalculateWeight();
 
@@ -53,6 +70,23 @@ public class WeightPlatform : MonoBehaviour
 
         // 현재 위치를 마지막 위치로 갱신
         lastPlatformPos = transform.position;
+    }
+
+    private void SyncPlayerPosition()
+    {
+        Vector3 platformMovement = transform.position - lastPlatformPos;
+        if (playerTransform != null)
+        {
+            playerTransform.position += platformMovement;
+        }
+        lastPlatformPos = transform.position;
+    }
+
+    // --- [핵심] 외부(부모)에서 호출할 함수 ---
+    public void SetLock(bool isLocked)
+    {
+        _isLocked = isLocked;
+        // 잠글 때 무게 정보 등을 초기화하고 싶다면 여기서 처리
     }
 
     private void CalculateWeight()

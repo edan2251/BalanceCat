@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33be76edc8722b84a89c4cbcfea1c452, type: 3}
   m_Name: QuestData_4_1_Quest3
   m_EditorClassIdentifier: 
-  questTitle: "[\uBB3C\uC18D\uC758 \uAD11\uBB3C]"
-  questDescription: "\uBB3C\uC6C5\uB369\uC774 \uC18D \uD76C\uADC0 \uAD11\uBB3C 3\uAC1C
-    \uC90D\uAE30"
+  questTitle: "[\uD2BC\uD2BC\uD574\uBCF4\uC5EC]"
+  questDescription: "\uB0C9\uAC01 \uC5D0\uB108\uC9C0 \uCF54\uC5B4\uB97C \uCC59\uAE30\uC138\uC694."
+  type: 2
+  targetValue: 1
+  requiredItemID: 405

@@ -13,4 +13,8 @@ MonoBehaviour:
   m_Name: QuestData_2_2_Quest3
   m_EditorClassIdentifier: 
   questTitle: "[\uB465\uB465..\uC2E0\uAE30\uD558\uB2E4!]"
-  questDescription: "\uC2E0\uBE44\uD55C \uC911\uB825\uC11D \uC870\uAC01 3\uAC1C \uD68D\uB4DD\uD558\uAE30"
+  questDescription: "\uC2E0\uBE44\uD55C \uC911\uB825\uC11D \uC870\uAC01 3\uAC1C\uB97C
+    \uCC59\uAE30\uC138\uC694."
+  type: 2
+  targetValue: 3
+  requiredItemID: 202

@@ -6,6 +6,10 @@ using System.Linq;
 
 public class ChapterSelector : MonoBehaviour
 {
+    [Header("Dev Settings")]
+    [Tooltip("개발 중이라 강제로 막을 챕터 인덱스 (예: 5챕터면 4 입력). -1이면 없음.")]
+    public int devLockChapterIndex = 4; // 0부터 시작하므로 5챕터는 인덱스 4
+
     // === 인스펙터 설정 ===
     public List<GameObject> planets;
     public Transform planetPivot;
@@ -98,6 +102,7 @@ public class ChapterSelector : MonoBehaviour
 
     void Update()
     {
+        /* 치트키(배포용에선 뻄)*/
         // 'O' 키로 진행 상황 리셋
         if (Input.GetKeyDown(KeyCode.O))
         {
@@ -125,30 +130,6 @@ public class ChapterSelector : MonoBehaviour
             return;
         }
 
-        // 로고 모드
-        if (!isChapterSelectionActive)
-        {
-            if (uiManager != null && uiManager.mainUIPanel != null && uiManager.mainUIPanel.activeSelf)
-            {
-                uiManager.HideUI();
-            }
-            planetPivot.Rotate(0, continuousRotationSpeed * Time.deltaTime, 0, Space.Self);
-            return;
-        }
-
-        // 챕터 선택 모드
-        if (isAnimating) return;
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            DeactivateChapterSelection();
-            return;
-        }
-
-        if (Input.GetKeyDown(KeyCode.W)) ChangeChapter(1);
-        else if (Input.GetKeyDown(KeyCode.S)) ChangeChapter(-1);
-
-        // --- 테스트 키 입력 ---
         if (currentStageSelector != null)
         {
             StageData currentStage = currentStageSelector.GetCurrentSelectedStageData();
@@ -180,6 +161,30 @@ public class ChapterSelector : MonoBehaviour
                 RefreshCurrentUIAndCheckRewards(chapterIdx);
             }
         }
+        
+        // 로고 모드
+        if (!isChapterSelectionActive)
+        {
+            if (uiManager != null && uiManager.mainUIPanel != null && uiManager.mainUIPanel.activeSelf)
+            {
+                uiManager.HideUI();
+            }
+            planetPivot.Rotate(0, continuousRotationSpeed * Time.deltaTime, 0, Space.Self);
+            return;
+        }
+
+        // 챕터 선택 모드
+        if (isAnimating) return;
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            DeactivateChapterSelection();
+            return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.W)) ChangeChapter(1);
+        else if (Input.GetKeyDown(KeyCode.S)) ChangeChapter(-1);
+
     }
 
     private void RefreshCurrentUIAndCheckRewards(int chapterIdx)
@@ -442,8 +447,12 @@ public class ChapterSelector : MonoBehaviour
             bool isSelected = (i == newIndex);
             bool isUnlocked = IsChapterUnlocked(i);
 
-            selector.enabled = isSelected && isChapterSelectionActive && isUnlocked;
-            selector.SetStagesVisibility(isSelected && isChapterSelectionActive && isUnlocked);
+            bool isDevLocked = (i == devLockChapterIndex);
+
+            bool showStages = isSelected && isChapterSelectionActive && isUnlocked && !isDevLocked;
+
+            selector.enabled = showStages;
+            selector.SetStagesVisibility(showStages);
 
             if (isSelected)
             {
@@ -455,20 +464,23 @@ public class ChapterSelector : MonoBehaviour
 
                     if (isUnlocked)
                     {
-                        if (uiManager != null && uiManager.mainUIPanel != null && !uiManager.mainUIPanel.activeSelf)
+                        if (isDevLocked)
                         {
-                            uiManager.mainUIPanel.SetActive(true);
+                            // 4-3을 깨서 해금은 됐지만, 개발 중인 챕터인 경우
+                            string chapterName = selector.chapterData != null ? selector.chapterData.chapterName : "챕터";
+                            uiManager.ShowDevLockMessage(chapterName); // 신규 함수 호출
                         }
-                        // [수정] 여기서 true/false를 전달합니다!
-                        selector.InitializeSelection(selectLastStage);
+                        else
+                        {
+                            // 정상적으로 플레이 가능한 챕터
+                            selector.InitializeSelection(selectLastStage);
+                        }
                     }
                     else
                     {
-                        if (uiManager != null)
-                        {
-                            string chapterName = selector.chapterData != null ? selector.chapterData.chapterName : "챕터";
-                            uiManager.ShowChapterLockedMessage(chapterName);
-                        }
+                        // 아예 해금조차 안 된 경우 (이전 챕터 안 깸)
+                        string chapterName = selector.chapterData != null ? selector.chapterData.chapterName : "챕터";
+                        uiManager.ShowChapterLockedMessage(chapterName);
                     }
                 }
             }

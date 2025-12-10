@@ -6978,7 +6978,7 @@ Transform:
   m_GameObject: {fileID: 1157021739}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 102.54, y: 55.4, z: 124.05}
+  m_LocalPosition: {x: 120.16, y: 55.4, z: 141.47}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -14649,6 +14649,8 @@ MonoBehaviour:
   sideBias: {fileID: 26351948774105025}
   balanceAdjustSpeed: 2
   balanceReturnSpeed: 1
+  walkStepInterval: 0.5
+  runStepInterval: 0.3
 --- !u!1 &1252239228698360136
 GameObject:
   m_ObjectHideFlags: 0
@@ -15007,7 +15009,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   interactionKey: 101
-  speechBubble: {fileID: 0}
+  speechBubble: {fileID: 6308858839989879072}
 --- !u!114 &1530569741235876239
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18438,6 +18440,7 @@ MonoBehaviour:
   inputDeadZone: 0.08
   biasAccumulationSpeed: 2.5
   biasReturnSpeed: 0.8
+  tiltSmoothTime: 0.15
 --- !u!136 &4658784914366861566
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -19280,7 +19283,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentScore: 0
-  requiredScore: 200
+  requiredScore: 600
 --- !u!222 &5235254302472593450
 CanvasRenderer:
   m_ObjectHideFlags: 0

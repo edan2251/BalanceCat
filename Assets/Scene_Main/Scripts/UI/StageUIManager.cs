@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 public class StageUIManager : MonoBehaviour
 {
+    [Header("Update Lock Text")]
+    [TextArea] public string comingSoonText = "추후 업데이트 예정입니다.\n조금만 기다려주세요!";
+
     [Header("Main UI Panel")]
     public GameObject mainUIPanel;
 
@@ -148,5 +151,24 @@ public class StageUIManager : MonoBehaviour
         }
         if (!string.IsNullOrEmpty(data.targetSceneName)) LoadingSceneController.LoadScene(data);
         else Debug.LogError($"StageData ID {data.stageID}: Scene Name Missing");
+    }
+
+    public void ShowDevLockMessage(string chapterName)
+    {
+        if (mainUIPanel != null) mainUIPanel.SetActive(true);
+        gameObject.SetActive(true);
+
+        // 챕터 이름은 표시
+        chapterNameText.text = $"{chapterName}";
+
+        // 시놉시스 자리에 "업데이트 예정" 문구 표시
+        stageSynopsisText.text = comingSoonText;
+
+        // 시작 버튼 비활성화
+        startButton.interactable = false;
+        startButton.onClick.RemoveAllListeners();
+
+        // 퀘스트/별 UI 숨기기
+        ToggleQuestUI(false, null, 0, 0);
     }
 }

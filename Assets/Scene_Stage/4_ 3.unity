@@ -17673,6 +17673,8 @@ MonoBehaviour:
   sideBias: {fileID: 2192903135977101846}
   balanceAdjustSpeed: 2
   balanceReturnSpeed: 1
+  walkStepInterval: 0.5
+  runStepInterval: 0.3
 --- !u!1 &1104375644135849119
 GameObject:
   m_ObjectHideFlags: 0
@@ -22965,7 +22967,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentScore: 0
-  requiredScore: 200
+  requiredScore: 600
 --- !u!1 &6293107360354187500
 GameObject:
   m_ObjectHideFlags: 0
@@ -23797,7 +23799,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentStageData: {fileID: 11400000, guid: f6fbde66b123eb24b8facf8c1136bdca, type: 2}
-  nextStageData: {fileID: 11400000, guid: 1bb8868934bda6f4ea6c718e4300c8f3, type: 2}
+  nextStageData: {fileID: 0}
   questPanelController: {fileID: 1158322526475020442}
   cursorController: {fileID: 5002024361725496404}
   hudStarImages:

@@ -14,3 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questTitle: "[\uC810\uD504\uC758 \uB2EC\uB0E5]"
   questDescription: "\uD55C\uBC88\uB3C4 \uB5A8\uC5B4\uC9C0\uC9C0 \uC54A\uACE0 \uD074\uB9AC\uC5B4"
+  type: 4
+  targetValue: 1
+  requiredItemID: 

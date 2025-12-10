@@ -13,12 +13,14 @@ MonoBehaviour:
   m_Name: Item203
   m_EditorClassIdentifier: 
   id: 203
-  displayName: "\uBD80\uC720\uC11D"
+  displayName: "\uC911\uB825\uC11D \uC870\uAC01"
   icon: {fileID: 21300000, guid: 13d22304cc8733e4fbc463e903ec09bf, type: 3}
-  description: "\uBB34\uAC8C\uAC00 \uBC18\uB300\uB85C \uC791\uC6A9\uB418\uB294 \uC544\uC774\uD15C\r\n"
+  description: "\uBB34\uAC8C\uC758 \uAE30\uC900\uC774 \uC544\uC608 \uB2E4\uB978 \uBB34\uAC70\uC6B4
+    \uB3CC\uC870\uAC01.\n\uD558\uC9C0\uB9CC \uC5B4\uB514\uC120\uAC00 \uC4F8\uBAA8
+    \uC788\uC744\uAC83 \uAC19\uB2E4.."
   worldPrefab: {fileID: 3796954650142692135, guid: 76f791693a9fb3d4d85ffd5e20d47c14,
     type: 3}
   sizeW: 1
-  sizeH: 2
-  weight: -1
+  sizeH: 1
+  weight: 3
   score: 50

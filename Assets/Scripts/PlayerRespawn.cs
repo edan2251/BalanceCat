@@ -120,7 +120,7 @@ public class PlayerRespawn : MonoBehaviour
     {
         if (_isRespawning) return;
         // 일반 사망은 아이템 드랍 false
-        StartCoroutine(RespawnCoroutine(false));
+        StartCoroutine(RespawnCoroutine(true));
     }
 
     public void TriggerLavaDeath()

@@ -5,17 +5,17 @@ using System.Collections;
 public class SpeechBubbleController : MonoBehaviour
 {
     [Header("컴포넌트 연결")]
-    [Tooltip("실제 텍스트를 표시하는 TMP 컴포넌트")]
     public TextMeshPro textMeshPro;
-    [Tooltip("말풍선 전체를 끄고 킬 부모 오브젝트")]
     public GameObject bubbleRoot;
 
     [Header("설정")]
-    [Tooltip("텍스트가 사라질 때 걸리는 시간 (초)")]
     public float fadeOutDuration = 1.0f;
 
     private Coroutine hideCoroutine;
     private Camera mainCamera;
+
+    // [신규] 우선순위 메시지가 떠있는지 확인하는 플래그
+    private bool _isLockedByPriority = false;
 
     void Start()
     {
@@ -31,32 +31,45 @@ public class SpeechBubbleController : MonoBehaviour
         }
     }
 
-    // 일정 시간 뒤에 사라지는 메시지
-    public void ShowMessage(string message, float duration = 10f)
+    // ---------------------------------------------------------
+    // 메시지 표시 함수들 (우선순위 로직 추가)
+    // ---------------------------------------------------------
+
+    // [수정] isPriority 매개변수 추가 (기본값 false)
+    public void ShowMessage(string message, float duration = 10f, bool isPriority = false)
     {
         if (textMeshPro == null || bubbleRoot == null) return;
 
+        // 1. 이미 우선순위 메시지가 떠있는데, 새로 온 메시지가 우선순위가 아니라면? -> 무시
+        if (_isLockedByPriority && !isPriority) return;
+
+        // 2. 메시지 설정
         textMeshPro.text = message;
         SetTextAlpha(1f);
         bubbleRoot.SetActive(true);
 
+        // 3. 우선순위 상태 업데이트
+        _isLockedByPriority = isPriority;
+
+        // 4. 기존 타이머 끄고 새로 시작
         if (hideCoroutine != null) StopCoroutine(hideCoroutine);
         hideCoroutine = StartCoroutine(HideProcess(duration));
     }
 
-    // ---------------------------------------------------------
-    //구역 안에 있을 때 계속 띄우기 위한 함수들
-    // ---------------------------------------------------------
-
-    // 사라지지 않고 계속 떠있는 메시지 (점수 갱신용)
-    public void ShowContinuousMessage(string message)
+    // [수정] 지속 메시지에도 우선순위 로직 적용
+    public void ShowContinuousMessage(string message, bool isPriority = false)
     {
         if (textMeshPro == null || bubbleRoot == null) return;
 
-        textMeshPro.text = message;
+        // 우선순위 체크 (중요: 아이템 획득 메시지 등은 보통 isPriority = false로 호출됨)
+        if (_isLockedByPriority && !isPriority) return;
 
+        textMeshPro.text = message;
         SetTextAlpha(1f);
         bubbleRoot.SetActive(true);
+
+        // 지속 메시지는 우선순위를 점유할지 말지 결정 (보통 아이템 메시지는 점유 안 함)
+        _isLockedByPriority = isPriority;
 
         if (hideCoroutine != null)
         {
@@ -67,16 +80,25 @@ public class SpeechBubbleController : MonoBehaviour
 
     public void HideContinuousMessage(bool fadeOut = true)
     {
-        if (fadeOut)
+        // 끄기 명령이 들어오면 우선순위 잠금도 해제해야 함
+        _isLockedByPriority = false;
+
+        if (fadeOut && gameObject.activeInHierarchy)
         {
             if (hideCoroutine != null) StopCoroutine(hideCoroutine);
             hideCoroutine = StartCoroutine(HideProcess(0f));
         }
         else
         {
+            if (hideCoroutine != null) StopCoroutine(hideCoroutine);
+            hideCoroutine = null;
+
+            SetTextAlpha(0f);
             if (bubbleRoot != null) bubbleRoot.SetActive(false);
         }
     }
+
+    // ---------------------------------------------------------
 
     private IEnumerator HideProcess(float duration)
     {
@@ -95,6 +117,9 @@ public class SpeechBubbleController : MonoBehaviour
         SetTextAlpha(0f);
         bubbleRoot.SetActive(false);
         hideCoroutine = null;
+
+        // [중요] 메시지가 완전히 사라지면 잠금 해제
+        _isLockedByPriority = false;
     }
 
     private void SetTextAlpha(float alpha)
