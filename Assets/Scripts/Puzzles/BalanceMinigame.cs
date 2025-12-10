@@ -173,6 +173,10 @@ public class BalanceMiniGame : MonoBehaviour
         if (panel) panel.gameObject.SetActive(false);
         if (timerSlider) timerSlider.gameObject.SetActive(false);
         SafeSetBool("isStaggering", false);
+
+        //초기화
+        if (ring != null) ring.ResetRingState();
+
         if (successUnlockDelay > 0f) yield return new WaitForSeconds(successUnlockDelay);
         movement?.SetControlEnabled(true);
         _running = false;
@@ -204,6 +208,10 @@ public class BalanceMiniGame : MonoBehaviour
         {
             SoundManager.Instance.PlaySFX(SFX.MiniGameFail);
         }
+
+        //초기화
+        if (ring != null) ring.ResetRingState();
+
         yield return new WaitForSeconds(failDownDuration);
         SafeSetBool("isFalling", false);
         movement?.SetControlEnabled(true);

@@ -236,4 +236,20 @@ public class BalanceSafetyRing : MonoBehaviour
             line.SetPosition(i, localPos);
         }
     }
+    public void ResetRingState()
+    {
+        // 1. 트리거 상태 해제
+        _triggered = false;
+
+        // 2. 링 위치를 정중앙으로 초기화 (가장 중요!)
+        _localOffset = Vector3.zero;
+        ringCenter.localPosition = Vector3.zero;
+
+        // 3. 내부 기울기 속도 등도 초기화하여 부드럽게 다시 시작
+        _currentSmoothTilt = 0f;
+        _tiltVelocity = 0f;
+
+        // 4. 라인 렌더러 끄기
+        if (line) line.enabled = false;
+    }
 }
